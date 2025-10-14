@@ -1,0 +1,570 @@
+/* ============================================================================== */
+/* 1. GLOBAL & RESET STYLING */
+/* ============================================================================== */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  min-height: 100vh;
+  font-family: 'Plus Jakarta Sans', sans-serif !important; 
+}
+.main-container,
+.main-container * {
+box-sizing: border-box;
+}
+.main-container {
+background: #ffffff;
+min-height: 100vh;
+position: relative;
+}
+
+/* ============================================================================== */
+/* 2. HEADER & NAVIGASI STYLING */
+/* ============================================================================== */
+
+.header-wrapper {
+padding: 0rem 6.25rem 0rem 6.25rem; /* Margin Kiri/Kanan 6.25rem */
+display: flex;
+flex-direction: column;
+gap: 4.0rem; 
+align-items: center;
+justify-content: flex-start;
+max-width: 90rem;
+width: 100%;
+margin: 3.125rem auto 0 auto; 
+position: relative;
+z-index: 30;
+}
+
+.hero {
+    background: #ffffff;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    align-self: stretch;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.green-ray-logo-1 {
+    flex-shrink: 0;
+    width: 12.6425rem;
+    height: 2.69125rem;
+    position: relative;
+    object-fit: cover;
+    aspect-ratio: 202.28/43.06;
+}
+
+.header-menu {
+    padding: 0.800625rem;
+    display: flex;
+    flex-direction: row;
+    gap: 2.5rem; 
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.header-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem; 
+    align-items: center;
+    justify-content: flex-start;
+    flex-shrink: 0;
+    position: relative;
+}
+
+/* Menu Links */
+.non-active, .active-head {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 1.125rem;
+    font-weight: 500;
+    position: relative;
+    cursor: pointer;
+}
+.active-head { font-weight: 700; }
+.non-active:hover { font-weight: 700; }
+.active-head a, .non-active a { text-decoration: none; color: black; }
+
+
+/* Tombol Login */
+.login-btn {
+    background: #136000;
+    border-radius: 9999px; 
+    padding: 0.91375rem 1.218125rem 0.91375rem 1.218125rem;
+    display: flex;
+    flex-direction: row;
+    gap: 0.50125rem;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    text-decoration: none; /* Untuk tag <a> */
+}
+.login-btn:hover { transform: scale(1.03); }
+.login-text { color: #ffffff; font-weight: 600; font-size: 0.9rem; font-family: 'Plus Jakarta Sans', sans-serif;}
+
+.login2 {
+color: var(--putih, #ffffff); /* Pastikan teks tetap putih */
+text-align: left;
+font-family: "Plus Jakarta Sans", sans-serif;
+font-size: 0.8072916865348816rem;
+font-weight: 500;
+position: relative;
+}
+
+/* Tombol Contact Us */
+.contact-us-btn {
+    background: #ffffff;
+    border-radius: 9999px; 
+    border: 0.07875rem solid #000000;
+    padding: 0.91375rem 1.218125rem 0.91375rem 1.218125rem;
+    display: flex;
+    flex-direction: row;
+    gap: 0.589375rem;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    text-decoration: none; /* Untuk tag <a> */
+}
+.contact-us-btn:hover { transform: scale(1.03); }
+.contact-us-text { color: #000000; font-weight: 600; font-size: 0.9rem; }
+
+
+/* Ikon Helper */
+.akar-icons--door{ 
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'%3E%3Cpath d='M5 2h11a3 3 0 0 1 3 3v14a1 1 0 0 1-1 1h-3'/%3E%3Cpath d='m5 2l7.588 1.518A3 3 0 0 1 15 6.459V20.78a1 1 0 0 1-1.196.98l-7.196-1.438A2 2 0 0 1 5 18.36zm7 10v2'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.mynaui--arrow-right {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%23000' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4.5 12h15m0 0l-5.625-6m5.625 6l-5.625 6'/%3E%3C/svg%3E");
+}
+
+/* ============================================================================== */
+/* 3. CONTENT DETAIL KATALOG STYLING */
+/* ============================================================================== */
+
+/* Back */
+/* Tombol Contact Us */
+.back-button {
+background: var(--putih, #ffffff);
+border-radius: 1.07625rem;
+border-style: solid;
+border-color: #000000;
+border-width: 1.5px;
+padding: 0.91375rem 1.218125rem;
+text-decoration: none;
+color: var(--hitam);
+display: flex;
+flex-direction: row;
+gap: 0.589375rem;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+box-shadow: none;
+transform: scale(1);
+transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.back-button:hover {
+box-shadow: var(
+--efek-shadow-tipis-box-shadow,
+0rem 0.0625rem 0.1875rem 0rem rgba(0, 0, 0, 0.26),
+0rem 0.3125rem 0.3125rem 0rem rgba(0, 0, 0, 0.23),
+0rem 0.6875rem 0.4375rem 0rem rgba(0, 0, 0, 0.13),
+0rem 1.25rem 0.5rem 0rem rgba(0, 0, 0, 0.04),
+0rem 1.9375rem 0.5625rem 0rem rgba(0, 0, 0, 0)
+);
+transform: scale(1.03);
+}
+
+/* Container Utama */
+.big-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5.5rem;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    padding: 0 0 3rem 0; /* Padding bawah untuk pemisah dengan footer */
+}
+
+/* Navigasi Breadcrumb dan Back Button */
+.nav-area {
+display: flex;
+flex-direction: row;
+align-items: center;
+gap: 1.5rem; 
+margin-bottom: 2rem; 
+}
+
+.nav-area .breadcrumb {
+margin-bottom: 0; 
+}
+
+.nav-area .breadcrumb-item a {
+text-decoration: none;
+color: #6c757d; 
+}
+
+.formkit--arrowleft {
+display: inline-block;
+width: 18px;
+height: 18px;
+background-repeat: no-repeat;
+background-size: 100% 100%;
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 9'%3E%3Cpath fill='%23000' d='M12.5 5h-9c-.28 0-.5-.22-.5-.5s.22-.5.5-.5h9c.28 0 .5.22.5.5s-.22.5-.5.5'/%3E%3Cpath fill='%23000' d='M6 8.5a.47.47 0 0 1-.35-.15l-3.5-3.5c-.2-.2-.2-.51 0-.71L5.65.65c.2-.2.51-.2.71 0s.2.51 0 .71L3.21 4.51l3.15 3.15c.2.2.2.51 0 .71c-.1.1-.23.15-.35.15Z'/%3E%3C/svg%3E");
+}
+
+/* Layout Gambar & Teks Detail */
+.image-catalog {
+display: flex;
+flex-direction: column;
+gap: 1.5rem;
+align-items: flex-start;
+justify-content: flex-start;
+align-self: stretch;
+flex-shrink: 0;
+position: relative;
+padding: 5rem 6.25rem 0 6.25rem; 
+width: 100%; 
+box-sizing: border-box;
+}
+
+.container-text {
+display: flex;
+flex-direction: row;
+align-items: center;
+justify-content: space-between;
+align-self: stretch;
+flex-shrink: 0;
+position: relative;
+gap: 5rem;
+}
+
+.image-container {
+flex-basis: 45%; 
+max-width: 45%; 
+height: 23.243125rem; 
+position: relative;
+}
+
+/* Carousel Image Styling */
+.image-container .carousel-inner,
+.image-container .carousel-item,
+.image-container .carousel-item img {
+height: 100%; 
+object-fit: cover; 
+}
+
+.title-heading {
+display: flex;
+flex-direction: column;
+gap: 1.173125rem;
+align-items: flex-start;
+justify-content: center;
+flex: 1;
+position: relative;
+}
+
+.text-heading {
+color: var(--hitam, #000000);
+text-align: left;
+font-family: "Plus Jakarta Sans", sans-serif;
+font-size: 3.5rem;
+font-weight: 700;
+position: relative;
+align-self: stretch;
+}
+
+.dec-heading {
+color: #000000;
+text-align: justify;
+align-self: stretch;
+font-family: "Plus Jakarta Sans", sans-serif;
+font-size: 1.1rem;
+font-weight: 400;
+position: relative;
+max-width: 51.3125rem; 
+width: 100%;
+}
+
+/* CTA Section (Book Consultation) */
+.cta {
+display: flex;
+flex-direction: column;
+gap: 1.25rem;
+align-items: center;
+justify-content: center;
+flex-shrink: 0;
+position: relative;
+}
+
+.cta-book {
+background: var(--hijau, #136000);
+border-radius: 0.75rem;
+padding: 1.25rem 2.5rem;
+display: flex;
+flex-direction: row;
+text-decoration: none;
+gap: 0.625rem;
+align-items: center;
+justify-content: center;
+}
+
+.material-symbols--chat {
+display: inline-block;
+width: 1.1375rem;
+height: 1.1375rem;
+background-repeat: no-repeat;
+background-size: 100% 100%;
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23fff' d='M2 22V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18H6zm4-8h8v-2H6zm0-3h12V9H6zm0-3h12V6H6z'/%3E%3C/svg%3E");
+}
+
+/* Section Fitur & Spesifikasi */
+.section1 {
+display: flex;
+flex-direction: column;
+gap: 2rem;
+align-items: flex-start;
+justify-content: flex-start;
+align-self: stretch;
+flex-shrink: 0;
+position: relative;
+padding: 0 6.25rem;
+}
+
+.title2 {
+color: #000000;
+text-align: left;
+font-family: "Plus Jakarta Sans", sans-serif;
+font-size: 1.875rem;
+font-weight: 600;
+position: relative;
+align-self: stretch;
+}
+
+.card-container {
+display: flex;
+flex-direction: row;
+gap: 1.875rem;
+align-items: flex-start;
+justify-content: flex-start;
+align-self: stretch;
+flex-shrink: 0;
+position: relative;
+}
+
+.fitur {
+border-radius: 0.9375rem;
+border-style: solid;
+border-color: #000000;
+border-width: 0.125rem;
+padding: 3.125rem 1.25rem;
+display: flex;
+flex-direction: column;
+gap: 0.9375rem;
+align-items: center;
+justify-content: center;
+align-self: stretch;
+flex: 1;
+position: relative;
+  /* Tambahkan transisi dan box-shadow default */
+transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.fitur:hover {
+    /* Efek hover: lift dan shadow */
+    transform: translateY(-5px);
+    box-shadow: 
+0rem 0.0625rem 0.1875rem 0rem rgba(0, 0, 0, 0.26),
+0rem 0.3125rem 0.3125rem 0rem rgba(0, 0, 0, 0.23),
+0rem 0.6875rem 0.4375rem 0rem rgba(0, 0, 0, 0.13),
+0rem 1.25rem 0.5rem 0rem rgba(0, 0, 0, 0.04),
+0rem 1.9375rem 0.5625rem 0rem rgba(0, 0, 0, 0);
+}
+
+.text-card {
+color: #000000;
+text-align: center;
+font-family: "Plus Jakarta Sans", sans-serif;
+font-size: 1rem;
+font-weight: 600;
+position: relative;
+width: 12.5rem;
+}
+
+.text-card-span {
+font-family: "Plus Jakarta Sans", sans-serif;
+font-size: 16px;
+font-weight: 700;
+}
+
+.text-card-span2 {
+font-family: "Plus Jakarta Sans", sans-serif;
+font-size: 14px;
+font-weight: 500;
+width: 100%;
+}
+
+/* Ikon Fitur */
+.material-symbols--electric-bolt-rounded,
+.akar-icons--gear,
+.streamline-flex--warranty-badge-highlight-remix {
+display: inline-block;
+width: 6.25rem;
+height: 6.25rem;
+background-repeat: no-repeat;
+background-size: 100% 100%;
+}
+.material-symbols--electric-bolt-rounded {
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='m11 14.5l-5.925-.75q-.625-.075-.813-.675t.263-1.025l10.225-9.8q.125-.125.3-.187T15.525 2q.5 0 .763.425t.012.875L13 9.5l5.925.75q.625.075.813.675t-.263 1.025L9.25 21.75q-.125.125-.3.188T8.475 22q-.5 0-.763-.425T7.7 20.7z'/%3E%3C/svg%3E");
+}
+.akar-icons--gear {
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%23000' stroke-width='2'%3E%3Cpath d='M14 3.269C14 2.568 13.432 2 12.731 2H11.27C10.568 2 10 2.568 10 3.269c0 .578-.396 1.074-.935 1.286q-.128.052-.253.106c-.531.23-1.162.16-1.572-.249a1.27 1.27 0 0 0-1.794 0L4.412 5.446a1.27 1.27 0 0 0 0 1.794c.41.41.48 1.04.248 1.572a8 8 0 0 0-.105.253c-.212.539-.708.935-1.286.935C2.568 10 2 10.568 2 11.269v1.462C2 13.432 2.568 14 3.269 14c.578 0 1.074.396 1.286.935q.052.128.105.253c.231.531.161 1.162-.248 1.572a1.27 1.27 0 0 0 0 1.794l1.034 1.034a1.27 1.27 0 0 0 1.794 0c.41-.41 1.04-.48 1.572-.249q.125.055.253.106c.539.212.935.708.935 1.286c0 .701.568 1.269 1.269 1.269h1.462c.701 0 1.269-.568 1.269-1.269c0-.578.396-1.074.935-1.287q.128-.05.253-.104c.531-.232 1.162-.161 1.571.248a1.27 1.27 0 0 0 1.795 0l1.034-1.034a1.27 1.27 0 0 0 0-1.794c-.41-.41-.48-1.04-.249-1.572q.055-.125.106-.253c.212-.539.708-.935 1.286-.935c.701 0 1.269-.568 1.269-1.269V11.27c0-.701-.568-1.269-1.269-1.269c-.578 0-1.074-.396-1.287-.935a8 8 0 0 0-.105-.253c-.23-.531-.16-1.162.249-1.572a1.27 1.27 0 0 0 0-1.794l-1.034-1.034a1.27 1.27 0 0 0-1.794 0c-.41.41-1.04.48-1.572.249a8 8 0 0 0-.253-.106C14.396 4.343 14 3.847 14 3.27Z'/%3E%3Cpath d='M16 12a4 4 0 1 1-8 0a4 4 0 0 1 8 0Z'/%3E%3C/g%3E%3C/svg%3E");
+}
+.streamline-flex--warranty-badge-highlight-remix {
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M8.056.396a1.636 1.636 0 0 0-2.133 0a55 55 0 0 0-.562.488a55 55 0 0 0-.73-.142a1.636 1.636 0 0 0-1.848 1.067q-.125.356-.243.708q-.36.12-.721.248A1.636 1.636 0 0 0 .752 4.613q.07.37.144.735q-.25.284-.5.575a1.636 1.636 0 0 0 0 2.133q.25.293.504.578q-.076.374-.148.753c-.15.796.303 1.58 1.067 1.848q.361.128.721.248q.119.352.243.708a1.636 1.636 0 0 0 1.848 1.068q.376-.071.748-.147q.279.248.565.492c.613.528 1.52.528 2.133 0q.285-.243.562-.488q.363.073.73.143c.795.15 1.58-.304 1.848-1.068q.125-.356.243-.708q.36-.12.721-.248a1.636 1.636 0 0 0 1.066-1.848a56 56 0 0 0-.143-.735q.25-.284.5-.575a1.636 1.636 0 0 0 0-2.133a56 56 0 0 0-.504-.579q.076-.374.147-.752a1.636 1.636 0 0 0-1.066-1.848a56 56 0 0 0-.721-.248q-.119-.353-.243-.708A1.636 1.636 0 0 0 9.369.742q-.375.07-.748.146a56 56 0 0 0-.565-.492m-1.319.947a.386.386 0 0 1 .504 0q.398.343.783.686c.148.132.35.186.544.146q.51-.107 1.033-.205a.386.386 0 0 1 .436.252q.174.496.335.985c.062.188.21.336.398.398q.496.163.997.34c.18.063.288.248.252.436q-.099.524-.206 1.037a.63.63 0 0 0 .146.545q.35.39.697.796a.386.386 0 0 1 0 .504q-.345.402-.693.792a.63.63 0 0 0-.146.544q.105.504.202 1.02a.386.386 0 0 1-.252.437q-.5.176-.997.339a.63.63 0 0 0-.398.398q-.162.49-.335.985a.386.386 0 0 1-.436.252a54 54 0 0 1-1.016-.201a.63.63 0 0 0-.544.146q-.382.342-.778.682a.386.386 0 0 1-.504 0a54 54 0 0 1-.783-.686a.63.63 0 0 0-.544-.146q-.51.107-1.033.205a.386.386 0 0 1-.436-.252q-.174-.495-.335-.985a.63.63 0 0 0-.398-.398q-.496-.163-.997-.34a.386.386 0 0 1-.252-.436q.098-.525.206-1.038a.63.63 0 0 0-.146-.544q-.35-.39-.697-.796a.386.386 0 0 1 0-.504q.345-.402.693-.792a.63.63 0 0 0 .146-.544q-.105-.504-.202-1.02a.386.386 0 0 1 .252-.437q.501-.175.996-.339a.63.63 0 0 0 .399-.398q.16-.489.335-.985a.386.386 0 0 1 .436-.252q.512.096 1.016.201a.63.63 0 0 0 .543-.146q.383-.342.78-.682m2.767 4.212a.75.75 0 0 0-1.008-1.11c-.674.611-1.19 1.17-1.628 1.852a9 9 0 0 0-.694 1.336l-.636-.655a.75.75 0 0 0-1.076 1.044l1.454 1.5a.75.75 0 0 0 1.247-.275c.333-.957.624-1.603.968-2.14c.342-.534.756-.992 1.373-1.551' clip-rule='evenodd'/%3E%3C/svg%3E");
+}
+
+/* ============================================================================== */
+/* 4. FOOTER STYLING */
+/* ============================================================================== */
+.footer {
+    background: #ffffff;
+    border-style: solid;
+    border-color: #000000;
+    border-width: 0.03125rem 0rem 0rem 0rem;
+    padding: 3.125rem 3.75rem 5rem 3.75rem;
+    display: flex;
+    flex-direction: row;
+    gap: 6.0625rem;
+    align-items: flex-start;
+    justify-content: space-evenly;
+    align-self: stretch;
+    flex-shrink: 0;
+    position: relative;
+    margin-top: 5rem;
+}
+.footer-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    align-items: flex-start;
+    justify-content: flex-start;
+    align-self: stretch;
+    flex-shrink: 0;
+    position: relative;
+}
+.footer-content { /* Class ini digunakan untuk membungkus footer-info dan copyright di HTML */
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem; /* Tambahkan gap agar ada jarak antara info dan copyright */
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-shrink: 0;
+    position: relative;
+}
+.footer-logo-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: flex-start;
+    justify-content: flex-start;
+    align-self: stretch;
+    flex-shrink: 0;
+    position: relative;
+}
+.green-ray-logo-12 {
+    flex-shrink: 0;
+    width: 14.6675rem;
+    height: 3.121875rem;
+    position: relative;
+    object-fit: cover;
+    aspect-ratio: 234.68/49.95;
+}
+.footer-desc {
+    color: #000000;
+    text-align: justify;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 1.125rem;
+    font-weight: 400;
+    position: relative;
+    width: 18.25rem;
+}
+.copyright {
+    color: #000000;
+    text-align: left;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 400;
+    position: relative;
+    align-self: stretch;
+}
+.footer-menu {
+    display: flex;
+    flex-direction: row;
+    gap: 10rem;
+    align-items: flex-start;
+    justify-content: flex-start;
+    align-self: stretch;
+    flex-shrink: 0;
+    position: relative;
+}
+.menu-container-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 3.125rem;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-shrink: 0;
+    position: relative;
+}
+.title-footer {
+    color: #000000;
+    text-align: left;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 1.7rem;
+    font-weight: 500;
+    position: relative;
+}
+.dec-container-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    align-items: flex-start;
+    justify-content: center;
+    align-self: stretch;
+    flex-shrink: 0;
+    position: relative;
+}
+.list-footer {
+    color: #000000;
+    text-align: center;
+    font-size: 1.125rem;
+    position: relative;
+    cursor: pointer;
+}
+.list-footer a {
+    text-decoration: none;
+    color: black;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 400;
+}

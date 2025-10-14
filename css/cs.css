@@ -1,0 +1,400 @@
+/* GLOBAL RESET & FONT */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  min-height: 100vh;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+}
+.main-container,
+.main-container * {
+    box-sizing: border-box;
+}
+
+/* ============================================================================== */
+/* HEADER STYLING (Diambil dari calc.css) */
+/* ============================================================================== */
+.main-container {
+    background: #ffffff;
+    min-height: 100vh;
+    position: relative;
+}
+
+.header-wrapper {
+    /* Menggantikan .frame-139 untuk Header margin/padding */
+    padding: 0rem 6.25rem 0rem 6.25rem; 
+    display: flex;
+    flex-direction: column;
+    gap: 4.0rem; /* GAP yang ditingkatkan */
+    align-items: center;
+    justify-content: flex-start;
+    max-width: 90rem;
+    width: 100%;
+    margin: 3.125rem auto 0 auto;
+    position: relative;
+    z-index: 30;
+}
+
+.hero {
+    background: #ffffff;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    align-self: stretch;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.green-ray-logo-1 {
+    flex-shrink: 0;
+    width: 12.6425rem;
+    height: 2.69125rem;
+    position: relative;
+    object-fit: cover;
+    aspect-ratio: 202.28/43.06;
+}
+
+.header-menu {
+    padding: 0.800625rem;
+    display: flex;
+    flex-direction: row;
+    gap: 2.5rem; 
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.header-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem; 
+    align-items: center;
+    justify-content: flex-start;
+    flex-shrink: 0;
+    position: relative;
+}
+
+/* Menu Links */
+.non-active, .active-head {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 1.125rem;
+    font-weight: 500;
+    position: relative;
+    cursor: pointer;
+}
+.active-head { font-weight: 700; }
+.non-active:hover { font-weight: 700; }
+.active-head a, .non-active a { text-decoration: none; color: black; }
+
+
+/* Tombol Login */
+.login-btn {
+    background: #136000;
+    border-radius: 9999px; 
+    padding: 0.91375rem 1.218125rem 0.91375rem 1.218125rem;
+    display: flex;
+    flex-direction: row;
+    gap: 0.50125rem;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    text-decoration: none; /* Untuk tag <a> */
+}
+.login-btn:hover { transform: scale(1.03); }
+.login-text { color: #ffffff; font-weight: 600; font-size: 0.9rem; font-family: 'Plus Jakarta Sans', sans-serif;}
+
+/* Tombol Contact Us */
+.contact-us-btn {
+    background: #ffffff;
+    border-radius: 9999px; 
+    border: 0.07875rem solid #000000;
+    padding: 0.91375rem 1.218125rem 0.91375rem 1.218125rem;
+    display: flex;
+    flex-direction: row;
+    gap: 0.589375rem;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    text-decoration: none; /* Untuk tag <a> */
+}
+.contact-us-btn:hover { transform: scale(1.03); }
+.contact-us-text { color: #000000; font-weight: 600; font-size: 0.9rem; }
+
+
+/* Ikon Helper */
+.akar-icons--door{ 
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'%3E%3Cpath d='M5 2h11a3 3 0 0 1 3 3v14a1 1 0 0 1-1 1h-3'/%3E%3Cpath d='m5 2l7.588 1.518A3 3 0 0 1 15 6.459V20.78a1 1 0 0 1-1.196.98l-7.196-1.438A2 2 0 0 1 5 18.36zm7 10v2'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.mynaui--arrow-right {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%23000' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4.5 12h15m0 0l-5.625-6m5.625 6l-5.625 6'/%3E%3C/svg%3E");
+}
+
+
+/* ============================================================================== */
+/* CONTENT & FORM STYLING */
+/* ============================================================================== */
+
+/* PENYESUAIAN MARGIN DAN PADDING CONTAINER */
+.container {
+    /* Padding Atas & Bawah 44px */
+    padding-top: 5rem !important;
+    padding-bottom: 44px !important;
+    
+    max-width: 90rem; 
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* MENGATUR ROW untuk SPACE-BETWEEN */
+.contact-row {
+    display: flex; 
+    justify-content: space-evenly !important; 
+    margin-left: 0;
+    margin-right: 0;
+    gap: 2rem; 
+}
+
+/* Header Form */
+.contact-form-title {
+  color: #136000;
+  font-size: 3rem; 
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.contact-description {
+  color: #136000;
+  font-size: 1.25rem;
+  font-weight: 400;
+  max-width: 600px;
+}
+
+/* Form Kontrol (Kustomisasi Border) */
+.form-label {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #000;
+}
+
+.form-control {
+  border: none;
+  border-bottom: 2px solid #ccc;
+  border-radius: 6px;
+  padding: 10px 12px;
+  transition: border-color 0.3s ease;
+  box-shadow: none !important;
+}
+
+.form-control:focus {
+  border-color: #146b00;
+  box-shadow: none !important;
+}
+
+/* Validasi Kustom */
+.form-control:valid {
+    border-color: #146b00 !important;
+    background-image: none !important;
+}
+
+.form-control:invalid {
+    border-color: #dc3545 !important;
+    background-image: none !important;
+}
+
+/* Tombol Submit Utama */
+.btn-success {
+  background-color: #146b00;
+  border: none;
+  transition: background 0.3s ease;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 1.2rem;
+}
+
+.btn-success:hover {
+  background-color: #0e5000;
+}
+
+/* Tombol Kontak Alternatif (WhatsApp/Email) */
+.contact-wa-btn, .contact-email-btn {
+    background-color: #43a047;
+    border: none;
+    color: white;
+    font-weight: 600;
+    border-radius: 9999px; /* Rounded Penuh */
+    padding: 15px 30px;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.contact-email-btn {
+    background-color: #136000;
+}
+
+.contact-wa-btn:hover { background-color: #2e7d32; }
+.contact-email-btn:hover { background-color: #0e5000; }
+
+.contact-separator { font-size: 1.5rem; font-weight: 500; color: #444; }
+.mdi--whatsapp {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23fff' d='M12.04 2c-5.46 0-9.91 4.45-9.91 9.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91c0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2m.01 1.67c2.2 0 4.26.86 5.82 2.42a8.23 8.23 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.24 8.23c-1.48 0-2.93-.39-4.19-1.15l-.3-.17l-3.12.82l.83-3.04l-.2-.32a8.2 8.2 0 0 1-1.26-4.38c.01-4.54 3.7-8.24 8.25-8.24M8.53 7.33c-.16 0-.43.06-.66.31c-.22.25-.87.86-.87 2.07c0 1.22.89 2.39 1 2.56c.14.17 1.76 2.67 4.25 3.73c.59.27 1.05.42 1.41.53c.59.19 1.13.16 1.56.1c.48-.07 1.46-.6 1.67-1.18s.21-1.07.15-1.18c-.07-.1-.23-.16-.48-.27c-.25-.14-1.47-.74-1.69-.82c-.23-.08-.37-.12-.56.12c-.16.25-.64.81-.78.97c-.15.17-.29.19-.53.07c-.26-.13-1.06-.39-2-1.23c-.74-.66-1.23-1.47-1.38-1.72c-.12-.24-.01-.39.11-.5c.11-.11.27-.29.37-.44c.13-.14.17-.25.25-.41c.08-.17.04-.31-.02-.43c-.06-.11-.56-1.35-.77-1.84c-.2-.48-.4-.42-.56-.43c-.14 0-.3-.01-.47-.01'/%3E%3C/svg%3E");
+}
+.ic--outline-email {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23fff' d='M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2zm-2 0l-8 5l-8-5zm0 12H4V8l8 5l8-5z'/%3E%3C/svg%3E");
+}
+
+
+/* ============================================================================== */
+/* FOOTER STYLING (Diambil dari calc.css) */
+/* ============================================================================== */
+.footer {
+    background: #ffffff;
+    border-style: solid;
+    border-color: #000000;
+    border-width: 0.03125rem 0rem 0rem 0rem;
+    padding: 3.125rem 3.75rem 5rem 3.75rem;
+    display: flex;
+    flex-direction: row;
+    gap: 6.0625rem;
+    align-items: flex-start;
+    justify-content: space-evenly;
+    align-self: stretch;
+    flex-shrink: 0;
+    position: relative;
+    margin-top: 5rem;
+}
+.footer-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    align-items: flex-start;
+    justify-content: flex-start;
+    align-self: stretch;
+    flex-shrink: 0;
+    position: relative;
+}
+.footer-content { /* Class ini digunakan untuk membungkus footer-info dan copyright di HTML */
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem; /* Tambahkan gap agar ada jarak antara info dan copyright */
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-shrink: 0;
+    position: relative;
+}
+.footer-logo-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: flex-start;
+    justify-content: flex-start;
+    align-self: stretch;
+    flex-shrink: 0;
+    position: relative;
+}
+.green-ray-logo-12 {
+    flex-shrink: 0;
+    width: 14.6675rem;
+    height: 3.121875rem;
+    position: relative;
+    object-fit: cover;
+    aspect-ratio: 234.68/49.95;
+}
+.footer-desc {
+    color: #000000;
+    text-align: justify;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 1.125rem;
+    font-weight: 400;
+    position: relative;
+    width: 18.25rem;
+}
+.copyright {
+    color: #000000;
+    text-align: left;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 400;
+    position: relative;
+    align-self: stretch;
+}
+.footer-menu {
+    display: flex;
+    flex-direction: row;
+    gap: 10rem;
+    align-items: flex-start;
+    justify-content: flex-start;
+    align-self: stretch;
+    flex-shrink: 0;
+    position: relative;
+}
+.menu-container-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 3.125rem;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-shrink: 0;
+    position: relative;
+}
+.title-footer {
+    color: #000000;
+    text-align: left;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 1.7rem;
+    font-weight: 500;
+    position: relative;
+}
+.dec-container-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    align-items: flex-start;
+    justify-content: center;
+    align-self: stretch;
+    flex-shrink: 0;
+    position: relative;
+}
+.list-footer {
+    color: #000000;
+    text-align: center;
+    font-size: 1.125rem;
+    position: relative;
+    cursor: pointer;
+}
+.list-footer a {
+    text-decoration: none;
+    color: black;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 400;
+}

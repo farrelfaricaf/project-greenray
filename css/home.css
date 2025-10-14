@@ -1,0 +1,943 @@
+/* ============================================================================== */
+/* 1. GLOBAL RESET & WRAPPER */
+/* ============================================================================== */
+html, body {
+    margin: 0;
+    padding: 0;
+}
+.beranda,
+.beranda * {
+    box-sizing: border-box;
+}
+.beranda {
+    background: #ffffff;
+    /* Tinggi dapat disesuaikan atau dihapus jika menggunakan flow normal */
+    height: auto; 
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.frame-136 {
+    /* Wrapper utama untuk semua konten di bawah header */
+    display: flex;
+    flex-direction: column;
+    gap: 8rem;
+    align-items: center;
+    justify-content: flex-start;
+    /* Atur agar lebar mengikuti konten dan berada di tengah */
+    max-width: 90.0625rem;
+    width: 100%;
+    margin: 3.125rem auto 0 auto; 
+    position: relative;
+}
+.frame-138 {
+    display: flex;
+    flex-direction: column;
+    gap: 5rem;
+    align-items: center;
+    justify-content: flex-start;
+    align-self: stretch;
+    flex-shrink: 0;
+    position: relative;
+}
+
+/* ============================================================================== */
+/* 2. HEADER & NAVIGASI */
+/* ============================================================================== */
+
+/* Kontainer Utama Header */
+.hero {
+    background: #ffffff;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    align-self: stretch;
+    flex-shrink: 0;
+    position: relative;
+    padding: 0 6.25rem;
+}
+
+.green-ray-logo-1 {
+    flex-shrink: 0;
+    width: 12.6425rem;
+    height: 2.69125rem;
+    position: relative;
+    object-fit: cover;
+    aspect-ratio: 202.28/43.06;
+}
+
+.header-menu {
+    padding: 0.800625rem;
+    display: flex;
+    flex-direction: row;
+    gap: 2.5rem; 
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.header-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem; 
+    align-items: center;
+    justify-content: flex-start;
+    flex-shrink: 0;
+    position: relative;
+}
+
+/* Menu Links */
+.non-active, .active-head {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 1.125rem;
+    font-weight: 500;
+    position: relative;
+    cursor: pointer;
+}
+.active-head { font-weight: 700; }
+.non-active:hover { font-weight: 700; }
+.active-head a, .non-active a { text-decoration: none; color: black; }
+
+
+/* Tombol Login */
+.login-btn {
+    background: #136000;
+    border-radius: 9999px; 
+    padding: 0.91375rem 1.218125rem 0.91375rem 1.218125rem;
+    display: flex;
+    flex-direction: row;
+    gap: 0.50125rem;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    text-decoration: none; /* Untuk tag <a> */
+}
+.login-btn:hover { transform: scale(1.03); }
+.login-text { color: #ffffff; font-weight: 600; font-size: 0.9rem; font-family: 'Plus Jakarta Sans', sans-serif;}
+
+/* Tombol Contact Us */
+.contact-us-btn {
+    background: #ffffff;
+    border-radius: 9999px; 
+    border: 0.07875rem solid #000000;
+    padding: 0.91375rem 1.218125rem 0.91375rem 1.218125rem;
+    display: flex;
+    flex-direction: row;
+    gap: 0.589375rem;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    text-decoration: none; /* Untuk tag <a> */
+}
+.contact-us-btn:hover { transform: scale(1.03); }
+.contact-us-text { color: #000000; font-weight: 600; font-size: 0.9rem; }
+
+
+/* Ikon Helper */
+.akar-icons--door{ 
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'%3E%3Cpath d='M5 2h11a3 3 0 0 1 3 3v14a1 1 0 0 1-1 1h-3'/%3E%3Cpath d='m5 2l7.588 1.518A3 3 0 0 1 15 6.459V20.78a1 1 0 0 1-1.196.98l-7.196-1.438A2 2 0 0 1 5 18.36zm7 10v2'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.mynaui--arrow-right {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%23000' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4.5 12h15m0 0l-5.625-6m5.625 6l-5.625 6'/%3E%3C/svg%3E");
+}
+
+.head-img {
+    align-self: stretch;
+    flex-shrink: 0;
+    height: 20.625rem;
+    position: relative;
+    object-fit: cover;
+}
+
+
+/* ============================================================================== */
+/* 3. ABOUT US SECTION */
+/* ============================================================================== */
+
+.abou-us-container {
+    display: flex;
+    flex-direction: row;
+    gap: 6.25rem;
+    align-items: center;
+    justify-content: flex-start;
+    flex-shrink: 0;
+    width: 77.5rem;
+    position: relative;
+}
+.img-container {
+    border-radius: 0.9375rem;
+    align-self: stretch;
+    flex: 1;
+    position: relative;
+    object-fit: cover;
+    
+    transform: scale(1);
+    box-shadow: none;
+    
+    transition: border-radius 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+.img-container:hover {
+    transform: scale(1.05);
+    border-radius: 0.9425rem;
+    box-shadow: 
+        0rem 0.063125rem 0.18875rem 0rem rgba(0, 0, 0, 0.26),
+        0rem 0.314375rem 0.314375rem 0rem rgba(0, 0, 0, 0.23),
+        0rem 0.69125rem 0.44rem 0rem rgba(0, 0, 0, 0.13),
+        0rem 1.256875rem 0.5025rem 0rem rgba(0, 0, 0, 0.04),
+        0rem 1.9475rem 0.565625rem 0rem rgba(0, 0, 0, 0);
+}
+.dec-about-us {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+    flex: 1;
+    position: relative;
+}
+.heading-container {
+    color: #000000;
+    text-align: left;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 2.5rem;
+    font-weight: 600;
+    position: relative;
+    align-self: stretch;
+}
+.dec-container {
+    color: #000000;
+    text-align: justify;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 1.2rem;
+    font-weight: 300;
+    position: relative;
+    align-self: stretch;
+    line-height: 1.2;
+}
+
+/* ============================================================================== */
+/* 4. CATALOG SECTION & CTA */
+/* ============================================================================== */
+
+.catalog-container {
+    display: flex;
+    flex-direction: column;
+    gap: 3.125rem;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 77.5rem;
+    position: relative;
+}
+.heading-container-2 {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-shrink: 0;
+    width: 61.375rem;
+    position: relative;
+}
+.heading-container2 {
+    color: #000000;
+    text-align: center;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    position: relative;
+    align-self: stretch;
+}
+.dec-container2 {
+    color: #000000;
+    text-align: center;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 1.3rem;
+    font-weight: 300;
+    position: relative;
+    align-self: stretch;
+}
+.card-container {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch; /* Mengganti center ke stretch untuk tinggi card yang sama */
+    justify-content: space-between;
+    align-self: stretch;
+    flex-shrink: 0;
+    position: relative;
+    gap: 1.5rem; /* Menambahkan gap yang wajar */
+}
+
+/* --- Card Item Styling Kustom (Diambil dari katalog.css) --- */
+.catalog-card {
+    background: var(--putih);
+    border-radius: 0.756875rem !important;
+    border-style: solid;
+    border-color: var(--hitam);
+    /* Border tebal (3px) */
+    border-width: 0.1875rem; 
+    padding: 1.009375rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.009375rem;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+    
+    flex: 1; /* Penting untuk flex row agar 4 card sejajar */
+    width: 25%; /* Memastikan pembagian ruang yang adil */
+    box-shadow: none; 
+    transform: translateY(0); 
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.catalog-card:hover {
+    box-shadow:
+        0rem 0.0625rem 0.1875rem 0rem rgba(0, 0, 0, 0.26),
+        0rem 0.3125rem 0.3125rem 0rem rgba(0, 0, 0, 0.23),
+        0rem 0.6875rem 0.4375rem 0rem rgba(0, 0, 0, 0.13),
+        0rem 1.25rem 0.5rem 0rem rgba(0, 0, 0, 0.04),
+        0rem 1.9375rem 0.5625rem 0rem rgba(0, 0, 0, 0);
+    transform: translateY(-5px);
+}
+
+.image-catalog {
+    align-self: stretch;
+    border-radius: 15px;
+    flex-shrink: 0;
+    height: 8.75rem;
+    position: relative;
+    object-fit: contain; /* Menggunakan contain agar gambar tidak terpotong */
+}
+
+/* Penyesuaian Bootstrap Card Structure */
+.catalog-card.card .card-body {
+    padding: 0 !important;
+    display: flex;
+    flex-direction: column;
+    gap: 1.009375rem;
+    align-items: flex-start;
+    justify-content: flex-start;
+    align-self: stretch;
+    flex-grow: 1; 
+}
+.catalog-card.card .card-title {
+    color: var(--hitam);
+    text-align: center;
+    font-size: 1.15rem;
+    font-weight: 600;
+    position: relative;
+    align-self: stretch;
+    margin-bottom: 0 !important;
+}
+.catalog-card.card .list-group {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin-bottom: 0 !important;
+    border-top: none !important;
+    color: var(--hitam);
+    font-size: 1rem;
+    font-weight: 400;
+}
+.catalog-card.card .list-group-item {
+    border: none;
+    padding: 0;
+    background-color: transparent;
+    line-height: 1.5;
+    text-align: left;
+}
+.catalog-card .cta-card {
+    background: var(--hijau);
+    border-radius: 0.756875rem;
+    padding: 1rem 1.51375rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    align-self: stretch;
+    flex-shrink: 0;
+    position: relative;
+    cursor: pointer;
+    text-decoration: none;
+}
+.catalog-card .cta-card .view-details {
+    color: #ffffff;
+    font-size: 0.9082030653953552rem;
+    font-weight: 500;
+}
+
+
+.cta-home {
+    background: var(--hijau);
+    border-radius: 0.75rem;
+    /* Gunakan min-width dan min-height untuk menjaga ukuran minimum */
+    min-width: 12rem; 
+    min-height: 3.5rem;
+    padding: 0; /* Hapus padding di sini, biarkan <a> yang mengatur */
+    display: flex;
+    flex-direction: row;
+    gap: 0.625rem;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative; /* Penting untuk posisi <a> */
+    box-shadow: var(
+        --efek-shadow-tipis-box-shadow,
+        0rem 0.0625rem 0.1875rem 0rem rgba(0, 0, 0, 0.26),
+        0rem 0.3125rem 0.3125rem 0rem rgba(0, 0, 0, 0.23),
+        0rem 0.6875rem 0.4375rem 0rem rgba(0, 0, 0, 0.13),
+        0rem 1.25rem 0.5rem 0rem rgba(0, 0, 0, 0.04),
+        0rem 1.9375rem 0.5625rem 0rem rgba(0, 0, 0, 0)
+    );
+    cursor: pointer;
+    
+    pointer-events: auto;
+}
+
+/* PERBAIKAN: Target tag <a> di dalam .cta-home */
+.cta-home a {
+    text-decoration: none;
+    color: var(--putih);
+    
+    /* Atur <a> agar mengisi seluruh ruang .cta-home, sambil membawa styling padding */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Pindahkan padding asli .cta-home ke <a> */
+    padding: 1.25rem 3rem; 
+}
+
+/* Perbaikan 3: Pastikan teks view-more tidak terpengaruh oleh posisi absolut <a> */
+.view-more {
+    color: var(--putih);
+    text-align: center;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 1.1rem;
+    font-weight: 500;
+    position: relative;
+    cursor: pointer;
+    z-index: 2; /* Taruh di atas elemen <a> */
+}
+
+
+/* ============================================================================== */
+/* 5. PORTFOLIO SECTION */
+/* ============================================================================== */
+
+.portfolio-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 77.5rem;
+    position: relative;
+}
+.portf-container {
+    display: flex;
+    flex-direction: row;
+    gap: 3.125rem;
+    align-items: flex-start;
+    justify-content: flex-start;
+    align-self: stretch;
+    flex-shrink: 0;
+    /* Hapus height tetap untuk fleksibilitas: height: 30.375rem; */
+    height: auto;
+    position: relative;
+}
+.card-portf {
+    display: flex;
+    flex-direction: column;
+    gap: 1.875rem;
+    align-items: flex-end;
+    justify-content: flex-start;
+    align-self: stretch;
+    flex: 1;
+    position: relative;
+}
+.img-container2 {
+    border-radius: 0.9375rem;
+    align-self: stretch;
+    flex-shrink: 0;
+    height: 15.625rem;
+    position: relative;
+    object-fit: cover;
+}
+.dec-portf {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: flex-start;
+    justify-content: flex-start;
+    align-self: stretch;
+    flex: 1;
+    position: relative;
+    padding: 0 1em;
+}
+.title-dec {
+    color: #000000;
+    text-align: left; /* Diubah dari center ke left agar lebih sesuai dengan dec-portf */
+    position: relative;
+    align-self: stretch;
+}
+.title-dec-span {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.2;
+}
+.title-dec-span2 {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.2;
+}
+.desc-prtfolio {
+    color: #000000;
+    text-align: justify;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    position: relative;
+    align-self: stretch;
+    flex: 1;
+}
+.desc-prtfolio-span2 {
+    list-style-type: circle;
+    padding-left: 1em;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    line-height: 1.5;
+}
+.desc-prtfolio-span2 li span {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+
+/* ============================================================================== */
+/* 6. REVIEWS SECTION */
+/* ============================================================================== */
+
+.reviews-bigcontain {
+    display: flex;
+    flex-direction: column;
+    gap: 3.125rem;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+    flex-shrink: 0;
+    position: relative;
+}
+.review-container {
+    display: flex;
+    flex-direction: row;
+    gap: 3.125rem;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-content: center;
+    align-self: stretch;
+    flex-shrink: 0;
+    /* Hapus height tetap agar fleksibel: height: 61.504375rem; */
+    height: auto;
+    position: relative;
+}
+.container-review {
+    background: var(--putih, #ffffff);
+    border-radius: 0.9375rem;
+    border-style: solid;
+    border-color: #000000;
+    padding: 3.125rem;
+    display: flex;
+    flex-direction: row;
+    align-self: stretch;
+    gap: 0.625rem;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    align-content: center;
+    flex-shrink: 0;
+    width: 25rem; /* Atur lebar agar 3 kolom per baris (sekitar 380px) */
+    position: relative;
+    overflow: hidden;
+
+    border-width: 0.1875rem;
+    box-shadow: none;
+    transform: scale(1);
+
+    transition: border-width 0.8s ease, box-shadow 0.8s ease, transform 0.8s ease;
+}
+
+.container-review:hover {
+    border-width: 0.125rem;
+    box-shadow: var(
+        --efek-shadow-tipis-box-shadow,
+        0rem 0.0625rem 0.1875rem 0rem rgba(0, 0, 0, 0.26),
+        0rem 0.3125rem 0.3125rem 0rem rgba(0, 0, 0, 0.23),
+        0rem 0.6875rem 0.4375rem 0rem rgba(0, 0, 0, 0.13),
+        0rem 1.25rem 0.5rem 0rem rgba(0, 0, 0, 0.04),
+        0rem 1.9375rem 0.5625rem 0rem rgba(0, 0, 0, 0)
+    );
+    transform: scale(1.02);
+    cursor: pointer;
+}
+.sec-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 100%; /* Memastikan konten review memenuhi lebar card */
+    position: relative;
+}
+/* Styling umum untuk ikon review (menghindari duplikasi) */
+.icon-review, .icon-review2, .icon-review3, .icon-review4, .icon-review5, .icon-review6 {
+    flex-shrink: 0;
+    width: 6.25rem;
+    height: 6.25rem;
+    border-radius: 10rem;
+    position: relative;
+    object-fit: cover;
+}
+.rating-review {
+    display: flex;
+    flex-direction: column;
+    gap: 1.875rem;
+    align-items: center;
+    justify-content: flex-start;
+    align-self: stretch;
+    flex-shrink: 0;
+    position: relative;
+}
+/* Styling umum untuk rating (menghindari duplikasi) */
+.rating-contain, .rating-contain2, .rating-contain3, .rating-contain4, .rating-contain5, .rating-contain6 {
+    display: flex;
+    flex-direction: row;
+    gap: 0.23125rem;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+    flex-shrink: 0;
+    height: auto;
+    position: relative;
+    overflow: visible;
+}
+.thr-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    align-items: center;
+    justify-content: flex-start;
+    align-self: stretch;
+    flex-shrink: 0;
+    position: relative;
+}
+.dec-review {
+    color: #000000;
+    text-align: center;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    position: relative;
+    align-self: stretch;
+    line-height: 1.2;
+}
+.name-review {
+    color: #000000;
+    text-align: center;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 1.375rem;
+    font-weight: 500;
+    position: relative;
+    align-self: stretch;
+}
+
+
+/* ============================================================================== */
+/* 7. FAQ SECTION */
+/* ============================================================================== */
+
+.faq-container {
+    padding: 0rem 5.6rem;
+    display: flex;
+    flex-direction: row;
+    gap: 6rem;
+    align-items: flex-start; /* Diubah ke flex-start agar judul tetap di atas */
+    justify-content: flex-start;
+    align-self: stretch;
+    flex-shrink: 0;
+    position: relative;
+}
+.title-contain {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    min-width: 500px;
+    align-self: stretch;
+    align-items: flex-start; /* Diubah ke flex-start */
+    justify-content: flex-start; /* Diubah ke flex-start */
+    flex: 1;
+    position: relative;
+}
+.title-faq {
+    color: #000000;
+    text-align: left;
+    font-family: "Plus Jakarta Sans", sans-serif; /* Menggunakan font utama */
+    font-size: 3.2rem; /* Disesuaikan agar tidak terlalu besar */
+    font-weight: 700; /* Disesuaikan agar lebih menonjol */
+    position: relative;
+    align-self: stretch;
+}
+.desc-contain {
+    color: #000000;
+    text-align: justify;
+    font-family: "Plus Jakarta Sans", sans-serif; /* Menggunakan font utama */
+    font-size: 1.375rem;
+    font-weight: 400;
+    position: relative;
+    align-self: stretch;
+    height: auto; /* Hapus height tetap */
+}
+.question-contain {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-shrink: 0;
+    width: 40rem; /* Diperlebar agar lebih proporsional */
+    position: relative;
+    flex-grow: 1;
+}
+.faq-item {
+    border-radius: 0.9375rem;
+    border-style: solid;
+    border-color: #000000;
+    border-width: 0.125rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden; 
+    align-self: stretch;
+    cursor: pointer;
+}
+.dropdown-faq {
+    background: var(--putih, #ffffff);
+    padding: 1.25rem 1.875rem;
+    display: flex;
+    flex-direction: row;
+    gap: 1.25rem;
+    align-items: center;
+    justify-content: space-between;
+    align-self: stretch;
+    flex-shrink: 0;
+    position: relative;
+    border-bottom: 0rem solid #000000; 
+    transition: border-bottom 0.3s ease;
+}
+.faq-item.active .dropdown-faq {
+    border-bottom: 0.0625rem solid #000000; 
+}
+.faq-answer-content {
+    background: var(--putih, #ffffff);
+    padding: 0 1.875rem; 
+    
+    max-height: 0; 
+    overflow: hidden;
+    transition: max-height 0.8s ease-out, padding 0.8s ease-out; 
+}
+.faq-answer-text {
+    color: var(--hitam, #000000);
+    text-align: justify;
+    font-family: "Plus Jakarta Sans", sans-serif; /* Menggunakan font utama */
+    font-size: 1.125rem;
+    font-weight: 400;
+    padding: 0;
+}
+
+.faq-item.active .faq-answer-content {
+    max-height: 500px;
+    padding: 1.25rem 1.875rem 1.25rem 1.875rem;
+}
+.text-faq-card {
+    color: var(--hitam, #000000);
+    text-align: justified;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 1.125rem;
+    font-weight: 500;
+    position: relative;
+    flex: 1;
+}
+.ep--arrow-down-bold {
+    display: inline-block;
+    width: 13px;
+    height: 25px;
+    --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Cpath fill='%23000' d='M104.704 338.752a64 64 0 0 1 90.496 0l316.8 316.8l316.8-316.8a64 64 0 0 1 90.496 90.496L557.248 791.296a64 64 0 0 1-90.496 0L104.704 429.248a64 64 0 0 1 0-90.496'/%3E%3C/svg%3E");
+    background-color: currentColor;
+    -webkit-mask-image: var(--svg);
+    mask-image: var(--svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+}
+.arrow-icon {
+    transition: transform 0.8s ease;
+    transform: rotate(0deg);
+}
+.faq-item.active .arrow-icon {
+    transform: rotate(180deg);
+}
+
+
+/* ============================================================================== */
+/* 8. FOOTER STYLING */
+/* ============================================================================== */
+
+.footer {
+    background: #ffffff;
+    border-style: solid;
+    border-color: #000000;
+    border-width: 0.03125rem 0rem 0rem 0rem;
+    padding: 3.125rem 3.75rem 5rem 3.75rem;
+    display: flex;
+    flex-direction: row;
+    gap: 6.0625rem;
+    align-items: flex-start;
+    justify-content: space-evenly;
+    align-self: stretch;
+    flex-shrink: 0;
+    position: relative;
+    margin-top: 5rem;
+}
+.footer-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    align-items: flex-start;
+    justify-content: flex-start;
+    align-self: stretch;
+    flex-shrink: 0;
+    position: relative;
+}
+.footer-content { /* Class ini digunakan untuk membungkus footer-info dan copyright di HTML */
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem; /* Tambahkan gap agar ada jarak antara info dan copyright */
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-shrink: 0;
+    position: relative;
+}
+.footer-logo-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: flex-start;
+    justify-content: flex-start;
+    align-self: stretch;
+    flex-shrink: 0;
+    position: relative;
+}
+.green-ray-logo-12 {
+    flex-shrink: 0;
+    width: 14.6675rem;
+    height: 3.121875rem;
+    position: relative;
+    object-fit: cover;
+    aspect-ratio: 234.68/49.95;
+}
+.footer-desc {
+    color: #000000;
+    text-align: justify;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 1.125rem;
+    font-weight: 400;
+    position: relative;
+    width: 18.25rem;
+}
+.copyright {
+    color: #000000;
+    text-align: left;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 400;
+    position: relative;
+    align-self: stretch;
+}
+.footer-menu {
+    display: flex;
+    flex-direction: row;
+    gap: 10rem;
+    align-items: flex-start;
+    justify-content: flex-start;
+    align-self: stretch;
+    flex-shrink: 0;
+    position: relative;
+}
+.menu-container-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 3.125rem;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-shrink: 0;
+    position: relative;
+}
+.title-footer {
+    color: #000000;
+    text-align: left;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 1.7rem;
+    font-weight: 500;
+    position: relative;
+}
+.dec-container-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    align-items: flex-start;
+    justify-content: center;
+    align-self: stretch;
+    flex-shrink: 0;
+    position: relative;
+}
+.list-footer {
+    color: #000000;
+    text-align: center;
+    font-size: 1.125rem;
+    position: relative;
+    cursor: pointer;
+}
+.list-footer a {
+    text-decoration: none;
+    color: black;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 400;
+}

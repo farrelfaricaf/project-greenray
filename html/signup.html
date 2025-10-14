@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up</title>
+
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+    crossorigin="anonymous"
+  />
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="..\css\signup.css" />
+  <link rel="icon" type="image/png" href="..\img\favicon.png" sizes="180px180">
+</head>
+
+<body>
+  <div class="signup-container">
+    <div class="left-panel d-flex flex-column justify-content-end align-items-center text-white text-center">
+      <div class="pb-4">
+        <h2 class="fw-bold">Get Started With Us</h2>
+        <p>Follow these simple steps to join our GreenRay community</p>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <h1 class="text-center fw-bold mb-2">Sign Up Account</h1>
+      <p class="text-center text-muted mb-4">
+        Enter your personal data to create your account
+      </p>
+
+      <form class="signup-form needs-validation" novalidate>
+        <div class="row g-3">
+          <div class="form-group col-md-6">
+            <label for="firstName" class="fw-medium">First Name</label>
+            <input type="text" class="form-control" id="firstName" placeholder="eg. John" required />
+            <div class="invalid-feedback">
+                Please enter your first name.
+            </div>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="lastName" class="fw-medium">Last Name</label>
+            <input type="text" class="form-control" id="lastName" placeholder="eg. Francisco" required />
+            <div class="invalid-feedback">
+                Please enter your last name.
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email" class="fw-medium">Email</label>
+          <input type="email" class="form-control" id="email" placeholder="eg. johnfrans@gmail.com" required />
+          <div class="invalid-feedback">
+              Please enter a valid email address.
+          </div>
+        </div>
+
+        <div class="form-group mb-4"> <label for="password" class="fw-medium">Password</label>
+          <input type="password" class="form-control" id="password" placeholder="Enter your password" required />
+          <div class="invalid-feedback">
+              Please enter a password.
+          </div>
+          <small class="text-muted">Must be at least 8 characters.</small>
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-success btn-block fw-bold"
+          id="signupButton"
+        >
+          Sign Up
+        </button>
+
+        <p class="text-center mt-3 login-text">
+          Already have an account? <a href="..\html\signin.html" class="fw-semibold">Log In</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    id="signupSuccessModal"
+    tabindex="-1"
+    aria-labelledby="signupSuccessModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content text-center p-4">
+        <h5 class="fw-bold mb-3" id="welcomeMessage">Account Created Successfully</h5>
+        <p>Your account has been successfully created.</p>
+        <div class="mt-4">
+          <a href="..\html\signin.html" class="btn btn-success px-4 py-2">Continue</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"
+  ></script>
+
+  <script src="..\javascript\validation.js"></script>
+</body>
+</html>

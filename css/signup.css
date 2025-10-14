@@ -1,0 +1,89 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.signup-container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-control:invalid {
+    border-color: #dc3545 !important;
+    padding-right: 12px !important; /* Sesuaikan padding agar tidak bentrok dengan ikon validasi */
+    background-image: none !important; /* Hapus ikon validasi default */
+}
+
+.left-panel {
+  flex: 0.9;
+  height: 85%;
+  margin-left: 3%;
+  background: linear-gradient(180deg, #146b00 0%, #000000 100%);
+  border-radius: 20px;
+  color: white;
+}
+
+.right-panel {
+  flex: 1;
+  padding: 50px 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+label {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.form-control {
+  border: none;
+  border-bottom: 2px solid #ccc;
+  border-radius: 6px;
+  padding: 10px 12px;
+  transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #146b00;
+  box-shadow: none;
+}
+
+.btn-success {
+  background-color: #146b00;
+  border: none;
+  transition: background 0.3s ease;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 14px 0;  /* ↑ ini ubahan: lebih tinggi (14px atas bawah, 0 kiri kanan biar full width) */
+  width: 100%;
+  font-size: 15px;
+}
+
+.btn-success:hover {
+  background-color: #0e5000;
+}
+
+
+.login-text {
+  font-size: 13px;
+}
+
+.login-text a {
+  color: #146b00;
+  text-decoration: none;
+}
+
+.login-text a:hover {
+  text-decoration: underline;
+}
+
+.modal-content {
+  border-radius: 15px;
+}

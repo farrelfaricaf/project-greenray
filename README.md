@@ -1,4 +1,4 @@
-# Project GreenRay: Solusi Energi Surya (Landing Page & Kalkulator)
+# Project GreenRay: Solusi Energi Surya
 
 ## 📝 Deskripsi Proyek
 

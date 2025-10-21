@@ -21,7 +21,6 @@ html, body {
 }
 
 .header-wrapper {
-    /* Menggantikan .frame-139 untuk Header margin/padding */
     padding: 0rem 6.25rem 0rem 6.25rem; 
     display: flex;
     flex-direction: column;
@@ -101,7 +100,7 @@ html, body {
     justify-content: center;
     cursor: pointer;
     transition: transform 0.3s ease;
-    text-decoration: none; /* Untuk tag <a> */
+    text-decoration: none;
 }
 .login-btn:hover { transform: scale(1.03); }
 .login-text { color: #ffffff; font-weight: 600; font-size: 0.9rem; font-family: 'Plus Jakarta Sans', sans-serif;}
@@ -119,7 +118,7 @@ html, body {
     justify-content: center;
     cursor: pointer;
     transition: transform 0.3s ease;
-    text-decoration: none; /* Untuk tag <a> */
+    text-decoration: none; 
 }
 .contact-us-btn:hover { transform: scale(1.03); }
 .contact-us-text { color: #000000; font-weight: 600; font-size: 0.9rem; }
@@ -149,9 +148,7 @@ html, body {
 /* CONTENT & FORM STYLING */
 /* ============================================================================== */
 
-/* PENYESUAIAN MARGIN DAN PADDING CONTAINER */
 .container {
-    /* Padding Atas & Bawah 44px */
     padding-top: 5rem !important;
     padding-bottom: 44px !important;
     
@@ -160,7 +157,6 @@ html, body {
     margin-right: auto;
 }
 
-/* MENGATUR ROW untuk SPACE-BETWEEN */
 .contact-row {
     display: flex; 
     justify-content: space-evenly !important; 
@@ -169,7 +165,6 @@ html, body {
     gap: 2rem; 
 }
 
-/* Header Form */
 .contact-form-title {
   color: #136000;
   font-size: 3rem; 
@@ -184,7 +179,6 @@ html, body {
   max-width: 600px;
 }
 
-/* Form Kontrol (Kustomisasi Border) */
 .form-label {
     font-weight: 600;
     font-size: 1rem;
@@ -205,7 +199,6 @@ html, body {
   box-shadow: none !important;
 }
 
-/* Validasi Kustom */
 .form-control:valid {
     border-color: #146b00 !important;
     background-image: none !important;
@@ -216,7 +209,6 @@ html, body {
     background-image: none !important;
 }
 
-/* Tombol Submit Utama */
 .btn-success {
   background-color: #146b00;
   border: none;
@@ -231,13 +223,12 @@ html, body {
   background-color: #0e5000;
 }
 
-/* Tombol Kontak Alternatif (WhatsApp/Email) */
 .contact-wa-btn, .contact-email-btn {
     background-color: #43a047;
     border: none;
     color: white;
     font-weight: 600;
-    border-radius: 9999px; /* Rounded Penuh */
+    border-radius: 9999px; 
     padding: 15px 30px;
     font-size: 1rem;
     display: flex;
@@ -303,10 +294,10 @@ html, body {
     flex-shrink: 0;
     position: relative;
 }
-.footer-content { /* Class ini digunakan untuk membungkus footer-info dan copyright di HTML */
+.footer-content { 
     display: flex;
     flex-direction: column;
-    gap: 1.25rem; /* Tambahkan gap agar ada jarak antara info dan copyright */
+    gap: 1.25rem; 
     align-items: flex-start;
     justify-content: flex-start;
     flex-shrink: 0;

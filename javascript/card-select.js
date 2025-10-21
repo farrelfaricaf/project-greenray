@@ -1,4 +1,3 @@
-// Global object untuk menyimpan semua data kalkulator.
 window.CALCULATOR_DATA = window.CALCULATOR_DATA || {
     'step-1': null, 
     'step-2': null, 
@@ -30,15 +29,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                // 1. Hapus kelas 'active' dari semua kartu
+                // Hapus kelas 'active' dari semua kartu
                 cards.forEach(c => {
                     c.classList.remove('active');
                 });
 
-                // 2. Tambahkan kelas 'active'
+                // Tambahkan kelas 'active'
                 this.classList.add('active');
                 
-                // 3. SIMPAN DATA
+                // SIMPAN DATA
                 window.CALCULATOR_DATA[stepId] = this.dataset.value;
 
                 console.log(`[CardSelect] Selection saved for ${stepId}: ${window.CALCULATOR_DATA[stepId]}`);

@@ -202,7 +202,7 @@
     function validateFullName(inputElement) {
         const value = inputElement.value;
         const invalidFeedback = document.getElementById('fullNameFeedback');
-        const validNameRegex = /^[a-zA-Z\s]*$/; // Hanya huruf dan spasi yang diizinkan
+        const validNameRegex = /^[a-zA-Z\s]*$/; 
         
         if (!validNameRegex.test(value)) {
             inputElement.setCustomValidity("Full name must contain only letters and spaces.");

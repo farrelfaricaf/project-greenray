@@ -189,7 +189,6 @@
   ></script>
 
   <script>
-    // FUNGSI UNTUK MENGUBAH HURUF DEPAN MENJADI KAPITAL
     function capitalizeFirstLetter(inputElement) {
         let value = inputElement.value.toLowerCase().trim();
         if (value) {
@@ -200,13 +199,11 @@
         }
     }
 
-    // FUNGSI VALIDASI KHUSUS FULL NAME (Hanya Huruf dan Spasi)
     function validateFullName(inputElement) {
         const value = inputElement.value;
         const invalidFeedback = document.getElementById('fullNameFeedback');
         const validNameRegex = /^[a-zA-Z\s]*$/; // Hanya huruf dan spasi yang diizinkan
         
-        // 1. Periksa validitas menggunakan Regex
         if (!validNameRegex.test(value)) {
             inputElement.setCustomValidity("Full name must contain only letters and spaces.");
             invalidFeedback.textContent = "Full Name tidak boleh mengandung angka atau simbol.";
@@ -214,11 +211,9 @@
             inputElement.setCustomValidity("Please enter your full name.");
             invalidFeedback.textContent = "Please enter your full name.";
         } else {
-            // Valid
-            inputElement.setCustomValidity(""); // Hapus pesan error kustom
+            inputElement.setCustomValidity(""); 
         }
 
-        // 2. Terapkan kelas visual (Real-time Feedback)
         const form = inputElement.closest('form');
         if (form.classList.contains('was-validated') || value.length > 0) {
             if (inputElement.checkValidity()) {
@@ -231,11 +226,6 @@
         }
     }
     
-    // ===============================================
-    // SKRIP UTAMA
-    // ===============================================
-
-    // Fungsi untuk melakukan URL Encoding (untuk Gmail Compose)
     function urlEncode(str) {
         return encodeURIComponent(str).replace(/[!'()*]/g, function(c) {
             return '%' + c.charCodeAt(0).toString(16);
@@ -246,15 +236,15 @@
         const emailBtn = document.getElementById('email-cta-btn');
         const fullNameInput = document.getElementById('fullName');
         
-        // --- 1. Event Listeners untuk Full Name ---
+        
         fullNameInput.addEventListener('input', () => validateFullName(fullNameInput));
-        // Kapitalisasi di event blur
+        
         fullNameInput.addEventListener('blur', () => {
             capitalizeFirstLetter(fullNameInput);
-            validateFullName(fullNameInput); // Panggil lagi setelah kapitalisasi
+            validateFullName(fullNameInput); 
         });
 
-        // --- 2. Logic Gmail Compose ---
+        
         const recipient = "info@greenray.com";
         const subject = "Pertanyaan Mengenai Potensi Instalasi Panel Surya";
         const bodyTemplate = "Halo Tim GreenRay,\n\nNama saya: [NAMA ANDA]\nNomor Telepon: [NOMOR TELEPON ANDA]\n\nSaya ingin menanyakan tentang ...";
@@ -270,7 +260,7 @@
         }
     });
 
-    // --- 3. Script Validasi Submit Form Bootstrap 5 (dengan Modal) ---
+    
     (function () {
       'use strict'
       const form = document.getElementById('contactForm'); // Gunakan ID untuk form
@@ -278,27 +268,22 @@
       
       if (form) {
         form.addEventListener('submit', function (event) {
-          event.preventDefault(); // Cegah reload/submit default
+          event.preventDefault(); 
           event.stopPropagation();
           
           const fullNameInput = document.getElementById('fullName');
           
-          // Panggil validasi kustom sebelum submit
+          
           validateFullName(fullNameInput);
 
           if (form.checkValidity()) {
-            // Jika form valid, tampilkan modal sukses (asumsi proses pengiriman sukses)
-            
-            // NOTE: Di aplikasi nyata, Anda akan melakukan AJAX/Fetch di sini
-            // untuk mengirim data ke server. Modal akan ditampilkan setelah 
-            // server merespons sukses.
             
             successModal.show();
 
-            // Opsional: Reset form setelah sukses
+            
             form.reset();
             form.classList.remove('was-validated');
-            // Hapus kelas is-valid dari semua input
+            
             form.querySelectorAll('.form-control').forEach(input => {
                 input.classList.remove('is-valid');
                 input.classList.remove('is-invalid');
@@ -306,7 +291,6 @@
 
 
           } else {
-            // Jika form tidak valid, tampilkan feedback validasi
             form.classList.add('was-validated');
           }
         }, false)

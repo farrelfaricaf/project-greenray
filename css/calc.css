@@ -1128,7 +1128,7 @@ body {
 
 /* Kustomisasi Form Input agar sesuai desain awal */
 #step-7 .form-control.form-control-lg {
-    background-color: #d9d9d9;
+    background-color: #ffffff;
     border: 2px solid #000000;
     border-radius: 12px;
     padding: 1rem 1.25rem;
@@ -1138,7 +1138,7 @@ body {
 }
 
 #step-7 .form-control.form-control-lg:focus {
-    background-color: #d9d9d9;
+    background-color: rgba(19, 96, 0, 0.1);
     border-color: #136000;
     box-shadow: 0 0 0 0.25rem rgba(19, 96, 0, 0.25);
     color: #000000;

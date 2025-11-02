@@ -3,7 +3,8 @@
     box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
@@ -19,7 +20,7 @@ html, body {
     padding: 0rem 6.25rem 0rem 6.25rem;
     display: flex;
     flex-direction: column;
-    gap: 3.25rem;
+    gap: 2rem;
     align-items: center;
     justify-content: flex-start;
     max-width: 90rem;
@@ -70,16 +71,28 @@ html, body {
     position: relative;
 }
 
-.non-active, .active-head {
+.non-active,
+.active-head {
     font-family: 'Plus Jakarta Sans', sans-serif;
     font-size: 1.125rem;
     font-weight: 500;
     position: relative;
     cursor: pointer;
 }
-.active-head { font-weight: 700; }
-.non-active:hover { font-weight: 700; }
-.active-head a, .non-active a { text-decoration: none; color: black; }
+
+.active-head {
+    font-weight: 700;
+}
+
+.non-active:hover {
+    font-weight: 700;
+}
+
+.active-head a,
+.non-active a {
+    text-decoration: none;
+    color: black;
+}
 
 .login-btn {
     background: #136000;
@@ -94,8 +107,17 @@ html, body {
     transition: transform 0.3s ease;
     text-decoration: none;
 }
-.login-btn:hover { transform: scale(1.03); }
-.login-text { color: #ffffff; font-weight: 600; font-size: 0.9rem; font-family: 'Plus Jakarta Sans', sans-serif;}
+
+.login-btn:hover {
+    transform: scale(1.03);
+}
+
+.login-text {
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.9rem;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
 
 .contact-us-btn {
     background: #ffffff;
@@ -111,10 +133,18 @@ html, body {
     transition: transform 0.3s ease;
     text-decoration: none;
 }
-.contact-us-btn:hover { transform: scale(1.03); }
-.contact-us-text { color: #000000; font-weight: 600; font-size: 0.9rem; }
 
-.akar-icons--door{
+.contact-us-btn:hover {
+    transform: scale(1.03);
+}
+
+.contact-us-text {
+    color: #000000;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.akar-icons--door {
     display: inline-block;
     width: 18px;
     height: 18px;
@@ -217,6 +247,11 @@ html, body {
     position: relative;
 }
 
+/* KHUSUS STEP 7: Hapus padding bawaan .calc-container agar style Bootstrap bekerja penuh */
+#step-7.calc-container.step.active-step {
+    padding: 0;
+}
+
 .calc-container.lead-container.step.active-step {
     padding-bottom: 5rem;
 }
@@ -229,6 +264,7 @@ html, body {
     font-weight: 500;
     position: relative;
     align-self: stretch;
+    line-height: 1;
 }
 
 .title-heading-span {
@@ -249,13 +285,14 @@ html, body {
     font-weight: 400;
     position: relative;
     width: 51.3125rem;
+    line-height: 1.1rem;
 }
 
 .input-container {
     display: flex;
     flex-direction: row;
     gap: 3rem;
-    align-items: center;
+    align-items: flex-end;
     justify-content: flex-start;
     align-self: stretch;
     flex-shrink: 0;
@@ -283,6 +320,7 @@ html, body {
     position: relative;
     align-self: stretch;
     padding: 0.6rem;
+    line-height: 1.1rem;
 }
 
 .title-result {
@@ -299,6 +337,7 @@ html, body {
 .input-calc {
     background: white;
     border-radius: 0.75rem;
+    font-family: "Plus Jakarta Sans", sans-serif;
     border-style: solid;
     border-color: #000000;
     border-width: 0.125rem;
@@ -381,6 +420,7 @@ html, body {
     font-weight: 400;
 }
 
+/* INI ADALAH .arrow-icon UNTUK STEP 1-6 */
 .arrow-icon {
     width: 0.78125rem;
     height: 1.5625rem;
@@ -440,7 +480,7 @@ html, body {
     padding: 0.8rem 1.25rem;
 }
 
-.dropdown-option + .dropdown-option {
+.dropdown-option+.dropdown-option {
     border-top: 2px solid rgba(0, 0, 0, 0.3);
 }
 
@@ -609,6 +649,7 @@ html, body {
     height: 9.375rem;
     position: relative;
 }
+
 .question {
     color: #000000;
     text-align: left;
@@ -618,6 +659,7 @@ html, body {
     position: relative;
     align-self: stretch;
 }
+
 .card-container {
     display: flex;
     align-items: flex-start;
@@ -643,7 +685,9 @@ html, body {
     flex: 1;
 }
 
-.card-option:hover { background-color: #f9fafb; }
+.card-option:hover {
+    background-color: #f9fafb;
+}
 
 .card-option:not(.active) {
     border: 2px solid #d1d5db;
@@ -663,11 +707,13 @@ html, body {
     stroke: currentColor;
     fill: none;
 }
+
 .card-option[data-value="flat_apartment"] svg,
 .card-option[data-value="commercial_business"] svg {
     fill: #10b981;
     stroke: none;
 }
+
 .card-option.active svg {
     color: #047857;
     fill: #047857;
@@ -707,14 +753,14 @@ html, body {
 .email-container {
     display: flex;
     flex-direction: column;
-    gap: 3.125rem;
+    gap: 2rem;
     align-items: flex-start;
     justify-content: flex-start;
     flex-shrink: 0;
     position: relative;
 }
 
-.email-container .input-calc{
+.email-container .input-calc {
     background: white;
     border-radius: 0.75rem;
     border-style: solid;
@@ -751,6 +797,7 @@ html, body {
     font-weight: 500;
     position: relative;
     align-self: stretch;
+    line-height: 3rem
 }
 
 .lead-dec {
@@ -797,6 +844,7 @@ html, body {
     position: relative;
     margin-top: 5rem;
 }
+
 .footer-info {
     display: flex;
     flex-direction: column;
@@ -807,6 +855,7 @@ html, body {
     flex-shrink: 0;
     position: relative;
 }
+
 .footer-content {
     display: flex;
     flex-direction: column;
@@ -816,6 +865,7 @@ html, body {
     flex-shrink: 0;
     position: relative;
 }
+
 .footer-logo-text {
     display: flex;
     flex-direction: column;
@@ -826,6 +876,7 @@ html, body {
     flex-shrink: 0;
     position: relative;
 }
+
 .green-ray-logo-12 {
     flex-shrink: 0;
     width: 14.6675rem;
@@ -834,6 +885,7 @@ html, body {
     object-fit: cover;
     aspect-ratio: 234.68/49.95;
 }
+
 .footer-desc {
     color: #000000;
     text-align: justify;
@@ -843,6 +895,7 @@ html, body {
     position: relative;
     width: 18.25rem;
 }
+
 .copyright {
     color: #000000;
     text-align: left;
@@ -852,6 +905,7 @@ html, body {
     position: relative;
     align-self: stretch;
 }
+
 .footer-menu {
     display: flex;
     flex-direction: row;
@@ -862,6 +916,7 @@ html, body {
     flex-shrink: 0;
     position: relative;
 }
+
 .menu-container-footer {
     display: flex;
     flex-direction: column;
@@ -871,6 +926,7 @@ html, body {
     flex-shrink: 0;
     position: relative;
 }
+
 .title-footer {
     color: #000000;
     text-align: left;
@@ -879,6 +935,7 @@ html, body {
     font-weight: 500;
     position: relative;
 }
+
 .dec-container-footer {
     display: flex;
     flex-direction: column;
@@ -889,6 +946,7 @@ html, body {
     flex-shrink: 0;
     position: relative;
 }
+
 .list-footer {
     color: #000000;
     text-align: center;
@@ -896,6 +954,7 @@ html, body {
     position: relative;
     cursor: pointer;
 }
+
 .list-footer a {
     text-decoration: none;
     color: black;
@@ -942,7 +1001,7 @@ html, body {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    gap: 3.5rem;
+    gap: 2rem;
     position: relative;
     width: 100%;
 }
@@ -985,7 +1044,7 @@ html, body {
 
 .result-question-container {
     height: auto;
-    gap: 1.25rem;
+    gap: 0.5rem;
     text-align: center;
 }
 
@@ -1045,4 +1104,292 @@ html, body {
 
 .result-cta-btn .text-button {
     font-size: 1.4rem;
+}
+
+/* ====================================================== */
+/* === GAYA UNTUK STEP 7 (DARI latihan-pemesanan.css) === */
+/* ====================================================== */
+
+/* Variabel CSS Bootstrap kustom ini sekarang "dibungkus" di dalam #step-7 */
+#step-7 {
+    --bs-success: #136000;
+    --bs-success-rgb: 19, 96, 0;
+    --bs-danger: #d4183d;
+    /* Menambahkan warna merah untuk error */
+    --bs-danger-rgb: 212, 24, 61;
+    --bs-dark: #000000;
+    --bs-dark-rgb: 0, 0, 0;
+
+    /* Style dari 'body' sekarang diterapkan ke #step-7 */
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #000000;
+    line-height: 1.5;
+}
+
+/* Kustomisasi Form Input agar sesuai desain awal */
+#step-7 .form-control.form-control-lg {
+    background-color: #d9d9d9;
+    border: 2px solid #000000;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    font-size: 1.125rem;
+    font-weight: 400;
+    color: #000000;
+}
+
+#step-7 .form-control.form-control-lg:focus {
+    background-color: #d9d9d9;
+    border-color: #136000;
+    box-shadow: 0 0 0 0.25rem rgba(19, 96, 0, 0.25);
+    color: #000000;
+}
+
+#step-7 .form-control.form-control-lg::placeholder {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+#step-7 .form-control.is-invalid,
+#step-7 .form-control.is-invalid:focus {
+    border-color: var(--bs-danger);
+    box-shadow: 0 0 0 0.25rem rgba(var(--bs-danger-rgb), 0.25);
+}
+
+#step-7 .form-control.is-valid,
+#step-7 .form-control.is-valid:focus {
+    border-color: var(--bs-success);
+    box-shadow: 0 0 0 0.25rem rgba(var(--bs-success-rgb), 0.25);
+}
+
+#step-7 .form-control.form-control-lg:read-only {
+    background-color: rgba(19, 96, 0, 0.1);
+    border-color: #136000;
+    color: #136000;
+    font-weight: 500;
+    opacity: 1;
+}
+
+#step-7 .form-label {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: #000000;
+    margin-bottom: 0.75rem;
+}
+
+#step-7 .btn.btn-lg {
+    padding: 1rem 2.5rem;
+    border-radius: 8px;
+    font-size: 1.375rem;
+    font-weight: 500;
+    transition: all 0.3s;
+    box-shadow: 0px 28.946px 8.404px 0px rgba(0, 0, 0, 0),
+        0px 18.675px 7.47px 0px rgba(0, 0, 0, 0.04),
+        0px 10.271px 6.536px 0px rgba(0, 0, 0, 0.13),
+        0px 4.669px 4.669px 0px rgba(0, 0, 0, 0.23),
+        0px 0.934px 2.801px 0px rgba(0, 0, 0, 0.26);
+}
+
+@media (max-width: 767.98px) {
+    #step-7 .btn.btn-lg {
+        padding-left: 1rem;
+        padding-right: 1rem;
+        font-size: 1.1rem;
+        /* Menyesuaikan font agar muat */
+    }
+}
+
+#step-7 .btn-check:checked+.btn,
+#step-7 .btn.active,
+#step-7 .btn.show,
+#step-7 .btn:first-child:active,
+#step-7 :not(.btn-check)+.btn:active {
+    transform: none;
+}
+
+#step-7 .btn-step7-back {
+    /* Mengambil style transisi lama dari .btn-hitung */
+    transition: box-shadow 0.3s ease, 
+                transform 0.3s ease, 
+                background-color 0.3s ease, 
+                color 0.3s ease;
+    transform: scale(1);
+    box-shadow: none;
+    border-radius: 8px; /* Menyamakan dengan tombol "Kirim" */
+
+    /* Tampilan Awal (Normal) */
+    background-color: #000000; /* BG Hitam */
+    color: #ffffff;           /* Font Putih */
+    border: 2px solid #000000; /* Border Hitam */
+}
+
+/* Tampilan Saat di-Hover */
+#step-7 .btn-step7-back:hover {
+    /* Mengambil style hover lama dari .btn-hitung */
+    box-shadow:
+        0rem 0.125rem 0.3rem rgba(0, 0, 0, 0.4),
+        0rem 0.625rem 0.625rem rgba(0, 0, 0, 0.2);
+    transform: scale(1.01);
+
+    /* Tampilan Hover yang diminta */
+    background-color: #ffffff; /* BG Putih */
+    color: #000000;           /* Font Hitam */
+    border: 2px solid #000000; /* Border Hitam */
+}
+
+/* Ini untuk memastikan ikon SVG di dalamnya juga ikut berubah warna */
+#step-7 .btn-step7-back:hover svg {
+    color: #000000;
+}
+
+#step-7 .btn-step7-submit {
+    transition: box-shadow 0.3s ease, 
+                transform 0.3s ease, 
+                background-color 0.3s ease, 
+                color 0.3s ease;
+    transform: scale(1);
+    box-shadow: none;
+    border-radius: 8px;
+
+    /* Tampilan Awal (Normal) - Warna Hijau GreenRay */
+    background-color: #136000; 
+    color: #ffffff;           
+    border: 2px solid #136000; 
+}
+
+/* Tampilan Saat di-Hover */
+#step-7 .btn-step7-submit:hover {
+    box-shadow:
+        0rem 0.125rem 0.3rem rgba(0, 0, 0, 0.4),
+        0rem 0.625rem 0.625rem rgba(0, 0, 0, 0.2);
+    transform: scale(1.03);
+
+    /* Tampilan Hover yang diminta (dibalik) */
+    background-color: #ffffff; 
+    color: #136000;           
+    border: 2px solid #136000; 
+}
+
+/* Ini untuk memastikan ikon SVG di dalamnya juga ikut berubah warna */
+#step-7 .btn-step7-submit:hover svg {
+    color: #136000;
+}
+
+/* Style untuk tombol saat 'disabled' (pas loading) */
+#step-7 .btn-step7-submit:disabled {
+    background-color: #cccccc;
+    color: #666666;
+    border-color: #cccccc;
+    box-shadow: none;
+    transform: scale(1);
+}
+
+#step-7 .btn.btn-outline-dark {
+    border-width: 2px;
+}
+
+#step-7 .btn.btn-success:disabled {
+    background-color: #ccc;
+    border-color: #ccc;
+    box-shadow: none;
+}
+
+/* === KONFLIK DISINI === */
+/* Nama kelas diganti dari .arrow-icon menjadi .step7-arrow-icon */
+#step-7 .step7-arrow-icon {
+    width: 22px;
+    height: 22px;
+}
+
+/* Step Indicator (Sama) */
+#step-7 .step-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#step-7 .step-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+#step-7 .step-circle.active {
+    background-color: #136000;
+    color: white;
+}
+
+#step-7 .step-circle.inactive {
+    background-color: #d9d9d9;
+    color: black;
+}
+
+#step-7 .step-label {
+    font-weight: 500;
+    font-size: 16px;
+}
+
+#step-7 .step-divider {
+    width: 60px;
+    height: 2px;
+    background-color: #d9d9d9;
+}
+
+/* Summary Box (Sama) */
+#step-7 .summary-item {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+#step-7 .summary-item .label {
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 5px;
+}
+
+#step-7 .summary-item .value {
+    font-size: 22px;
+    font-weight: bold;
+    color: white;
+}
+
+/* Box Persetujuan dan Checkbox (Sama) */
+#step-7 .agreement-box {
+    background-color: #f5f5f5;
+    border-radius: 12px;
+}
+
+#step-7 .form-check-input {
+    border: 2px solid #000000;
+}
+
+#step-7 .form-check-input:checked {
+    border-color: var(--bs-success);
+}
+
+#step-7 .form-check-input.is-invalid {
+    border-color: var(--bs-danger);
+}
+
+#step-7 .form-check-label.is-invalid {
+    color: var(--bs-danger);
+}
+
+/* Untuk membuat .invalid-feedback muncul untuk checkbox */
+#step-7 .form-check.is-invalid~.invalid-feedback {
+    display: block;
+}
+
+
+/* Responsive (Sama) */
+@media (max-width: 767.98px) {
+    #step-7 .step-divider {
+        width: 2px;
+        height: 30px;
+    }
 }

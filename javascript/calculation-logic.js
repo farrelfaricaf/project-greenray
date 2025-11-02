@@ -46,23 +46,26 @@ function calculateSavings(data) {
         }
 
         const consumptionKWh = monthlyBill / tariff;
-
         const idealKWp = (consumptionKWh * SAFETY_FACTOR) / (irradiance * DAYS_IN_MONTH);
-
         const potentialEnergyGenerated = idealKWp * irradiance * EFFICIENCY_FACTOR * DAYS_IN_MONTH;
         const estimatedSavingsRp = potentialEnergyGenerated * tariff;
         
+        // Perhitungan ini sudah ada:
         const totalInstallationCost = idealKWp * COST_PER_KWp;
         const annualSavings = estimatedSavingsRp * 12;
         const roiEstimate = annualSavings > 0 ? totalInstallationCost / annualSavings : 99; 
 
+        // === PERUBAHAN DI SINI ===
+        // Kita tambahkan 'investment' ke dalam objek yang di-return
         return {
             monthlySavings: Math.round(estimatedSavingsRp),
             systemCapacity: Math.round(idealKWp * 10) / 10, 
             roiYears: Math.round(roiEstimate * 10) / 10, 
+            investment: Math.round(totalInstallationCost), // <-- BARIS INI DITAMBAHKAN
             initialBill: monthlyBill,
             userEmail: data['step-5'] ? data['step-5'].email : 'N/A' 
         };
+        // =======================
         
     } catch (e) {
         console.error("Error during calculation:", e);
@@ -93,8 +96,9 @@ function displayResults(results) {
     const ctaText = document.querySelector('.result-cta-btn .text-button');
     const ctaDec = document.querySelector('.result-dec-heading-small');
     
-    ctaButton.href = '/html/contact-us.html'; 
-    ctaText.textContent = 'Schedule Your FREE Consultation Now';
+    // Ini biarkan saja, tombol ini akan pindah ke step 7
+    // ctaButton.href = '/html/contact-us.html'; 
+    // ctaText.textContent = 'Schedule Your FREE Consultation Now';
     ctaDec.textContent = 
         `Tim ahli kami siap memverifikasi kelayakan atap Anda dan memberikan penawaran harga yang akurat. Laporan ringkas sudah dikirim ke ${results.userEmail}.`;
 }

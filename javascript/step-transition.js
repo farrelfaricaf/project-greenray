@@ -1,31 +1,36 @@
 window.CALCULATOR_DATA = window.CALCULATOR_DATA || {};
+window.CALCULATOR_RESULTS = null; // <-- (BARIS 1) VARIABEL BARU UNTUK SIMPAN HASIL
 
 // FUNGSI INI SEKARANG MENG-UPDATE RINGKASAN (STEP 6) DAN DETAIL (STEP 1, 2, 3 & 4)
 function updateStep7Summary() {
     try {
         // === Bagian 1: Ambil data dari elemen hasil di Step 6 ===
-        const savings = document.getElementById('monthly-savings').innerText;
-        const capacity = document.getElementById('system-capacity').innerText;
-        const roi = document.getElementById('roi-estimate').innerText;
+        // Kita sekarang ambil dari data global, bukan dari teks HTML
+        const savings = window.CALCULATOR_RESULTS.monthlySavings;
+        const capacity = window.CALCULATOR_RESULTS.systemCapacity;
+        const roi = window.CALCULATOR_RESULTS.roiYears;
+        const investment = window.CALCULATOR_RESULTS.investment; // <-- (BARIS 3) AMBIL DATA INVESTASI
+
+        // Format data ke Rupiah
+        const formattedSavings = 'Rp ' + new Intl.NumberFormat('id-ID', { minimumFractionDigits: 0 }).format(savings);
+        const formattedInvestment = 'Rp ' + new Intl.NumberFormat('id-ID', { minimumFractionDigits: 0 }).format(investment);
 
         // Masukkan data ke ringkasan Step 7
-        document.getElementById('summary-savings').innerText = savings;
-        document.getElementById('summary-capacity').innerText = capacity;
-        document.getElementById('summary-roi').innerText = roi;
+        document.getElementById('summary-savings').innerText = formattedSavings;
+        document.getElementById('summary-capacity').innerText = capacity + ' kWp'; // Tambah kWp
+        document.getElementById('summary-roi').innerText = roi + ' years'; // Tambah years
+        document.getElementById('summary-investment').innerText = formattedInvestment; // <-- (BARIS 4) TAMPILKAN INVESTASI
 
         // === Bagian 2: Ambil data dari Step 1, 2, 3 & 4 ===
-        
-        // Ambil data teks yang sudah kita simpan sebelumnya di validateStep
         const selectedCity = window.CALCULATOR_DATA['step-1'].lokasi; 
         const selectedProperty = window.CALCULATOR_DATA['step-2'];
         const selectedTimeline = window.CALCULATOR_DATA['step-3'];
-        const selectedConstraints = window.CALCULATOR_DATA['step-4']; // <-- (BARIS 1) DATA BARU DARI STEP 4
+        const selectedConstraints = window.CALCULATOR_DATA['step-4']; 
         
-        // Masukkan data ke input "Detail Instalasi" di Step 7
         document.getElementById('city').value = selectedCity || 'Data tidak ditemukan'; 
         document.getElementById('propertyType').value = selectedProperty || 'Data tidak ditemukan';
         document.getElementById('installationTime').value = selectedTimeline || 'Data tidak ditemukan';
-        document.getElementById('roofConstraints').value = selectedConstraints || 'Data tidak ditemukan'; // <-- (BARIS 2) MASUKKAN KE INPUT BARU
+        document.getElementById('roofConstraints').value = selectedConstraints || 'Data tidak ditemukan';
 
     } catch (e) {
         console.error("Gagal update ringkasan atau detail Step 7:", e);
@@ -199,10 +204,12 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (validateStep(currentStepNumber)) { 
                 
-                const results = calculateSavings(window.CALCULATOR_DATA); 
+                // === (BARIS 2) SIMPAN HASIL KE VARIABEL GLOBAL ===
+                window.CALCULATOR_RESULTS = calculateSavings(window.CALCULATOR_DATA); 
+                // ===============================================
                 
-                if (results) {
-                    displayResults(results); 
+                if (window.CALCULATOR_RESULTS) {
+                    displayResults(window.CALCULATOR_RESULTS); 
                     showStep(nextStepNumber);
                 } else {
                     showAlert('Calculation error. Please ensure all data is correctly entered.');

@@ -1,12 +1,45 @@
 window.CALCULATOR_DATA = window.CALCULATOR_DATA || {};
 
+// FUNGSI INI SEKARANG MENG-UPDATE RINGKASAN (STEP 6) DAN DETAIL (STEP 1, 2, 3 & 4)
+function updateStep7Summary() {
+    try {
+        // === Bagian 1: Ambil data dari elemen hasil di Step 6 ===
+        const savings = document.getElementById('monthly-savings').innerText;
+        const capacity = document.getElementById('system-capacity').innerText;
+        const roi = document.getElementById('roi-estimate').innerText;
+
+        // Masukkan data ke ringkasan Step 7
+        document.getElementById('summary-savings').innerText = savings;
+        document.getElementById('summary-capacity').innerText = capacity;
+        document.getElementById('summary-roi').innerText = roi;
+
+        // === Bagian 2: Ambil data dari Step 1, 2, 3 & 4 ===
+        
+        // Ambil data teks yang sudah kita simpan sebelumnya di validateStep
+        const selectedCity = window.CALCULATOR_DATA['step-1'].lokasi; 
+        const selectedProperty = window.CALCULATOR_DATA['step-2'];
+        const selectedTimeline = window.CALCULATOR_DATA['step-3'];
+        const selectedConstraints = window.CALCULATOR_DATA['step-4']; // <-- (BARIS 1) DATA BARU DARI STEP 4
+        
+        // Masukkan data ke input "Detail Instalasi" di Step 7
+        document.getElementById('city').value = selectedCity || 'Data tidak ditemukan'; 
+        document.getElementById('propertyType').value = selectedProperty || 'Data tidak ditemukan';
+        document.getElementById('installationTime').value = selectedTimeline || 'Data tidak ditemukan';
+        document.getElementById('roofConstraints').value = selectedConstraints || 'Data tidak ditemukan'; // <-- (BARIS 2) MASUKKAN KE INPUT BARU
+
+    } catch (e) {
+        console.error("Gagal update ringkasan atau detail Step 7:", e);
+    }
+}
+
+
 document.addEventListener('DOMContentLoaded', () => {
     let currentStep = 1;
 
     const steps = document.querySelectorAll('.calc-container.step');
     const stepWrapper = document.querySelector('.step-wrapper');
     const allNextButtons = document.querySelectorAll('.btn-hitung.btn-next');
-    const allBackButtons = document.querySelectorAll('.btn-hitung.btn-back');
+    const allBackButtons = document.querySelectorAll('.btn-back');
     const unlockButton = document.getElementById('unlockButton'); 
     
     const alertContainer = document.getElementById('validation-alert-container');
@@ -101,7 +134,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const selectedValue = container.querySelector('.card-option.active');
             
             if (selectedValue) {
-                window.CALCULATOR_DATA[stepId] = selectedValue.dataset.value;
+                const textCard = selectedValue.querySelector('.text-card');
+                if(textCard) {
+                    let cardText = textCard.innerText.replace(/\s+/g, ' ').trim();
+                    window.CALCULATOR_DATA[stepId] = cardText; 
+                } else {
+                    window.CALCULATOR_DATA[stepId] = selectedValue.dataset.value;
+                }
                 return true;
             } else {
                 showAlert('Please select one option to proceed.');
@@ -139,6 +178,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const nextStepNumber = parseInt(this.dataset.nextStep);
             
             if (validateStep(currentStepNumber)) {
+                
+                if (currentStepNumber === 6 && nextStepNumber === 7) {
+                    updateStep7Summary();
+                }
+
                 if (nextStepNumber) {
                     showStep(nextStepNumber);
                 }
@@ -170,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
     allBackButtons.forEach(button => {
         button.addEventListener('click', function() {
             const prevStepNumber = parseInt(this.dataset.prevStep);
-            if (prevStepNumber < currentStep) {
+            if (!isNaN(prevStepNumber) && prevStepNumber < currentStep) {
                 showStep(prevStepNumber);
             }
         });

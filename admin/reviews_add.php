@@ -1,5 +1,48 @@
 <?php
+// 1. Hubungkan ke database
 include '../koneksi.php';
+
+$alert_message = ""; // Variabel untuk menyimpan pesan notifikasi
+
+// 2. Logika untuk memproses form saat disubmit
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    // Ambil semua data dari form
+    $customer_name = $_POST['customer_name'];
+    $review_text = $_POST['review_text'];
+    $rating = $_POST['rating'];
+    $image_url = $_POST['image_url'];
+    // Cek apakah is_visible dikirim (jika checkbox dicentang, nilainya '1', jika tidak, '0')
+    $is_visible = isset($_POST['is_visible']) ? 1 : 0;
+
+    // 3. Buat query INSERT
+    $stmt = $koneksi->prepare("INSERT INTO reviews (customer_name, review_text, rating, image_url, is_visible) VALUES (?, ?, ?, ?, ?)");
+
+    // 'ssisi' = string, string, integer, string, integer
+    $stmt->bind_param(
+        "ssisi",
+        $customer_name,
+        $review_text,
+        $rating,
+        $image_url,
+        $is_visible
+    );
+
+    // 4. Eksekusi query
+    if ($stmt->execute()) {
+        $alert_message = '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <strong>Sukses!</strong> Review baru berhasil ditambahkan.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                          </div>';
+    } else {
+        $alert_message = '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>Error!</strong> Gagal menyimpan: ' . $stmt->error . '
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                          </div>';
+    }
+
+    $stmt->close();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -8,18 +51,18 @@ include '../koneksi.php';
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>Manajemen Klien - GreenRay Admin</title>
+    <title>Tambah Review - GreenRay Admin</title>
     <link href="css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <link rel="icon" type="image/png" href="../img/favicon.png?v=1.1" sizes="180x180">
 </head>
 
 <body class="sb-nav-fixed">
 
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <a class="navbar-brand ps-3" href="index.php">GreenRay Admin</a>
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
                 class="fas fa-bars"></i></button>
-        <a class="navbar-brand ps-3" href="index.php">GreenRay Admin</a>
-
         <ul class="navbar-nav ms-auto me-3 me-lg-4">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
@@ -30,13 +73,13 @@ include '../koneksi.php';
             </li>
         </ul>
     </nav>
-
     <div id="layoutSidenav">
 
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
+
                         <div class="sb-sidenav-menu-heading">Utama</div>
                         <a class="nav-link" href="index.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
@@ -52,11 +95,11 @@ include '../koneksi.php';
                             <div class="sb-nav-link-icon"><i class="fas fa-solar-panel"></i></div>
                             Produk
                         </a>
-                        <a class="nav-link active" href="clients.php">
+                        <a class="nav-link" href="clients.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-handshake"></i></div>
                             Klien
                         </a>
-                        <a class="nav-link" href="reviews.php">
+                        <a class="nav-link active" href="reviews.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-star"></i></div>
                             Reviews
                         </a>
@@ -68,7 +111,7 @@ include '../koneksi.php';
                         <div class="sb-sidenav-menu-heading">Interaksi User</div>
                         <a class="nav-link" href="consultations.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-calculator"></i></div>
-                            Konsultasi (Leads)
+                            Konsultasi
                         </a>
                         <a class="nav-link" href="contact_messages.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-envelope"></i></div>
@@ -94,6 +137,7 @@ include '../koneksi.php';
                                 <a class="nav-link" href="tariffs.php">Manajemen Tarif</a>
                             </nav>
                         </div>
+
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
@@ -105,63 +149,60 @@ include '../koneksi.php';
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">Manajemen Klien</h1>
+
+                    <h1 class="mt-4">Tambah Review Baru</h1>
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item"><a href="index.php">Dashboard</a></li>
-                        <li class="breadcrumb-item active">Data Klien</li>
+                        <li class="breadcrumb-item"><a href="reviews.php">Data Reviews</a></li>
+                        <li class="breadcrumb-item active">Tambah Review</li>
                     </ol>
+
+                    <?php echo $alert_message; ?>
 
                     <div class="card mb-4">
                         <div class="card-header">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span>
-                                    <i class="fas fa-handshake me-1"></i>
-                                    Daftar Semua Klien (dari tabel `clients`)
-                                </span>
-                                <a href="clients_add.php" class="btn btn-primary btn-sm">
-                                    <i class="fas fa-plus me-1"></i> Tambah Klien
-                                </a>
-                            </div>
+                            <i class="fas fa-plus me-1"></i>
+                            Formulir Review Baru
                         </div>
                         <div class="card-body">
-                            <table id="datatablesSimple">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Nama Klien</th>
-                                        <th>Logo</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    // 3. Query untuk mengambil data dari tabel 'clients'
-                                    $query_clients = "SELECT id, name, logo_url FROM clients ORDER BY id ASC";
-                                    $result_clients = $koneksi->query($query_clients);
+                            <form action="review_add.php" method="POST">
 
-                                    if ($result_clients && $result_clients->num_rows > 0) {
-                                        // 4. Loop data dan tampilkan di baris tabel
-                                        while ($row = $result_clients->fetch_assoc()) {
+                                <div class="mb-3">
+                                    <label class="small mb-1" for="customer_name">Nama Customer</label>
+                                    <input class="form-control" id="customer_name" name="customer_name" type="text"
+                                        placeholder="Cth: Budi Santoso" required>
+                                </div>
 
-                                            // Perbaiki path gambar agar relatif dari root (../)
-                                            $logo_path = '../' . ltrim(str_replace('../', '', $row['logo_url']), '/');
+                                <div class="mb-3">
+                                    <label class="small mb-1" for="review_text">Isi Review</label>
+                                    <textarea class="form-control" id="review_text" name="review_text" rows="4"
+                                        placeholder="Tulis isi review di sini..."></textarea>
+                                </div>
 
-                                            echo '<tr>';
-                                            echo '<td>' . $row['id'] . '</td>';
-                                            echo '<td>' . htmlspecialchars($row['name']) . '</td>';
-                                            echo '<td><img src="' . htmlspecialchars($logo_path) . '" alt="' . htmlspecialchars($row['name']) . '" height="40"></td>';
-                                            echo '<td>
-                                                <a href="clients_edit.php?id=' . $row['id'] . '" class="btn btn-warning btn-sm">Edit</a>
-                                                <a href="clients_delete.php?id=' . $row['id'] . '" class="btn btn-danger btn-sm" onclick="return confirm(\'Yakin ingin menghapus klien ini?\');">Hapus</a>
-                                            </td>';
-                                            echo '</tr>';
-                                        }
-                                    } else {
-                                        echo '<tr><td colspan="4" class="text-center">Tidak ada data klien.</td></tr>';
-                                    }
-                                    ?>
-                                </tbody>
-                            </table>
+                                <div class="row gx-3 mb-3">
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="rating">Rating (Angka 1-5)</label>
+                                        <input class="form-control" id="rating" name="rating" type="number" min="1"
+                                            max="5" placeholder="Cth: 5" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="image_url">URL Foto Customer</label>
+                                        <input class="form-control" id="image_url" name="image_url" type="text"
+                                            placeholder="Cth: ../img/pp-reviews/img.png" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" id="is_visible" name="is_visible" type="checkbox"
+                                        value="1" checked>
+                                    <label class="form-check-label" for="is_visible">
+                                        Tampilkan di Website? (Visible)
+                                    </label>
+                                </div>
+
+                                <button class="btn btn-primary" type="submit">Simpan Review</button>
+                                <a href="reviews.php" class="btn btn-secondary">Batal</a>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -179,9 +220,6 @@ include '../koneksi.php';
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
     <script src="js/scripts.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
-        crossorigin="anonymous"></script>
-    <script src="js/datatables-simple-demo.js"></script>
 </body>
 
 </html>

@@ -118,7 +118,7 @@ include '../koneksi.php';
                                     <i class="fas fa-star me-1"></i>
                                     Daftar Semua Reviews (dari tabel `reviews`)
                                 </span>
-                                <a href="review_add.php" class="btn btn-primary btn-sm">
+                                <a href="reviews_add.php" class="btn btn-primary btn-sm">
                                     <i class="fas fa-plus me-1"></i> Tambah Review
                                 </a>
                             </div>
@@ -163,8 +163,8 @@ include '../koneksi.php';
                                             echo '<td>' . htmlspecialchars($review_snippet) . '</td>';
                                             echo '<td>' . $status . '</td>';
                                             echo '<td>
-                                                <a href="review_edit.php?id=' . $row['id'] . '" class="btn btn-warning btn-sm">Edit</a>
-                                                <a href="review_delete.php?id=' . $row['id'] . '" class="btn btn-danger btn-sm" onclick="return confirm(\'Yakin ingin menghapus review ini?\');">Hapus</a>
+                                                <a href="reviews_edit.php?id=' . $row['id'] . '" class="btn btn-warning btn-sm">Edit</a>
+                                                <a href="reviews_delete.php?id=' . $row['id'] . '" class="btn btn-danger btn-sm" onclick="return confirm(\'Yakin ingin menghapus review ini?\');">Hapus</a>
                                             </td>';
                                             echo '</tr>';
                                         }

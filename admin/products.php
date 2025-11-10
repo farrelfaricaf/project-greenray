@@ -118,7 +118,7 @@ include '../koneksi.php';
                                     <i class="fas fa-solar-panel me-1"></i>
                                     Daftar Semua Produk (dari tabel `products`)
                                 </span>
-                                <a href="product_add.php" class="btn btn-primary btn-sm">
+                                <a href="products_add.php" class="btn btn-primary btn-sm">
                                     <i class="fas fa-plus me-1"></i> Tambah Produk
                                 </a>
                             </div>
@@ -149,7 +149,7 @@ include '../koneksi.php';
                                             echo '<td>' . htmlspecialchars($row['subtitle']) . '</td>';
                                             echo '<td>' . htmlspecialchars($row['slug']) . '</td>';
                                             echo '<td>
-                                                <a href="product_edit.php?id=' . $row['id'] . '" class="btn btn-warning btn-sm">Edit</a>
+                                                <a href="products_edit.php?id=' . $row['id'] . '" class="btn btn-warning btn-sm">Edit</a>
                                                 <a href="product_delete.php?id=' . $row['id'] . '" class="btn btn-danger btn-sm" onclick="return confirm(\'Yakin ingin menghapus produk ini?\');">Hapus</a>
                                             </td>';
                                             echo '</tr>';

@@ -105,7 +105,7 @@ $js_monthly_data = json_encode($monthly_data);
                         </a>
 
                         <div class="sb-sidenav-menu-heading">Manajemen Konten</div>
-                        <a class="nav-link" href="master\projects.php">
+                        <a class="nav-link" href="projects.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-briefcase"></i></div>
                             Proyek
                         </a>

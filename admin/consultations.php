@@ -159,8 +159,8 @@ include '../koneksi.php';
                                             echo '<td>' . htmlspecialchars($row['result_system_capacity_kwp']) . ' kWp</td>';
                                             echo '<td>' . htmlspecialchars($penghematan) . '</td>';
                                             echo '<td>
-                                                <a href="consultation_view.php?id=' . $row['id'] . '" class="btn btn-info btn-sm">Lihat Detail</a>
-                                                <a href="consultation_delete.php?id=' . $row['id'] . '" class="btn btn-danger btn-sm" onclick="return confirm(\'Yakin ingin menghapus data konsultasi ini?\');">Hapus</a>
+                                                <a href="consultations_view.php?id=' . $row['id'] . '" class="btn btn-info btn-sm">Lihat Detail</a>
+                                                <a href="consultations_delete.php?id=' . $row['id'] . '" class="btn btn-danger btn-sm" onclick="return confirm(\'Yakin ingin menghapus data konsultasi ini?\');">Hapus</a>
                                             </td>';
                                             echo '</tr>';
                                         }

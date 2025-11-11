@@ -1,5 +1,38 @@
 <?php
+// 1. Hubungkan ke database
 include '../koneksi.php';
+
+$alert_message = ""; // Variabel untuk menyimpan pesan notifikasi
+
+// 2. Logika untuk memproses form saat disubmit
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    // Ambil semua data dari form
+    $question = $_POST['question'];
+    $answer = $_POST['answer'];
+    $order_index = $_POST['order_index'];
+
+    // 3. Buat query INSERT
+    $stmt = $koneksi->prepare("INSERT INTO faqs (question, answer, order_index) VALUES (?, ?, ?)");
+
+    // 'ssi' = string, string, integer
+    $stmt->bind_param("ssi", $question, $answer, $order_index);
+
+    // 4. Eksekusi query
+    if ($stmt->execute()) {
+        $alert_message = '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <strong>Sukses!</strong> FAQ baru berhasil ditambahkan.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                          </div>';
+    } else {
+        $alert_message = '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>Error!</strong> Gagal menyimpan: ' . $stmt->error . '
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                          </div>';
+    }
+
+    $stmt->close();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -8,18 +41,18 @@ include '../koneksi.php';
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>Manajemen FAQ - GreenRay Admin</title>
+    <title>Tambah FAQ - GreenRay Admin</title>
     <link href="css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <link rel="icon" type="image/png" href="../img/favicon.png?v=1.1" sizes="180x180">
 </head>
 
 <body class="sb-nav-fixed">
 
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <a class="navbar-brand ps-3" href="index.php">GreenRay Admin</a>
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
                 class="fas fa-bars"></i></button>
-        <a class="navbar-brand ps-3" href="index.php">GreenRay Admin</a>
-
         <ul class="navbar-nav ms-auto me-3 me-lg-4">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
@@ -30,13 +63,13 @@ include '../koneksi.php';
             </li>
         </ul>
     </nav>
-
     <div id="layoutSidenav">
 
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
+
                         <div class="sb-sidenav-menu-heading">Utama</div>
                         <a class="nav-link" href="index.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
@@ -68,7 +101,7 @@ include '../koneksi.php';
                         <div class="sb-sidenav-menu-heading">Interaksi User</div>
                         <a class="nav-link" href="consultations.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-calculator"></i></div>
-                            Konsultasi (Leads)
+                            Konsultasi
                         </a>
                         <a class="nav-link" href="contact_messages.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-envelope"></i></div>
@@ -94,6 +127,7 @@ include '../koneksi.php';
                                 <a class="nav-link" href="tariffs.php">Manajemen Tarif</a>
                             </nav>
                         </div>
+
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
@@ -105,64 +139,43 @@ include '../koneksi.php';
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">Manajemen FAQ</h1>
+
+                    <h1 class="mt-4">Tambah FAQ Baru</h1>
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item"><a href="index.php">Dashboard</a></li>
-                        <li class="breadcrumb-item active">Data FAQ</li>
+                        <li class="breadcrumb-item"><a href="faqs.php">Data FAQ</a></li>
+                        <li class="breadcrumb-item active">Tambah FAQ</li>
                     </ol>
+
+                    <?php echo $alert_message; ?>
 
                     <div class="card mb-4">
                         <div class="card-header">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span>
-                                    <i class="fas fa-question-circle me-1"></i>
-                                    Daftar Semua FAQ (dari tabel `faqs`)
-                                </span>
-                                <a href="faqs_add.php" class="btn btn-primary btn-sm">
-                                    <i class="fas fa-plus me-1"></i> Tambah FAQ
-                                </a>
-                            </div>
+                            <i class="fas fa-plus me-1"></i>
+                            Formulir FAQ Baru
                         </div>
                         <div class="card-body">
-                            <table id="datatablesSimple">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 5%;">Urutan</th>
-                                        <th style="width: 30%;">Pertanyaan</th>
-                                        <th style="width: 45%;">Jawaban (Singkat)</th>
-                                        <th style="width: 20%;">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    // 3. Query untuk mengambil data dari tabel 'faqs'
-                                    // Kita urutkan berdasarkan 'order_index' agar sesuai dengan tampilan di web
-                                    $query_faqs = "SELECT id, question, answer, order_index FROM faqs ORDER BY order_index ASC";
-                                    $result_faqs = $koneksi->query($query_faqs);
+                            <form action="faq_add.php" method="POST">
 
-                                    if ($result_faqs && $result_faqs->num_rows > 0) {
-                                        // 4. Loop data dan tampilkan di baris tabel
-                                        while ($row = $result_faqs->fetch_assoc()) {
+                                <div class="mb-3">
+                                    <label class="small mb-1" for="question">Pertanyaan (Question)</label>
+                                    <input class="form-control" id="question" name="question" type="text"
+                                        placeholder="Tulis pertanyaan..." required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="small mb-1" for="answer">Jawaban (Answer)</label>
+                                    <textarea class="form-control" id="answer" name="answer" rows="5"
+                                        placeholder="Tulis jawaban... (Boleh menggunakan tag HTML seperti <strong>)"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="small mb-1" for="order_index">Nomor Urut (Order Index)</label>
+                                    <input class="form-control" id="order_index" name="order_index" type="number"
+                                        placeholder="Cth: 1" value="0" required>
+                                </div>
 
-                                            // Logika untuk memotong teks jawaban jika terlalu panjang
-                                            $answer_snippet = strlen($row['answer']) > 100 ? substr(strip_tags($row['answer']), 0, 100) . '...' : strip_tags($row['answer']);
-
-                                            echo '<tr>';
-                                            echo '<td>' . htmlspecialchars($row['order_index']) . '</td>';
-                                            echo '<td>' . htmlspecialchars($row['question']) . '</td>';
-                                            echo '<td>' . htmlspecialchars($answer_snippet) . '</td>';
-                                            echo '<td>
-                                                <a href="faqs_edit.php?id=' . $row['id'] . '" class="btn btn-warning btn-sm">Edit</a>
-                                                <a href="faqs_delete.php?id=' . $row['id'] . '" class="btn btn-danger btn-sm" onclick="return confirm(\'Yakin ingin menghapus FAQ ini?\');">Hapus</a>
-                                            </td>';
-                                            echo '</tr>';
-                                        }
-                                    } else {
-                                        echo '<tr><td colspan="4" class="text-center">Tidak ada data FAQ.</td></tr>';
-                                    }
-                                    ?>
-                                </tbody>
-                            </table>
+                                <button class="btn btn-primary" type="submit">Simpan FAQ</button>
+                                <a href="faqs.php" class="btn btn-secondary">Batal</a>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -180,9 +193,6 @@ include '../koneksi.php';
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
     <script src="js/scripts.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
-        crossorigin="anonymous"></script>
-    <script src="js/datatables-simple-demo.js"></script>
 </body>
 
 </html>

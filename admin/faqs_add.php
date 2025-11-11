@@ -155,7 +155,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             Formulir FAQ Baru
                         </div>
                         <div class="card-body">
-                            <form action="faq_add.php" method="POST">
+                            <form action="faqs_add.php" method="POST">
 
                                 <div class="mb-3">
                                     <label class="small mb-1" for="question">Pertanyaan (Question)</label>

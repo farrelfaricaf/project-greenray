@@ -206,7 +206,7 @@ if (empty($review)) {
                         </div>
                         <div class="card-body">
 
-                            <form action="review_edit.php?id=<?php echo $review_id; ?>" method="POST">
+                            <form action="reviews_edit.php?id=<?php echo $review_id; ?>" method="POST">
                                 <input type="hidden" name="review_id" value="<?php echo $review_id; ?>">
 
                                 <div class="mb-3">

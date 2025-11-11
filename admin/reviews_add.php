@@ -167,7 +167,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             Formulir Review Baru
                         </div>
                         <div class="card-body">
-                            <form action="review_add.php" method="POST">
+                            <form action="reviews_add.php" method="POST">
 
                                 <div class="mb-3">
                                     <label class="small mb-1" for="customer_name">Nama Customer</label>

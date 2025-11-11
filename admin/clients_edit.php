@@ -193,7 +193,7 @@ if (empty($client)) {
                         </div>
                         <div class="card-body">
 
-                            <form action="client_edit.php?id=<?php echo $client_id; ?>" method="POST">
+                            <form action="clients_edit.php?id=<?php echo $client_id; ?>" method="POST">
                                 <input type="hidden" name="client_id" value="<?php echo $client_id; ?>">
 
                                 <div class="mb-3">

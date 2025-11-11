@@ -192,7 +192,7 @@ if (empty($faq)) {
                         </div>
                         <div class="card-body">
 
-                            <form action="faq_edit.php?id=<?php echo $faq_id; ?>" method="POST">
+                            <form action="faqs_edit.php?id=<?php echo $faq_id; ?>" method="POST">
                                 <input type="hidden" name="faq_id" value="<?php echo $faq_id; ?>">
 
                                 <div class="mb-3">

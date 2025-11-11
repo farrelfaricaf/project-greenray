@@ -176,7 +176,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             Formulir Produk Baru
                         </div>
                         <div class="card-body">
-                            <form action="product_add.php" method="POST">
+                            <form action="products_add.php" method="POST">
 
                                 <h5 class="mt-3 text-dark">Info Utama</h5>
                                 <div class="row gx-3 mb-3">

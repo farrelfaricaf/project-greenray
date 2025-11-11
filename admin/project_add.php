@@ -204,7 +204,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             Formulir Proyek Baru
                         </div>
                         <div class="card-body">
-                            <form action="project_add.php" method="POST">
+                            <form action="projects_add.php" method="POST">
 
                                 <h5 class="mt-3 text-dark">Info Dasar</h5>
                                 <div class="row gx-3 mb-3">

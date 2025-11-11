@@ -156,7 +156,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             Formulir Klien Baru
                         </div>
                         <div class="card-body">
-                            <form action="client_add.php" method="POST">
+                            <form action="clients_add.php" method="POST">
 
                                 <div class="mb-3">
                                     <label class="small mb-1" for="name">Nama Klien</label>

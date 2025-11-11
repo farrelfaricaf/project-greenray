@@ -253,7 +253,7 @@ if (empty($project)) {
                         </div>
                         <div class="card-body">
 
-                            <form action="project_edit.php?id=<?php echo $project_id; ?>" method="POST">
+                            <form action="projects_edit.php?id=<?php echo $project_id; ?>" method="POST">
                                 <input type="hidden" name="project_id" value="<?php echo $project_id; ?>">
 
                                 <h5 class="mt-3 text-dark">Info Dasar</h5>

@@ -225,7 +225,7 @@ if (empty($product)) {
                         </div>
                         <div class="card-body">
 
-                            <form action="product_edit.php?id=<?php echo $product_id; ?>" method="POST">
+                            <form action="products_edit.php?id=<?php echo $product_id; ?>" method="POST">
                                 <input type="hidden" name="product_id" value="<?php echo $product_id; ?>">
 
                                 <h5 class="mt-3 text-dark">Info Utama</h5>

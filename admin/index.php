@@ -275,7 +275,7 @@ $js_monthly_data = json_encode($monthly_data);
                                             echo '<td>' . htmlspecialchars($row['calc_location']) . '</td>';
                                             echo '<td>' . htmlspecialchars($row['result_system_capacity_kwp']) . ' kWp</td>';
                                             echo '<td>
-                                                        <a href="consultation_view.php?id=' . $row['id'] . '" class="btn btn-info btn-sm">Lihat</a>
+                                                        <a href="consultations_view.php?id=' . $row['id'] . '" class="btn btn-info btn-sm">Lihat</a>
                                                       </td>';
                                             echo '</tr>';
                                         }

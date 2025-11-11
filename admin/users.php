@@ -148,8 +148,11 @@ include '../koneksi.php';
                                             echo '<td>' . htmlspecialchars($row['email']) . '</td>';
                                             echo '<td>' . $tanggal . '</td>';
                                             echo '<td>
-                                                <a href="user_delete.php?id=' . $row['id'] . '" class="btn btn-danger btn-sm" onclick="return confirm(\'Yakin ingin menghapus user ini?\');">Hapus</a>
+                                                <a href="user_edit.php?id=' . $row['id'] . '" class="btn btn-warning btn-sm" title="Edit Nama/Email">Edit</a>
+                                                <a href="user_reset_password.php?id=' . $row['id'] . '" class="btn btn-secondary btn-sm" title="Reset Password" onclick="return confirm(\'Yakin ingin me-reset password untuk ' . htmlspecialchars($row['email']) . '?\');">Reset Pass</a>
+                                                <a href="user_delete.php?id=' . $row['id'] . '" class="btn btn-danger btn-sm" title="Hapus User" onclick="return confirm(\'Yakin ingin menghapus user ini?\');">Hapus</a>
                                             </td>';
+
                                             echo '</tr>';
                                         }
                                     } else {

@@ -1,18 +1,18 @@
 <?php
-// 1. Hubungkan ke database
+
 include '../koneksi.php';
 
-$alert_message = ""; // Variabel untuk menyimpan pesan notifikasi
+$alert_message = ""; 
 $product_id = null;
-$product = []; // Array untuk menyimpan data produk yang akan diedit
+$product = []; 
 
-// 2. Ambil ID Produk dari URL (GET Request)
+
 if (isset($_GET['id'])) {
     $product_id = $_GET['id'];
 
-    // 3. Ambil data produk yang ada dari database
+    
     $stmt_select = $koneksi->prepare("SELECT * FROM products WHERE id = ?");
-    $stmt_select->bind_param("i", $product_id); // 'i' untuk integer
+    $stmt_select->bind_param("i", $product_id); 
     $stmt_select->execute();
     $result = $stmt_select->get_result();
 
@@ -26,10 +26,10 @@ if (isset($_GET['id'])) {
     $alert_message = '<div class="alert alert-danger">Error: ID Produk tidak valid.</div>';
 }
 
-// 4. Logika untuk memproses form saat disubmit (POST Request)
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // Ambil semua data dari form (termasuk ID dari hidden input)
+    
     $product_id = $_POST['product_id'];
     $slug = $_POST['slug'];
     $name = $_POST['name'];
@@ -41,13 +41,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $key_features_json = $_POST['key_features_json'];
     $specifications_json = $_POST['specifications_json'];
 
-    // 5. Buat query UPDATE
+    
     $stmt_update = $koneksi->prepare("UPDATE products SET 
         slug = ?, name = ?, subtitle = ?, image_url = ?, description = ?, 
         summary_feature_1 = ?, summary_feature_2 = ?, key_features_json = ?, specifications_json = ? 
-        WHERE id = ?"); // Kondisi WHERE id = ?
+        WHERE id = ?"); 
 
-    // 's' untuk string, 'i' untuk integer (ID di akhir)
+    
     $stmt_update->bind_param(
         "sssssssssi",
         $slug,
@@ -59,17 +59,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $summary_feature_2,
         $key_features_json,
         $specifications_json,
-        $product_id // ID untuk klausa WHERE
+        $product_id 
     );
 
-    // 6. Eksekusi query
+    
     if ($stmt_update->execute()) {
         $alert_message = '<div class="alert alert-success alert-dismissible fade show" role="alert">
                             <strong>Sukses!</strong> Produk berhasil diperbarui.
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                           </div>';
 
-        // Ambil lagi data terbaru untuk ditampilkan di form
+        
         $stmt_select = $koneksi->prepare("SELECT * FROM products WHERE id = ?");
         $stmt_select->bind_param("i", $product_id);
         $stmt_select->execute();
@@ -86,7 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt_update->close();
 }
 
-// Jika data $product kosong (karena error atau ID tidak ada), isi dengan string kosong
+
 if (empty($product)) {
     $product = array_fill_keys([
         'slug',

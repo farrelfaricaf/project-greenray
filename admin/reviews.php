@@ -138,23 +138,21 @@ include '../koneksi.php';
                                 </thead>
                                 <tbody>
                                     <?php
-                                    // 3. Query untuk mengambil data dari tabel 'reviews'
+                                    
                                     $query_reviews = "SELECT id, customer_name, rating, review_text, image_url, is_visible FROM reviews ORDER BY id ASC";
                                     $result_reviews = $koneksi->query($query_reviews);
 
                                     if ($result_reviews && $result_reviews->num_rows > 0) {
-                                        // 4. Loop data dan tampilkan di baris tabel
+                                        
                                         while ($row = $result_reviews->fetch_assoc()) {
 
-                                            // Logika untuk menampilkan status (Visible / Hidden)
+                                            
                                             $status = $row['is_visible'] ? '<span class="badge bg-success">Visible</span>' : '<span class="badge bg-danger">Hidden</span>';
 
-                                            // Logika untuk memotong teks review jika terlalu panjang
+                                            
                                             $review_snippet = strlen($row['review_text']) > 50 ? substr($row['review_text'], 0, 50) . '...' : $row['review_text'];
-
-                                            // Perbaiki path gambar
+                                   
                                             $image_path = '../' . ltrim(str_replace('../', '', $row['image_url']), '/');
-
                                             echo '<tr>';
                                             echo '<td>' . $row['id'] . '</td>';
                                             echo '<td><img src="' . htmlspecialchars($image_path) . '" alt="' . htmlspecialchars($row['customer_name']) . '" width="50" height="50" style="border-radius: 50%; object-fit: cover;"></td>';
@@ -187,7 +185,6 @@ include '../koneksi.php';
             </footer>
         </div>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
     <script src="js/scripts.js"></script>
@@ -195,5 +192,4 @@ include '../koneksi.php';
         crossorigin="anonymous"></script>
     <script src="js/datatables-simple-demo.js"></script>
 </body>
-
 </html>

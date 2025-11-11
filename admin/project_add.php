@@ -1,14 +1,14 @@
 <?php
-// 1. Hubungkan ke database
-// (Path '../' artinya 'naik satu folder' untuk menemukan koneksi.php)
+
+
 include '../koneksi.php';
 
-$alert_message = ""; // Variabel untuk menyimpan pesan notifikasi
+$alert_message = ""; 
 
-// 2. Logika untuk memproses form saat disubmit (ketika tombol "Simpan" ditekan)
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // Ambil semua 17 data dari form
+    
     $slug = $_POST['slug'];
     $title = $_POST['title'];
     $subtitle_goal = $_POST['subtitle_goal'];
@@ -29,9 +29,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $solutions_html = $_POST['solutions_html'];
     $impact_html = $_POST['impact_html'];
 
-    $tech_specs_json = $_POST['tech_specs_json']; // Ambil data JSON sebagai string
+    $tech_specs_json = $_POST['tech_specs_json']; 
 
-    // 3. Buat query INSERT (Gunakan Prepared Statements agar aman dari SQL Injection)
+    
     $stmt = $koneksi->prepare("INSERT INTO projects 
         (slug, title, subtitle_goal, category, location_text, hero_image_url, 
         stat_capacity, stat_co2_reduction, stat_timeline, stat_investment, 
@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         challenges_html, solutions_html, impact_html, tech_specs_json) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-    // 's' berarti string. Kita punya 17 kolom string/text/json
+    
     $stmt->bind_param(
         "sssssssssssssssss",
         $slug,
@@ -61,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $tech_specs_json
     );
 
-    // 4. Eksekusi query
+    
     if ($stmt->execute()) {
         $alert_message = '<div class="alert alert-success alert-dismissible fade show" role="alert">
                             <strong>Sukses!</strong> Proyek baru berhasil ditambahkan.

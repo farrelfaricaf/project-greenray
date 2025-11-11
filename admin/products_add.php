@@ -1,13 +1,13 @@
 <?php
-// 1. Hubungkan ke database
+
 include '../koneksi.php';
 
-$alert_message = ""; // Variabel untuk menyimpan pesan notifikasi
+$alert_message = ""; 
 
-// 2. Logika untuk memproses form saat disubmit (ketika tombol "Simpan" ditekan)
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // Ambil semua data dari form
+    
     $slug = $_POST['slug'];
     $name = $_POST['name'];
     $subtitle = $_POST['subtitle'];
@@ -18,13 +18,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $key_features_json = $_POST['key_features_json'];
     $specifications_json = $_POST['specifications_json'];
 
-    // 3. Buat query INSERT (Gunakan Prepared Statements agar aman)
+    
     $stmt = $koneksi->prepare("INSERT INTO products 
         (slug, name, subtitle, image_url, description, 
         summary_feature_1, summary_feature_2, key_features_json, specifications_json) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-    // 's' berarti string. Kita punya 9 kolom.
+    
     $stmt->bind_param(
         "sssssssss",
         $slug,
@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $specifications_json
     );
 
-    // 4. Eksekusi query
+    
     if ($stmt->execute()) {
         $alert_message = '<div class="alert alert-success alert-dismissible fade show" role="alert">
                             <strong>Sukses!</strong> Produk baru berhasil ditambahkan.

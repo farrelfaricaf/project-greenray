@@ -1,25 +1,25 @@
 <?php
-// 1. Hubungkan ke database
+
 include '../koneksi.php';
 
-$alert_message = ""; // Variabel untuk menyimpan pesan notifikasi
+$alert_message = ""; 
 
-// 2. Logika untuk memproses form saat disubmit
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // Ambil semua data dari form
+    
     $city_name = $_POST['city_name'];
     $irradiance_factor = $_POST['irradiance_factor'];
-    // Cek apakah is_active dikirim (jika checkbox dicentang, nilainya '1', jika tidak, '0')
+    
     $is_active = isset($_POST['is_active']) ? 1 : 0;
 
-    // 3. Buat query INSERT
+    
     $stmt = $koneksi->prepare("INSERT INTO locations (city_name, irradiance_factor, is_active) VALUES (?, ?, ?)");
 
-    // 'sdi' = string, double, integer
+    
     $stmt->bind_param("sdi", $city_name, $irradiance_factor, $is_active);
 
-    // 4. Eksekusi query
+    
     if ($stmt->execute()) {
         $alert_message = '<div class="alert alert-success alert-dismissible fade show" role="alert">
                             <strong>Sukses!</strong> Lokasi baru berhasil ditambahkan.

@@ -1,18 +1,18 @@
 <?php
-// 1. Hubungkan ke database
+
 include '../koneksi.php';
 
-$alert_message = ""; // Variabel untuk menyimpan pesan notifikasi
+$alert_message = ""; 
 $location_id = null;
-$location = []; // Array untuk menyimpan data lokasi
+$location = []; 
 
-// 2. Ambil ID Lokasi dari URL (GET Request)
+
 if (isset($_GET['id'])) {
     $location_id = $_GET['id'];
 
-    // 3. Ambil data lama dari database
+    
     $stmt_select = $koneksi->prepare("SELECT * FROM locations WHERE id = ?");
-    $stmt_select->bind_param("i", $location_id); // 'i' untuk integer
+    $stmt_select->bind_param("i", $location_id); 
     $stmt_select->execute();
     $result = $stmt_select->get_result();
 
@@ -26,29 +26,29 @@ if (isset($_GET['id'])) {
     $alert_message = '<div class="alert alert-danger">Error: ID Lokasi tidak valid.</div>';
 }
 
-// 4. Logika untuk memproses form saat disubmit (POST Request)
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // Ambil semua data dari form
+    
     $location_id = $_POST['location_id'];
     $city_name = $_POST['city_name'];
     $irradiance_factor = $_POST['irradiance_factor'];
     $is_active = isset($_POST['is_active']) ? 1 : 0;
 
-    // 5. Buat query UPDATE
+    
     $stmt_update = $koneksi->prepare("UPDATE locations SET city_name = ?, irradiance_factor = ?, is_active = ? WHERE id = ?");
 
-    // 'sdii' = string, double, integer, integer (untuk ID)
+    
     $stmt_update->bind_param("sdii", $city_name, $irradiance_factor, $is_active, $location_id);
 
-    // 6. Eksekusi query
+    
     if ($stmt_update->execute()) {
         $alert_message = '<div class="alert alert-success alert-dismissible fade show" role="alert">
                             <strong>Sukses!</strong> Lokasi berhasil diperbarui.
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                           </div>';
 
-        // Ambil lagi data terbaru untuk ditampilkan di form
+        
         $stmt_select = $koneksi->prepare("SELECT * FROM locations WHERE id = ?");
         $stmt_select->bind_param("i", $location_id);
         $stmt_select->execute();
@@ -65,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt_update->close();
 }
 
-// Jika data $location kosong (karena error atau ID tidak ada), isi dengan string kosong
+
 if (empty($location)) {
     $location = array_fill_keys(['city_name', 'irradiance_factor', 'is_active'], '');
 }
@@ -145,7 +145,7 @@ if (empty($location)) {
 
                     <?php echo $alert_message; ?>
 
-                    <?php if (!empty($location)): // Hanya tampilkan form jika data ditemukan ?>
+                    <?php if (!empty($location)):?> 
                         <div class="card mb-4">
                             <div class="card-header">
                                 <i class="fas fa-edit me-1"></i>

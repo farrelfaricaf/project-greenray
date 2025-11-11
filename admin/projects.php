@@ -137,12 +137,12 @@ include '../koneksi.php';
                                 </thead>
                                 <tbody>
                                     <?php
-                                    // 3. Query untuk mengambil data dari tabel 'projects'
+                                    
                                     $query_projects = "SELECT id, title, category, location_text, stat_capacity FROM projects ORDER BY id ASC";
                                     $result_projects = $koneksi->query($query_projects);
 
                                     if ($result_projects && $result_projects->num_rows > 0) {
-                                        // 4. Loop data dan tampilkan di baris tabel
+                                        
                                         while ($row = $result_projects->fetch_assoc()) {
                                             echo '<tr>';
                                             echo '<td>' . $row['id'] . '</td>';

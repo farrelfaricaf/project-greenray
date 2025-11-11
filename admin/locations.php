@@ -137,15 +137,15 @@ include '../koneksi.php';
                                 </thead>
                                 <tbody>
                                     <?php
-                                    // 3. Query untuk mengambil data dari tabel 'locations'
+                                    
                                     $query_locations = "SELECT id, city_name, irradiance_factor, is_active FROM locations ORDER BY id ASC";
                                     $result_locations = $koneksi->query($query_locations);
 
                                     if ($result_locations && $result_locations->num_rows > 0) {
-                                        // 4. Loop data dan tampilkan di baris tabel
+                                        
                                         while ($row = $result_locations->fetch_assoc()) {
 
-                                            // Logika untuk status (is_active: 1 = Aktif, 0 = Nonaktif)
+                                            
                                             $status = $row['is_active'] ? '<span class="badge bg-success">Aktif</span>' : '<span class="badge bg-danger">Nonaktif</span>';
 
                                             echo '<tr>';

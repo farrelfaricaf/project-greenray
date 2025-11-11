@@ -3,7 +3,6 @@ include '../koneksi.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -12,14 +11,11 @@ include '../koneksi.php';
     <link href="css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
-
 <body class="sb-nav-fixed">
-
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
                 class="fas fa-bars"></i></button>
         <a class="navbar-brand ps-3" href="index.php">GreenRay Admin</a>
-
         <ul class="navbar-nav ms-auto me-3 me-lg-4">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
@@ -30,9 +26,7 @@ include '../koneksi.php';
             </li>
         </ul>
     </nav>
-
     <div id="layoutSidenav">
-
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
@@ -42,7 +36,6 @@ include '../koneksi.php';
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
                         </a>
-
                         <div class="sb-sidenav-menu-heading">Manajemen Konten</div>
                         <a class="nav-link" href="projects.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-briefcase"></i></div>
@@ -64,7 +57,6 @@ include '../koneksi.php';
                             <div class="sb-nav-link-icon"><i class="fas fa-question-circle"></i></div>
                             FAQ
                         </a>
-
                         <div class="sb-sidenav-menu-heading">Interaksi User</div>
                         <a class="nav-link" href="consultations.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-calculator"></i></div>
@@ -74,7 +66,6 @@ include '../koneksi.php';
                             <div class="sb-nav-link-icon"><i class="fas fa-envelope"></i></div>
                             Pesan Kontak
                         </a>
-
                         <div class="sb-sidenav-menu-heading">Pengaturan Sistem</div>
                         <a class="nav-link" href="users.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
@@ -111,7 +102,6 @@ include '../koneksi.php';
                         <li class="breadcrumb-item">Setting Kalkulator</li>
                         <li class="breadcrumb-item active">Manajemen Tarif</li>
                     </ol>
-
                     <div class="card mb-4">
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
@@ -137,20 +127,12 @@ include '../koneksi.php';
                                 </thead>
                                 <tbody>
                                     <?php
-                                    // 3. Query untuk mengambil data dari tabel 'power_tariffs'
                                     $query_tariffs = "SELECT id, va_capacity, tariff_per_kwh, is_active FROM power_tariffs ORDER BY id ASC";
                                     $result_tariffs = $koneksi->query($query_tariffs);
-
                                     if ($result_tariffs && $result_tariffs->num_rows > 0) {
-                                        // 4. Loop data dan tampilkan di baris tabel
                                         while ($row = $result_tariffs->fetch_assoc()) {
-
-                                            // Logika untuk status (is_active: 1 = Aktif, 0 = Nonaktif)
                                             $status = $row['is_active'] ? '<span class="badge bg-success">Aktif</span>' : '<span class="badge bg-danger">Nonaktif</span>';
-
-                                            // Format angka tarif
                                             $tarif = number_format($row['tariff_per_kwh'], 2, ',', '.');
-
                                             echo '<tr>';
                                             echo '<td>' . $row['id'] . '</td>';
                                             echo '<td>' . htmlspecialchars($row['va_capacity']) . '</td>';
@@ -181,7 +163,6 @@ include '../koneksi.php';
             </footer>
         </div>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
     <script src="js/scripts.js"></script>
@@ -189,5 +170,4 @@ include '../koneksi.php';
         crossorigin="anonymous"></script>
     <script src="js/datatables-simple-demo.js"></script>
 </body>
-
 </html>

@@ -1,35 +1,21 @@
 <?php
-// 1. Hubungkan ke database
 include '../koneksi.php';
-
 $alert_message = "";
 $user_id = null;
 $user_email = "";
-$new_password_plain = ""; // Variabel untuk menampikan password baru ke admin
-
-// 2. Ambil ID dari URL (GET Request)
+$new_password_plain = "";
 if (isset($_GET['id'])) {
     $user_id = $_GET['id'];
-
-    // Ambil email user untuk ditampilkan
     $stmt_select = $koneksi->prepare("SELECT email FROM users WHERE id = ?");
     $stmt_select->bind_param("i", $user_id);
     $stmt_select->execute();
     $result = $stmt_select->get_result();
-
     if ($result->num_rows > 0) {
         $user_email = $result->fetch_assoc()['email'];
-
-        // 3. Buat password baru yang acak (8 karakter)
-        $new_password_plain = bin2hex(random_bytes(4)); // cth: "a3b9d7e1"
-
-        // 4. Hash password baru
+        $new_password_plain = bin2hex(random_bytes(4)); 
         $hashed_password = password_hash($new_password_plain, PASSWORD_BCRYPT);
-
-        // 5. Update password di database
         $stmt_update = $koneksi->prepare("UPDATE users SET password = ? WHERE id = ?");
         $stmt_update->bind_param("si", $hashed_password, $user_id);
-
         if ($stmt_update->execute()) {
             $alert_message = '<div class="alert alert-success" role="alert">
                                 <strong>Sukses!</strong> Password untuk <strong>' . htmlspecialchars($user_email) . '</strong> berhasil di-reset.
@@ -38,7 +24,6 @@ if (isset($_GET['id'])) {
             $alert_message = '<div class="alert alert-danger">Error: Gagal me-reset password. ' . $stmt_update->error . '</div>';
         }
         $stmt_update->close();
-
     } else {
         $alert_message = '<div class="alert alert-danger">Error: User tidak ditemukan!</div>';
     }
@@ -49,7 +34,6 @@ if (isset($_GET['id'])) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -59,9 +43,7 @@ if (isset($_GET['id'])) {
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     <link rel="icon" type="image/png" href="../img/favicon.png?v=1.1" sizes="180x180">
 </head>
-
 <body class="sb-nav-fixed">
-
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <a class="navbar-brand ps-3" href="index.php">GreenRay Admin</a>
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
@@ -77,14 +59,12 @@ if (isset($_GET['id'])) {
         </ul>
     </nav>
     <div id="layoutSidenav">
-
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
                         <div class="sb-sidenav-menu-heading">Utama</div>
                         <a class="nav-link" href="index.php">... Dashboard</a>
-
                         <div class="sb-sidenav-menu-heading">Manajemen Konten</div>
                         <div class="sb-sidenav-menu-heading">Interaksi User</div>
                         <div class="sb-sidenav-menu-heading">Pengaturan Sistem</div>
@@ -103,16 +83,13 @@ if (isset($_GET['id'])) {
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-
                     <h1 class="mt-4">Reset Password User</h1>
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item"><a href="index.php">Dashboard</a></li>
                         <li class="breadcrumb-item"><a href="users.php">Data Users</a></li>
                         <li class="breadcrumb-item active">Reset Password</li>
                     </ol>
-
                     <?php echo $alert_message; ?>
-
                     <?php if (!empty($new_password_plain)): ?>
                         <div class="card mb-4">
                             <div class="card-header bg-warning">
@@ -148,10 +125,8 @@ if (isset($_GET['id'])) {
             </footer>
         </div>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
     <script src="js/scripts.js"></script>
 </body>
-
 </html>

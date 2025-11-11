@@ -1,18 +1,18 @@
 <?php
-// 1. Hubungkan ke database
+
 include '../koneksi.php';
 
-$alert_message = ""; // Variabel untuk menyimpan pesan notifikasi
+$alert_message = ""; 
 $project_id = null;
-$project = []; // Array untuk menyimpan data proyek yang akan diedit
+$project = []; 
 
-// 2. Ambil ID Proyek dari URL (GET Request)
+
 if (isset($_GET['id'])) {
     $project_id = $_GET['id'];
 
-    // 3. Ambil data proyek yang ada dari database
+    
     $stmt_select = $koneksi->prepare("SELECT * FROM projects WHERE id = ?");
-    $stmt_select->bind_param("i", $project_id); // 'i' untuk integer
+    $stmt_select->bind_param("i", $project_id); 
     $stmt_select->execute();
     $result = $stmt_select->get_result();
 
@@ -24,10 +24,10 @@ if (isset($_GET['id'])) {
     $stmt_select->close();
 }
 
-// 4. Logika untuk memproses form saat disubmit (POST Request)
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // Ambil semua data dari form (termasuk ID dari hidden input)
+    
     $project_id = $_POST['project_id'];
     $slug = $_POST['slug'];
     $title = $_POST['title'];
@@ -51,15 +51,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $tech_specs_json = $_POST['tech_specs_json'];
 
-    // 5. Buat query UPDATE
+    
     $stmt_update = $koneksi->prepare("UPDATE projects SET 
         slug = ?, title = ?, subtitle_goal = ?, category = ?, location_text = ?, hero_image_url = ?, 
         stat_capacity = ?, stat_co2_reduction = ?, stat_timeline = ?, stat_investment = ?, 
         overview_result = ?, overview_details = ?, overview_generation = ?, 
         challenges_html = ?, solutions_html = ?, impact_html = ?, tech_specs_json = ? 
-        WHERE id = ?"); // Kondisi WHERE id = ?
+        WHERE id = ?"); 
 
-    // 's' untuk string, 'i' untuk integer (ID di akhir)
+    
     $stmt_update->bind_param(
         "sssssssssssssssssi",
         $slug,
@@ -79,17 +79,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $solutions_html,
         $impact_html,
         $tech_specs_json,
-        $project_id // ID untuk klausa WHERE
+        $project_id 
     );
 
-    // 6. Eksekusi query
+    
     if ($stmt_update->execute()) {
         $alert_message = '<div class="alert alert-success alert-dismissible fade show" role="alert">
                             <strong>Sukses!</strong> Proyek berhasil diperbarui.
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                           </div>';
 
-        // Ambil lagi data terbaru untuk ditampilkan di form
+        
         $stmt_select = $koneksi->prepare("SELECT * FROM projects WHERE id = ?");
         $stmt_select->bind_param("i", $project_id);
         $stmt_select->execute();
@@ -106,7 +106,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt_update->close();
 }
 
-// Jika data $project kosong (karena error atau ID tidak ada), isi dengan string kosong
+
 if (empty($project)) {
     $project = array_fill_keys([
         'slug',

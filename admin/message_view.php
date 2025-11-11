@@ -1,25 +1,25 @@
 <?php
-// 1. Hubungkan ke database
+
 include '../koneksi.php';
 
 $alert_message = "";
 $message_id = null;
-$message_data = []; // Array untuk menyimpan data pesan
+$message_data = []; 
 
-// 2. Ambil ID dari URL (GET Request)
+
 if (isset($_GET['id'])) {
     $message_id = $_GET['id'];
 
-    // 3. Ambil data pesan dari database
+    
     $stmt_select = $koneksi->prepare("SELECT * FROM contact_messages WHERE id = ?");
-    $stmt_select->bind_param("i", $message_id); // 'i' untuk integer
+    $stmt_select->bind_param("i", $message_id); 
     $stmt_select->execute();
     $result = $stmt_select->get_result();
 
     if ($result->num_rows > 0) {
         $message_data = $result->fetch_assoc();
 
-        // 4. (FITUR PENTING) Jika pesan belum dibaca (is_read = 0), update jadi 1
+        
         if ($message_data['is_read'] == 0) {
             $stmt_update = $koneksi->prepare("UPDATE contact_messages SET is_read = 1 WHERE id = ?");
             $stmt_update->bind_param("i", $message_id);

@@ -136,12 +136,12 @@ include '../koneksi.php';
                                 </thead>
                                 <tbody>
                                     <?php
-                                    // 3. Query untuk mengambil data dari tabel 'products'
+                                    
                                     $query_products = "SELECT id, name, subtitle, slug FROM products ORDER BY id ASC";
                                     $result_products = $koneksi->query($query_products);
 
                                     if ($result_products && $result_products->num_rows > 0) {
-                                        // 4. Loop data dan tampilkan di baris tabel
+                                        
                                         while ($row = $result_products->fetch_assoc()) {
                                             echo '<tr>';
                                             echo '<td>' . $row['id'] . '</td>';

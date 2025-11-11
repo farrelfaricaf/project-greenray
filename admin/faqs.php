@@ -135,16 +135,16 @@ include '../koneksi.php';
                                 </thead>
                                 <tbody>
                                     <?php
-                                    // 3. Query untuk mengambil data dari tabel 'faqs'
-                                    // Kita urutkan berdasarkan 'order_index' agar sesuai dengan tampilan di web
+                                    
+                                    
                                     $query_faqs = "SELECT id, question, answer, order_index FROM faqs ORDER BY order_index ASC";
                                     $result_faqs = $koneksi->query($query_faqs);
 
                                     if ($result_faqs && $result_faqs->num_rows > 0) {
-                                        // 4. Loop data dan tampilkan di baris tabel
+                                        
                                         while ($row = $result_faqs->fetch_assoc()) {
 
-                                            // Logika untuk memotong teks jawaban jika terlalu panjang
+                                            
                                             $answer_snippet = strlen($row['answer']) > 100 ? substr(strip_tags($row['answer']), 0, 100) . '...' : strip_tags($row['answer']);
 
                                             echo '<tr>';

@@ -1,18 +1,18 @@
 <?php
-// 1. Hubungkan ke database
+
 include '../koneksi.php';
 
-$alert_message = ""; // Variabel untuk menyimpan pesan notifikasi
+$alert_message = ""; 
 $faq_id = null;
-$faq = []; // Array untuk menyimpan data FAQ yang akan diedit
+$faq = []; 
 
-// 2. Ambil ID FAQ dari URL (GET Request)
+
 if (isset($_GET['id'])) {
     $faq_id = $_GET['id'];
 
-    // 3. Ambil data FAQ yang ada dari database
+    
     $stmt_select = $koneksi->prepare("SELECT * FROM faqs WHERE id = ?");
-    $stmt_select->bind_param("i", $faq_id); // 'i' untuk integer
+    $stmt_select->bind_param("i", $faq_id); 
     $stmt_select->execute();
     $result = $stmt_select->get_result();
 
@@ -26,29 +26,29 @@ if (isset($_GET['id'])) {
     $alert_message = '<div class="alert alert-danger">Error: ID FAQ tidak valid.</div>';
 }
 
-// 4. Logika untuk memproses form saat disubmit (POST Request)
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // Ambil semua data dari form (termasuk ID dari hidden input)
+    
     $faq_id = $_POST['faq_id'];
     $question = $_POST['question'];
     $answer = $_POST['answer'];
     $order_index = $_POST['order_index'];
 
-    // 5. Buat query UPDATE
+    
     $stmt_update = $koneksi->prepare("UPDATE faqs SET question = ?, answer = ?, order_index = ? WHERE id = ?");
 
-    // 'ssii' = string, string, integer, integer (untuk ID)
+    
     $stmt_update->bind_param("ssii", $question, $answer, $order_index, $faq_id);
 
-    // 6. Eksekusi query
+    
     if ($stmt_update->execute()) {
         $alert_message = '<div class="alert alert-success alert-dismissible fade show" role="alert">
                             <strong>Sukses!</strong> FAQ berhasil diperbarui.
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                           </div>';
 
-        // Ambil lagi data terbaru untuk ditampilkan di form
+        
         $stmt_select = $koneksi->prepare("SELECT * FROM faqs WHERE id = ?");
         $stmt_select->bind_param("i", $faq_id);
         $stmt_select->execute();
@@ -65,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt_update->close();
 }
 
-// Jika data $faq kosong (karena error atau ID tidak ada), isi dengan string kosong
+
 if (empty($faq)) {
     $faq = array_fill_keys(['question', 'answer', 'order_index'], '');
 }

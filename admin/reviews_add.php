@@ -1,24 +1,18 @@
 <?php
-// 1. Hubungkan ke database
 include '../koneksi.php';
-
-$alert_message = ""; // Variabel untuk menyimpan pesan notifikasi
-
-// 2. Logika untuk memproses form saat disubmit
+$alert_message = ""; 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-    // Ambil semua data dari form
     $customer_name = $_POST['customer_name'];
     $review_text = $_POST['review_text'];
     $rating = $_POST['rating'];
     $image_url = $_POST['image_url'];
-    // Cek apakah is_visible dikirim (jika checkbox dicentang, nilainya '1', jika tidak, '0')
+    
     $is_visible = isset($_POST['is_visible']) ? 1 : 0;
 
-    // 3. Buat query INSERT
+    
     $stmt = $koneksi->prepare("INSERT INTO reviews (customer_name, review_text, rating, image_url, is_visible) VALUES (?, ?, ?, ?, ?)");
 
-    // 'ssisi' = string, string, integer, string, integer
+    
     $stmt->bind_param(
         "ssisi",
         $customer_name,
@@ -28,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $is_visible
     );
 
-    // 4. Eksekusi query
+    
     if ($stmt->execute()) {
         $alert_message = '<div class="alert alert-success alert-dismissible fade show" role="alert">
                             <strong>Sukses!</strong> Review baru berhasil ditambahkan.

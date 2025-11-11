@@ -1,25 +1,12 @@
 <?php
-// 1. Hubungkan ke database
 include '../koneksi.php';
-
-$alert_message = ""; // Variabel untuk menyimpan pesan notifikasi
-
-// 2. Logika untuk memproses form saat disubmit
+$alert_message = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-    // Ambil semua data dari form
     $va_capacity = $_POST['va_capacity'];
     $tariff_per_kwh = $_POST['tariff_per_kwh'];
-    // Cek apakah is_active dikirim (jika checkbox dicentang, nilainya '1', jika tidak, '0')
     $is_active = isset($_POST['is_active']) ? 1 : 0;
-
-    // 3. Buat query INSERT
     $stmt = $koneksi->prepare("INSERT INTO power_tariffs (va_capacity, tariff_per_kwh, is_active) VALUES (?, ?, ?)");
-
-    // 'sdi' = string, double, integer
     $stmt->bind_param("sdi", $va_capacity, $tariff_per_kwh, $is_active);
-
-    // 4. Eksekusi query
     if ($stmt->execute()) {
         $alert_message = '<div class="alert alert-success alert-dismissible fade show" role="alert">
                             <strong>Sukses!</strong> Tarif baru berhasil ditambahkan.
@@ -31,13 +18,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                           </div>';
     }
-
     $stmt->close();
 }
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -47,9 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     <link rel="icon" type="image/png" href="../img/favicon.png?v=1.1" sizes="180x180">
 </head>
-
 <body class="sb-nav-fixed">
-
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <a class="navbar-brand ps-3" href="index.php">GreenRay Admin</a>
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
@@ -65,29 +48,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </ul>
     </nav>
     <div id="layoutSidenav">
-
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-
                         <div class="sb-sidenav-menu-heading">Utama</div>
                         <a class="nav-link" href="index.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
                         </a>
-
                         <div class="sb-sidenav-menu-heading">Manajemen Konten</div>
                         <a class="nav-link" href="projects.php">... Proyek</a>
                         <a class="nav-link" href="products.php">... Produk</a>
                         <a class="nav-link" href="clients.php">... Klien</a>
                         <a class="nav-link" href="reviews.php">... Reviews</a>
                         <a class="nav-link" href="faqs.php">... FAQ</a>
-
                         <div class="sb-sidenav-menu-heading">Interaksi User</div>
                         <a class="nav-link" href="consultations.php">... Konsultasi</a>
                         <a class="nav-link" href="contact_messages.php">... Pesan Kontak</a>
-
                         <div class="sb-sidenav-menu-heading">Pengaturan Sistem</div>
                         <a class="nav-link" href="users.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
@@ -106,7 +84,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <a class="nav-link active" href="tariffs.php">Manajemen Tarif</a>
                             </nav>
                         </div>
-
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
@@ -118,7 +95,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-
                     <h1 class="mt-4">Tambah Tarif Baru</h1>
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item"><a href="index.php">Dashboard</a></li>
@@ -126,9 +102,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <li class="breadcrumb-item"><a href="tariffs.php">Manajemen Tarif</a></li>
                         <li class="breadcrumb-item active">Tambah Tarif</li>
                     </ol>
-
                     <?php echo $alert_message; ?>
-
                     <div class="card mb-4">
                         <div class="card-header">
                             <i class="fas fa-plus me-1"></i>
@@ -136,7 +110,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </div>
                         <div class="card-body">
                             <form action="tariff_add.php" method="POST">
-
                                 <div class="mb-3">
                                     <label class="small mb-1" for="va_capacity">Kapasitas VA</label>
                                     <input class="form-control" id="va_capacity" name="va_capacity" type="text"
@@ -154,7 +127,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         Aktif? (Tampilkan di dropdown kalkulator)
                                     </label>
                                 </div>
-
                                 <button class="btn btn-primary" type="submit">Simpan Tarif</button>
                                 <a href="tariffs.php" class="btn btn-secondary">Batal</a>
                             </form>
@@ -171,10 +143,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </footer>
         </div>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
     <script src="js/scripts.js"></script>
 </body>
-
 </html>

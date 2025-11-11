@@ -3,7 +3,6 @@ include '../koneksi.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -12,14 +11,11 @@ include '../koneksi.php';
     <link href="css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
-
 <body class="sb-nav-fixed">
-
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
                 class="fas fa-bars"></i></button>
         <a class="navbar-brand ps-3" href="index.php">GreenRay Admin</a>
-
         <ul class="navbar-nav ms-auto me-3 me-lg-4">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
@@ -30,9 +26,7 @@ include '../koneksi.php';
             </li>
         </ul>
     </nav>
-
     <div id="layoutSidenav">
-
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
@@ -42,7 +36,6 @@ include '../koneksi.php';
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
                         </a>
-
                         <div class="sb-sidenav-menu-heading">Manajemen Konten</div>
                         <a class="nav-link" href="projects.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-briefcase"></i></div>
@@ -64,7 +57,6 @@ include '../koneksi.php';
                             <div class="sb-nav-link-icon"><i class="fas fa-question-circle"></i></div>
                             FAQ
                         </a>
-
                         <div class="sb-sidenav-menu-heading">Interaksi User</div>
                         <a class="nav-link" href="consultations.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-calculator"></i></div>
@@ -74,7 +66,6 @@ include '../koneksi.php';
                             <div class="sb-nav-link-icon"><i class="fas fa-envelope"></i></div>
                             Pesan Kontak
                         </a>
-
                         <div class="sb-sidenav-menu-heading">Pengaturan Sistem</div>
                         <a class="nav-link active" href="users.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
@@ -110,7 +101,6 @@ include '../koneksi.php';
                         <li class="breadcrumb-item"><a href="index.php">Dashboard</a></li>
                         <li class="breadcrumb-item active">Data Users</li>
                     </ol>
-
                     <div class="card mb-4">
                         <div class="card-header">
                             <i class="fas fa-users me-1"></i>
@@ -130,17 +120,11 @@ include '../koneksi.php';
                                 </thead>
                                 <tbody>
                                     <?php
-                                    // 3. Query untuk mengambil data dari tabel 'users'
                                     $query_users = "SELECT id, first_name, last_name, email, created_at FROM users ORDER BY id DESC";
                                     $result_users = $koneksi->query($query_users);
-
                                     if ($result_users && $result_users->num_rows > 0) {
-                                        // 4. Loop data dan tampilkan di baris tabel
                                         while ($row = $result_users->fetch_assoc()) {
-
-                                            // Format tanggal
                                             $tanggal = date('d M Y', strtotime($row['created_at']));
-
                                             echo '<tr>';
                                             echo '<td>' . $row['id'] . '</td>';
                                             echo '<td>' . htmlspecialchars($row['first_name']) . '</td>';
@@ -152,7 +136,6 @@ include '../koneksi.php';
                                                 <a href="user_reset_password.php?id=' . $row['id'] . '" class="btn btn-secondary btn-sm" title="Reset Password" onclick="return confirm(\'Yakin ingin me-reset password untuk ' . htmlspecialchars($row['email']) . '?\');">Reset Pass</a>
                                                 <a href="user_delete.php?id=' . $row['id'] . '" class="btn btn-danger btn-sm" title="Hapus User" onclick="return confirm(\'Yakin ingin menghapus user ini?\');">Hapus</a>
                                             </td>';
-
                                             echo '</tr>';
                                         }
                                     } else {
@@ -174,7 +157,6 @@ include '../koneksi.php';
             </footer>
         </div>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
     <script src="js/scripts.js"></script>
@@ -182,5 +164,4 @@ include '../koneksi.php';
         crossorigin="anonymous"></script>
     <script src="js/datatables-simple-demo.js"></script>
 </body>
-
 </html>

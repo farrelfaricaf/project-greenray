@@ -119,7 +119,7 @@ include '../koneksi.php';
                                     <i class="fas fa-map-marker-alt me-1"></i>
                                     Daftar Semua Lokasi (dari tabel `locations`)
                                 </span>
-                                <a href="location_add.php" class="btn btn-primary btn-sm">
+                                <a href="locations_add.php" class="btn btn-primary btn-sm">
                                     <i class="fas fa-plus me-1"></i> Tambah Lokasi
                                 </a>
                             </div>
@@ -154,8 +154,8 @@ include '../koneksi.php';
                                             echo '<td>' . htmlspecialchars($row['irradiance_factor']) . '</td>';
                                             echo '<td>' . $status . '</td>';
                                             echo '<td>
-                                                <a href="location_edit.php?id=' . $row['id'] . '" class="btn btn-warning btn-sm">Edit</a>
-                                                <a href="location_delete.php?id=' . $row['id'] . '" class="btn btn-danger btn-sm" onclick="return confirm(\'Yakin ingin menghapus lokasi ini?\');">Hapus</a>
+                                                <a href="locations_edit.php?id=' . $row['id'] . '" class="btn btn-warning btn-sm">Edit</a>
+                                                <a href="locations_delete.php?id=' . $row['id'] . '" class="btn btn-danger btn-sm" onclick="return confirm(\'Yakin ingin menghapus lokasi ini?\');">Hapus</a>
                                             </td>';
                                             echo '</tr>';
                                         }

@@ -119,7 +119,7 @@ include '../koneksi.php';
                                     <i class="fas fa-bolt me-1"></i>
                                     Daftar Semua Tarif (dari tabel `power_tariffs`)
                                 </span>
-                                <a href="tariff_add.php" class="btn btn-primary btn-sm">
+                                <a href="tariffs_add.php" class="btn btn-primary btn-sm">
                                     <i class="fas fa-plus me-1"></i> Tambah Tarif
                                 </a>
                             </div>
@@ -157,8 +157,8 @@ include '../koneksi.php';
                                             echo '<td>' . htmlspecialchars($tarif) . '</td>';
                                             echo '<td>' . $status . '</td>';
                                             echo '<td>
-                                                <a href="tariff_edit.php?id=' . $row['id'] . '" class="btn btn-warning btn-sm">Edit</a>
-                                                <a href="tariff_delete.php?id=' . $row['id'] . '" class="btn btn-danger btn-sm" onclick="return confirm(\'Yakin ingin menghapus tarif ini?\');">Hapus</a>
+                                                <a href="tariffs_edit.php?id=' . $row['id'] . '" class="btn btn-warning btn-sm">Edit</a>
+                                                <a href="tariffs_delete.php?id=' . $row['id'] . '" class="btn btn-danger btn-sm" onclick="return confirm(\'Yakin ingin menghapus tarif ini?\');">Hapus</a>
                                             </td>';
                                             echo '</tr>';
                                         }

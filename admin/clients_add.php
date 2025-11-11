@@ -1,32 +1,63 @@
 <?php
+// 1. Hubungkan ke database
 include '../koneksi.php';
 
-$alert_message = ""; 
+$alert_message = ""; // Variabel untuk menyimpan pesan notifikasi
 
+// 2. Logika untuk memproses form saat disubmit
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    
-    $name = $_POST['name'];
-    $logo_url = $_POST['logo_url'];
+    // --- AWAL LOGIKA UPLOAD FILE ---
+    $logo_path_db = ""; // Path yang akan disimpan ke DB
 
-    
-    $stmt = $koneksi->prepare("INSERT INTO clients (name, logo_url) VALUES (?, ?)");
-    
-    $stmt->bind_param("ss", $name, $logo_url);
-    
-    if ($stmt->execute()) {
-        $alert_message = '<div class="alert alert-success alert-dismissible fade show" role="alert">
-                            <strong>Sukses!</strong> Klien baru berhasil ditambahkan.
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                          </div>';
+    // Cek apakah file di-upload tanpa error
+    if (isset($_FILES['logo_file']) && $_FILES['logo_file']['error'] == 0) {
+
+        $target_dir = "../uploads/clients/"; // Folder tujuan
+        $file_name = uniqid() . '-' . basename($_FILES["logo_file"]["name"]);
+        $target_file = $target_dir . $file_name;
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+        // Validasi sederhana (cek apakah ini gambar)
+        $check = getimagesize($_FILES["logo_file"]["tmp_name"]);
+        if ($check !== false) {
+            if (move_uploaded_file($_FILES["logo_file"]["tmp_name"], $target_file)) {
+                $logo_path_db = "uploads/clients/" . $file_name; // Path relatif dari root
+            } else {
+                $alert_message = '<div class="alert alert-danger">Error: Gagal memindahkan file yang di-upload.</div>';
+            }
+        } else {
+            $alert_message = '<div class="alert alert-danger">Error: File yang di-upload bukan gambar.</div>';
+        }
     } else {
-        $alert_message = '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <strong>Error!</strong> Gagal menyimpan: ' . $stmt->error . '
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                          </div>';
+        $alert_message = '<div class="alert alert-danger">Error: Logo klien wajib di-upload.</div>';
     }
+    // --- AKHIR LOGIKA UPLOAD FILE ---
 
-    $stmt->close();
+    // Ambil data form lainnya
+    $name = $_POST['name'];
+
+    // Hanya jalankan query INSERT jika alert masih kosong (upload berhasil)
+    if (empty($alert_message)) {
+
+        // 3. Buat query INSERT
+        $stmt = $koneksi->prepare("INSERT INTO clients (name, logo_url) VALUES (?, ?)");
+        $stmt->bind_param("ss", $name, $logo_path_db);
+
+        // 4. Eksekusi query
+        if ($stmt->execute()) {
+            $alert_message = '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <strong>Sukses!</strong> Klien baru berhasil ditambahkan.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                              </div>';
+        } else {
+            $alert_message = '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <strong>Error!</strong> Gagal menyimpan ke database: ' . $stmt->error . '
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                              </div>';
+        }
+        $stmt->close();
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -44,93 +75,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body class="sb-nav-fixed">
 
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
-                class="fas fa-bars"></i></button>
-        <a class="navbar-brand ps-3" href="index.php">GreenRay Admin</a>
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">...</nav>
 
-        <ul class="navbar-nav ms-auto me-3 me-lg-4">
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
-                    aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#!">Logout</a></li>
-                </ul>
-            </li>
-        </ul>
-    </nav>
-    
     <div id="layoutSidenav">
 
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-
-                        <div class="sb-sidenav-menu-heading">Utama</div>
-                        <a class="nav-link" href="index.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Dashboard
-                        </a>
-
-                        <div class="sb-sidenav-menu-heading">Manajemen Konten</div>
-                        <a class="nav-link" href="projects.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-briefcase"></i></div>
-                            Proyek
-                        </a>
-                        <a class="nav-link" href="products.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-solar-panel"></i></div>
-                            Produk
-                        </a>
                         <a class="nav-link active" href="clients.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-handshake"></i></div>
                             Klien
                         </a>
-                        <a class="nav-link" href="reviews.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-star"></i></div>
-                            Reviews
-                        </a>
-                        <a class="nav-link" href="faqs.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-question-circle"></i></div>
-                            FAQ
-                        </a>
-
-                        <div class="sb-sidenav-menu-heading">Interaksi User</div>
-                        <a class="nav-link" href="consultations.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-calculator"></i></div>
-                            Konsultasi
-                        </a>
-                        <a class="nav-link" href="contact_messages.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-envelope"></i></div>
-                            Pesan Kontak
-                        </a>
-
-                        <div class="sb-sidenav-menu-heading">Pengaturan Sistem</div>
-                        <a class="nav-link" href="users.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
-                            Users
-                        </a>
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
-                            data-bs-target="#collapseKalkulator" aria-expanded="false"
-                            aria-controls="collapseKalkulator">
-                            <div class="sb-nav-link-icon"><i class="fas fa-cogs"></i></div>
-                            Setting Kalkulator
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapseKalkulator" aria-labelledby="headingOne"
-                            data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="locations.php">Manajemen Lokasi</a>
-                                <a class="nav-link" href="tariffs.php">Manajemen Tarif</a>
-                            </nav>
-                        </div>
-
                     </div>
                 </div>
-                <div class="sb-sidenav-footer">
-                    <div class="small">Logged in as:</div>
-                    Admin
-                </div>
+                <div class="sb-sidenav-footer">...</div>
             </nav>
         </div>
         <div id="layoutSidenav_content">
@@ -152,17 +111,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             Formulir Klien Baru
                         </div>
                         <div class="card-body">
-                            <form action="clients_add.php" method="POST">
+                            <form action="clients_add.php" method="POST" enctype="multipart/form-data">
 
                                 <div class="mb-3">
                                     <label class="small mb-1" for="name">Nama Klien</label>
                                     <input class="form-control" id="name" name="name" type="text"
                                         placeholder="Cth: PT Sejahtera" required>
                                 </div>
+
                                 <div class="mb-3">
-                                    <label class="small mb-1" for="logo_url">URL Logo</label>
-                                    <input class="form-control" id="logo_url" name="logo_url" type="text"
-                                        placeholder="Cth: ../img/Ciputra.png" required>
+                                    <label class="small mb-1" for="logo_file">Upload Logo Klien</label>
+                                    <input class="form-control" id="logo_file" name="logo_file" type="file" required>
                                 </div>
 
                                 <button class="btn btn-primary" type="submit">Simpan Klien</button>

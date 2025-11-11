@@ -1,41 +1,71 @@
 <?php
+
 include '../koneksi.php';
-$alert_message = ""; 
+
+$alert_message = "";
+
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    $image_path_db = ""; 
+
+    
+    if (isset($_FILES['image_file']) && $_FILES['image_file']['error'] == 0) {
+        $target_dir = "../uploads/reviews/"; 
+        $file_name = uniqid() . '-' . basename($_FILES["image_file"]["name"]);
+        $target_file = $target_dir . $file_name;
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+        
+        $check = getimagesize($_FILES["image_file"]["tmp_name"]);
+        if ($check !== false) {
+            if (move_uploaded_file($_FILES["image_file"]["tmp_name"], $target_file)) {
+                
+                $image_path_db = "uploads/reviews/" . $file_name; 
+            } else {
+                $alert_message = '<div class="alert alert-danger">Error: Gagal memindahkan file.</div>';
+            }
+        } else {
+            $alert_message = '<div class="alert alert-danger">Error: File bukan gambar.</div>';
+        }
+    } else {
+        $alert_message = '<div class="alert alert-danger">Error: Foto customer wajib di-upload.</div>';
+    }
+    
+
+    
     $customer_name = $_POST['customer_name'];
     $review_text = $_POST['review_text'];
     $rating = $_POST['rating'];
-    $image_url = $_POST['image_url'];
-    
     $is_visible = isset($_POST['is_visible']) ? 1 : 0;
 
     
-    $stmt = $koneksi->prepare("INSERT INTO reviews (customer_name, review_text, rating, image_url, is_visible) VALUES (?, ?, ?, ?, ?)");
+    if ($alert_message == "") {
+        
+        $stmt = $koneksi->prepare("INSERT INTO reviews (customer_name, review_text, rating, image_url, is_visible) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param(
+            "ssisi",
+            $customer_name,
+            $review_text,
+            $rating,
+            $image_path_db,
+            $is_visible
+        );
 
-    
-    $stmt->bind_param(
-        "ssisi",
-        $customer_name,
-        $review_text,
-        $rating,
-        $image_url,
-        $is_visible
-    );
-
-    
-    if ($stmt->execute()) {
-        $alert_message = '<div class="alert alert-success alert-dismissible fade show" role="alert">
-                            <strong>Sukses!</strong> Review baru berhasil ditambahkan.
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                          </div>';
-    } else {
-        $alert_message = '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <strong>Error!</strong> Gagal menyimpan: ' . $stmt->error . '
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                          </div>';
+        
+        if ($stmt->execute()) {
+            $alert_message = '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <strong>Sukses!</strong> Review baru berhasil ditambahkan.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                              </div>';
+        } else {
+            $alert_message = '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <strong>Error!</strong> Gagal menyimpan ke database: ' . $stmt->error . '
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                              </div>';
+        }
+        $stmt->close();
     }
-
-    $stmt->close();
 }
 ?>
 <!DOCTYPE html>
@@ -53,21 +83,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body class="sb-nav-fixed">
 
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
-                class="fas fa-bars"></i></button>
-        <a class="navbar-brand ps-3" href="index.php">GreenRay Admin</a>
-
-        <ul class="navbar-nav ms-auto me-3 me-lg-4">
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
-                    aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#!">Logout</a></li>
-                </ul>
-            </li>
-        </ul>
-    </nav>
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">...</nav>
 
     <div id="layoutSidenav">
 
@@ -75,71 +91,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-
-                        <div class="sb-sidenav-menu-heading">Utama</div>
-                        <a class="nav-link" href="index.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Dashboard
-                        </a>
-
-                        <div class="sb-sidenav-menu-heading">Manajemen Konten</div>
-                        <a class="nav-link" href="projects.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-briefcase"></i></div>
-                            Proyek
-                        </a>
-                        <a class="nav-link" href="products.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-solar-panel"></i></div>
-                            Produk
-                        </a>
-                        <a class="nav-link" href="clients.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-handshake"></i></div>
-                            Klien
-                        </a>
                         <a class="nav-link active" href="reviews.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-star"></i></div>
                             Reviews
                         </a>
-                        <a class="nav-link" href="faqs.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-question-circle"></i></div>
-                            FAQ
-                        </a>
-
-                        <div class="sb-sidenav-menu-heading">Interaksi User</div>
-                        <a class="nav-link" href="consultations.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-calculator"></i></div>
-                            Konsultasi
-                        </a>
-                        <a class="nav-link" href="contact_messages.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-envelope"></i></div>
-                            Pesan Kontak
-                        </a>
-
-                        <div class="sb-sidenav-menu-heading">Pengaturan Sistem</div>
-                        <a class="nav-link" href="users.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
-                            Users
-                        </a>
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
-                            data-bs-target="#collapseKalkulator" aria-expanded="false"
-                            aria-controls="collapseKalkulator">
-                            <div class="sb-nav-link-icon"><i class="fas fa-cogs"></i></div>
-                            Setting Kalkulator
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapseKalkulator" aria-labelledby="headingOne"
-                            data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="locations.php">Manajemen Lokasi</a>
-                                <a class="nav-link" href="tariffs.php">Manajemen Tarif</a>
-                            </nav>
-                        </div>
-
+                        <a class="nav-link" href="faqs.php">... FAQ</a>
                     </div>
                 </div>
-                <div class="sb-sidenav-footer">
-                    <div class="small">Logged in as:</div>
-                    Admin
-                </div>
+                <div class="sb-sidenav-footer">...</div>
             </nav>
         </div>
         <div id="layoutSidenav_content">
@@ -161,7 +120,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             Formulir Review Baru
                         </div>
                         <div class="card-body">
-                            <form action="reviews_add.php" method="POST">
+                            <form action="reviews_add.php" method="POST" enctype="multipart/form-data">
 
                                 <div class="mb-3">
                                     <label class="small mb-1" for="customer_name">Nama Customer</label>
@@ -182,9 +141,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             max="5" placeholder="Cth: 5" required>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="small mb-1" for="image_url">URL Foto Customer</label>
-                                        <input class="form-control" id="image_url" name="image_url" type="text"
-                                            placeholder="Cth: ../img/pp-reviews/img.png" required>
+                                        <label class="small mb-1" for="image_file">Foto Customer</label>
+                                        <input class="form-control" id="image_file" name="image_file" type="file"
+                                            required>
                                     </div>
                                 </div>
 

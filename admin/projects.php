@@ -152,6 +152,7 @@ include '../koneksi.php';
                                             echo '<td>' . htmlspecialchars($row['stat_capacity']) . '</td>';
                                             echo '<td>
                                                         <a href="project_edit.php?id=' . $row['id'] . '" class="btn btn-warning btn-sm">Edit</a>
+                                                        <a href="project_gallery.php?id=' . $row['id'] . '" class="btn btn-info btn-sm">Galeri</a>
                                                         <a href="project_delete.php?id=' . $row['id'] . '" class="btn btn-danger btn-sm" onclick="return confirm(\'Yakin ingin menghapus proyek ini?\');">Hapus</a>
                                                       </td>';
                                             echo '</tr>';

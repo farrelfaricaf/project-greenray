@@ -1,18 +1,18 @@
 <?php
-
+// 1. Hubungkan ke database
 include '../koneksi.php';
 
-$alert_message = ""; 
+$alert_message = "";
 $client_id = null;
-$client = []; 
+$client = [];
 
-
+// 2. Ambil ID Klien dari URL (GET Request)
 if (isset($_GET['id'])) {
     $client_id = $_GET['id'];
 
-    
+    // 3. Ambil data lama dari database
     $stmt_select = $koneksi->prepare("SELECT * FROM clients WHERE id = ?");
-    $stmt_select->bind_param("i", $client_id); 
+    $stmt_select->bind_param("i", $client_id);
     $stmt_select->execute();
     $result = $stmt_select->get_result();
 
@@ -26,45 +26,76 @@ if (isset($_GET['id'])) {
     $alert_message = '<div class="alert alert-danger">Error: ID Klien tidak valid.</div>';
 }
 
-
+// 4. Logika untuk memproses form saat disubmit (POST Request)
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    
+    // Ambil path gambar lama dari hidden input
+    $current_logo_path = $_POST['current_logo_path'];
+    $logo_path_db = $current_logo_path; // Default-nya adalah gambar lama
+
+    // --- AWAL LOGIKA UPLOAD FILE BARU (JIKA ADA) ---
+    if (isset($_FILES['logo_file']) && $_FILES['logo_file']['error'] == 0 && $_FILES['logo_file']['size'] > 0) {
+
+        $target_dir = "../uploads/clients/";
+        $file_name = uniqid() . '-' . basename($_FILES["logo_file"]["name"]);
+        $target_file = $target_dir . $file_name;
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+        $check = getimagesize($_FILES["logo_file"]["tmp_name"]);
+        if ($check !== false) {
+            if (move_uploaded_file($_FILES["logo_file"]["tmp_name"], $target_file)) {
+                // Jika berhasil, set path BARU untuk database
+                $logo_path_db = "uploads/clients/" . $file_name;
+
+                // Hapus file gambar LAMA dari server
+                if (!empty($current_logo_path) && file_exists("../" . $current_logo_path)) {
+                    unlink("../" . $current_logo_path);
+                }
+            } else {
+                $alert_message = '<div class="alert alert-danger">Error: Gagal memindahkan file baru.</div>';
+            }
+        } else {
+            $alert_message = '<div class="alert alert-danger">Error: File baru bukan gambar.</div>';
+        }
+    }
+    // --- AKHIR LOGIKA UPLOAD FILE ---
+
+    // Ambil data form lainnya
     $client_id = $_POST['client_id'];
     $name = $_POST['name'];
-    $logo_url = $_POST['logo_url'];
 
-    
-    $stmt_update = $koneksi->prepare("UPDATE clients SET name = ?, logo_url = ? WHERE id = ?");
+    // Hanya jalankan query UPDATE jika alert masih kosong
+    if (empty($alert_message)) {
 
-    
-    $stmt_update->bind_param("ssi", $name, $logo_url, $client_id);
+        // 5. Buat query UPDATE
+        $stmt_update = $koneksi->prepare("UPDATE clients SET name = ?, logo_url = ? WHERE id = ?");
+        $stmt_update->bind_param("ssi", $name, $logo_path_db, $client_id);
 
-    
-    if ($stmt_update->execute()) {
-        $alert_message = '<div class="alert alert-success alert-dismissible fade show" role="alert">
-                            <strong>Sukses!</strong> Klien berhasil diperbarui.
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                          </div>';
+        // 6. Eksekusi query
+        if ($stmt_update->execute()) {
+            $alert_message = '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <strong>Sukses!</strong> Klien berhasil diperbarui.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                              </div>';
 
-        
-        $stmt_select = $koneksi->prepare("SELECT * FROM clients WHERE id = ?");
-        $stmt_select->bind_param("i", $client_id);
-        $stmt_select->execute();
-        $client = $stmt_select->get_result()->fetch_assoc();
-        $stmt_select->close();
+            // Ambil lagi data terbaru untuk ditampilkan di form
+            $stmt_select = $koneksi->prepare("SELECT * FROM clients WHERE id = ?");
+            $stmt_select->bind_param("i", $client_id);
+            $stmt_select->execute();
+            $client = $stmt_select->get_result()->fetch_assoc();
+            $stmt_select->close();
 
-    } else {
-        $alert_message = '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <strong>Error!</strong> Gagal memperbarui: ' . $stmt_update->error . '
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                          </div>';
+        } else {
+            $alert_message = '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <strong>Error!</strong> Gagal memperbarui: ' . $stmt_update->error . '
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                              </div>';
+        }
+        $stmt_update->close();
     }
-
-    $stmt_update->close();
 }
 
-
+// Jika data $client kosong (karena error atau ID tidak ada), isi dengan string kosong
 if (empty($client)) {
     $client = array_fill_keys(['name', 'logo_url'], '');
 }
@@ -84,93 +115,21 @@ if (empty($client)) {
 
 <body class="sb-nav-fixed">
 
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
-                class="fas fa-bars"></i></button>
-        <a class="navbar-brand ps-3" href="index.php">GreenRay Admin</a>
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">...</nav>
 
-        <ul class="navbar-nav ms-auto me-3 me-lg-4">
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
-                    aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#!">Logout</a></li>
-                </ul>
-            </li>
-        </ul>
-    </nav>
-    
     <div id="layoutSidenav">
 
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-
-                        <div class="sb-sidenav-menu-heading">Utama</div>
-                        <a class="nav-link" href="index.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Dashboard
-                        </a>
-
-                        <div class="sb-sidenav-menu-heading">Manajemen Konten</div>
-                        <a class="nav-link" href="projects.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-briefcase"></i></div>
-                            Proyek
-                        </a>
-                        <a class="nav-link" href="products.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-solar-panel"></i></div>
-                            Produk
-                        </a>
                         <a class="nav-link active" href="clients.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-handshake"></i></div>
                             Klien
                         </a>
-                        <a class="nav-link" href="reviews.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-star"></i></div>
-                            Reviews
-                        </a>
-                        <a class="nav-link" href="faqs.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-question-circle"></i></div>
-                            FAQ
-                        </a>
-
-                        <div class="sb-sidenav-menu-heading">Interaksi User</div>
-                        <a class="nav-link" href="consultations.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-calculator"></i></div>
-                            Konsultasi
-                        </a>
-                        <a class="nav-link" href="contact_messages.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-envelope"></i></div>
-                            Pesan Kontak
-                        </a>
-
-                        <div class="sb-sidenav-menu-heading">Pengaturan Sistem</div>
-                        <a class="nav-link" href="users.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
-                            Users
-                        </a>
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
-                            data-bs-target="#collapseKalkulator" aria-expanded="false"
-                            aria-controls="collapseKalkulator">
-                            <div class="sb-nav-link-icon"><i class="fas fa-cogs"></i></div>
-                            Setting Kalkulator
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapseKalkulator" aria-labelledby="headingOne"
-                            data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="locations.php">Manajemen Lokasi</a>
-                                <a class="nav-link" href="tariffs.php">Manajemen Tarif</a>
-                            </nav>
-                        </div>
-
                     </div>
                 </div>
-                <div class="sb-sidenav-footer">
-                    <div class="small">Logged in as:</div>
-                    Admin
-                </div>
+                <div class="sb-sidenav-footer">...</div>
             </nav>
         </div>
         <div id="layoutSidenav_content">
@@ -186,32 +145,49 @@ if (empty($client)) {
 
                     <?php echo $alert_message; ?>
 
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <i class="fas fa-edit me-1"></i>
-                            Formulir Edit Klien (ID: <?php echo $client_id; ?>)
+                    <?php if (!empty($client)): ?>
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-edit me-1"></i>
+                                Formulir Edit Klien (ID: <?php echo $client_id; ?>)
+                            </div>
+                            <div class="card-body">
+
+                                <form action="clients_edit.php?id=<?php echo $client_id; ?>" method="POST"
+                                    enctype="multipart/form-data">
+                                    <input type="hidden" name="client_id" value="<?php echo $client_id; ?>">
+                                    <input type="hidden" name="current_logo_path"
+                                        value="<?php echo htmlspecialchars($client['logo_url']); ?>">
+
+                                    <div class="mb-3">
+                                        <label class="small mb-1" for="name">Nama Klien</label>
+                                        <input class="form-control" id="name" name="name" type="text"
+                                            value="<?php echo htmlspecialchars($client['name']); ?>" required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="small mb-1">Logo Saat Ini:</label><br>
+                                        <?php if (!empty($client['logo_url'])): ?>
+                                            <img src="../<?php echo htmlspecialchars($client['logo_url']); ?>"
+                                                alt="<?php echo htmlspecialchars($client['name']); ?>"
+                                                style="height: 50px; border: 1px solid #ddd; background: #fff; padding: 5px;">
+                                        <?php else: ?>
+                                            <small class="text-muted">Belum ada logo.</small>
+                                        <?php endif; ?>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="small mb-1" for="logo_file">Upload Logo Baru (Opsional)</label>
+                                        <input class="form-control" id="logo_file" name="logo_file" type="file">
+                                        <small class="text-muted">Biarkan kosong jika tidak ingin mengganti logo.</small>
+                                    </div>
+
+                                    <button class="btn btn-primary" type="submit">Update Klien</button>
+                                    <a href="clients.php" class="btn btn-secondary">Kembali ke Daftar</a>
+                                </form>
+                            </div>
                         </div>
-                        <div class="card-body">
-
-                            <form action="clients_edit.php?id=<?php echo $client_id; ?>" method="POST">
-                                <input type="hidden" name="client_id" value="<?php echo $client_id; ?>">
-
-                                <div class="mb-3">
-                                    <label class="small mb-1" for="name">Nama Klien</label>
-                                    <input class="form-control" id="name" name="name" type="text"
-                                        value="<?php echo htmlspecialchars($client['name']); ?>" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="small mb-1" for="logo_url">URL Logo</label>
-                                    <input class="form-control" id="logo_url" name="logo_url" type="text"
-                                        value="<?php echo htmlspecialchars($client['logo_url']); ?>" required>
-                                </div>
-
-                                <button class="btn btn-primary" type="submit">Update Klien</button>
-                                <a href="clients.php" class="btn btn-secondary">Kembali ke Daftar</a>
-                            </form>
-                        </div>
-                    </div>
+                    <?php endif; ?>
                 </div>
             </main>
             <footer class="py-4 bg-light mt-auto">

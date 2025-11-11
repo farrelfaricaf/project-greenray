@@ -1,24 +1,24 @@
 <?php
-// 1. Hubungkan ke database
+
 include '../koneksi.php';
 
-$alert_message = ""; // Variabel untuk menyimpan pesan notifikasi
+$alert_message = ""; 
 
-// 2. Logika untuk memproses form saat disubmit
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // Ambil semua data dari form
+    
     $question = $_POST['question'];
     $answer = $_POST['answer'];
     $order_index = $_POST['order_index'];
 
-    // 3. Buat query INSERT
+    
     $stmt = $koneksi->prepare("INSERT INTO faqs (question, answer, order_index) VALUES (?, ?, ?)");
 
-    // 'ssi' = string, string, integer
+    
     $stmt->bind_param("ssi", $question, $answer, $order_index);
 
-    // 4. Eksekusi query
+    
     if ($stmt->execute()) {
         $alert_message = '<div class="alert alert-success alert-dismissible fade show" role="alert">
                             <strong>Sukses!</strong> FAQ baru berhasil ditambahkan.

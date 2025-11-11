@@ -1,18 +1,18 @@
 <?php
-// 1. Hubungkan ke database
+
 include '../koneksi.php';
 
-$alert_message = ""; // Variabel untuk menyimpan pesan notifikasi
+$alert_message = ""; 
 $client_id = null;
-$client = []; // Array untuk menyimpan data klien yang akan diedit
+$client = []; 
 
-// 2. Ambil ID Klien dari URL (GET Request)
+
 if (isset($_GET['id'])) {
     $client_id = $_GET['id'];
 
-    // 3. Ambil data klien yang ada dari database
+    
     $stmt_select = $koneksi->prepare("SELECT * FROM clients WHERE id = ?");
-    $stmt_select->bind_param("i", $client_id); // 'i' untuk integer
+    $stmt_select->bind_param("i", $client_id); 
     $stmt_select->execute();
     $result = $stmt_select->get_result();
 
@@ -26,28 +26,28 @@ if (isset($_GET['id'])) {
     $alert_message = '<div class="alert alert-danger">Error: ID Klien tidak valid.</div>';
 }
 
-// 4. Logika untuk memproses form saat disubmit (POST Request)
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // Ambil semua data dari form (termasuk ID dari hidden input)
+    
     $client_id = $_POST['client_id'];
     $name = $_POST['name'];
     $logo_url = $_POST['logo_url'];
 
-    // 5. Buat query UPDATE
+    
     $stmt_update = $koneksi->prepare("UPDATE clients SET name = ?, logo_url = ? WHERE id = ?");
 
-    // 's' untuk string, 'i' untuk integer (ID di akhir)
+    
     $stmt_update->bind_param("ssi", $name, $logo_url, $client_id);
 
-    // 6. Eksekusi query
+    
     if ($stmt_update->execute()) {
         $alert_message = '<div class="alert alert-success alert-dismissible fade show" role="alert">
                             <strong>Sukses!</strong> Klien berhasil diperbarui.
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                           </div>';
 
-        // Ambil lagi data terbaru untuk ditampilkan di form
+        
         $stmt_select = $koneksi->prepare("SELECT * FROM clients WHERE id = ?");
         $stmt_select->bind_param("i", $client_id);
         $stmt_select->execute();
@@ -64,7 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt_update->close();
 }
 
-// Jika data $client kosong (karena error atau ID tidak ada), isi dengan string kosong
+
 if (empty($client)) {
     $client = array_fill_keys(['name', 'logo_url'], '');
 }

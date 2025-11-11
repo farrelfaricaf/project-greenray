@@ -131,26 +131,26 @@ include '../koneksi.php';
                                 </thead>
                                 <tbody>
                                     <?php
-                                    // 3. Query untuk mengambil data dari tabel 'contact_messages'
+                                    
                                     $query_messages = "SELECT id, created_at, full_name, email, subject, is_read 
                                     FROM contact_messages 
                                     ORDER BY id DESC";
                                     $result_messages = $koneksi->query($query_messages);
 
                                     if ($result_messages && $result_messages->num_rows > 0) {
-                                        // 4. Loop data dan tampilkan di baris tabel
+                                        
                                         while ($row = $result_messages->fetch_assoc()) {
 
-                                            // Format tanggal
+                                            
                                             $tanggal = date('d M Y, H:i', strtotime($row['created_at']));
 
-                                            // Logika untuk status (is_read: 0 = Baru, 1 = Dibaca)
+                                            
                                             if ($row['is_read'] == 0) {
                                                 $status = '<span class="badge bg-primary">Baru</span>';
-                                                $row_style = 'font-weight: bold;'; // Buat teks jadi tebal jika belum dibaca
+                                                $row_style = 'font-weight: bold;'; 
                                             } else {
                                                 $status = '<span class="badge bg-secondary">Dibaca</span>';
-                                                $row_style = ''; // Normal jika sudah dibaca
+                                                $row_style = ''; 
                                             }
 
                                             echo '<tr style="' . $row_style . '">';

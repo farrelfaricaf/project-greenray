@@ -1,28 +1,28 @@
 <?php
-// 1. Hubungkan ke database
+
 include '../koneksi.php';
 
 $alert_message = "";
 $consultation_id = null;
-$consultation = []; // Array untuk menyimpan data
+$consultation = []; 
 
-// 2. Ambil ID dari URL (GET Request)
+
 if (isset($_GET['id'])) {
     $consultation_id = $_GET['id'];
 
-    // 3. Ambil SEMUA data untuk ID tersebut
+    
     $stmt = $koneksi->prepare("SELECT * FROM consultation_requests WHERE id = ?");
-    $stmt->bind_param("i", $consultation_id); // 'i' untuk integer
+    $stmt->bind_param("i", $consultation_id); 
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
         $consultation = $result->fetch_assoc();
 
-        // (CATATAN: Di file contact_messages, kita menambahkan logika 'is_read'. 
-        // Di tabel consultation_requests, kita tidak membuatnya. 
-        // Jika kamu ingin, kamu bisa menambahkan kolom 'status' di database
-        // dan mengubahnya di sini, misal: UPDATE consultation_requests SET status = 'Dibaca' WHERE id = ?)
+        
+        
+        
+        
 
     } else {
         $alert_message = '<div class="alert alert-danger">Error: Data Konsultasi tidak ditemukan!</div>';
@@ -32,7 +32,7 @@ if (isset($_GET['id'])) {
     $alert_message = '<div class="alert alert-danger">Error: ID Konsultasi tidak valid.</div>';
 }
 
-// Jika data $consultation kosong, kita akan menampilkannya di HTML
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

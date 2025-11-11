@@ -135,15 +135,15 @@ include '../koneksi.php';
                                 </thead>
                                 <tbody>
                                     <?php
-                                    // 3. Query untuk mengambil data dari tabel 'clients'
+                                    
                                     $query_clients = "SELECT id, name, logo_url FROM clients ORDER BY id ASC";
                                     $result_clients = $koneksi->query($query_clients);
 
                                     if ($result_clients && $result_clients->num_rows > 0) {
-                                        // 4. Loop data dan tampilkan di baris tabel
+                                        
                                         while ($row = $result_clients->fetch_assoc()) {
 
-                                            // Perbaiki path gambar agar relatif dari root (../)
+                                            
                                             $logo_path = '../' . ltrim(str_replace('../', '', $row['logo_url']), '/');
 
                                             echo '<tr>';

@@ -133,7 +133,7 @@ include '../koneksi.php';
                                 </thead>
                                 <tbody>
                                     <?php
-                                    // 3. Query untuk mengambil data dari tabel 'consultation_requests'
+                                    
                                     $query_consults = "SELECT id, created_at, full_name, email, phone, calc_location, 
                                             result_system_capacity_kwp, result_monthly_savings 
                                     FROM consultation_requests 
@@ -141,12 +141,12 @@ include '../koneksi.php';
                                     $result_consults = $koneksi->query($query_consults);
 
                                     if ($result_consults && $result_consults->num_rows > 0) {
-                                        // 4. Loop data dan tampilkan di baris tabel
+                                        
                                         while ($row = $result_consults->fetch_assoc()) {
 
-                                            // Format tanggal agar lebih rapi
+                                            
                                             $tanggal = date('d M Y, H:i', strtotime($row['created_at']));
-                                            // Format angka penghematan
+                                            
                                             $penghematan = "Rp " . number_format($row['result_monthly_savings'], 0, ',', '.');
 
                                             echo '<tr>';

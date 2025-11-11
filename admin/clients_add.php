@@ -1,23 +1,19 @@
 <?php
-// 1. Hubungkan ke database
 include '../koneksi.php';
 
-$alert_message = ""; // Variabel untuk menyimpan pesan notifikasi
+$alert_message = ""; 
 
-// 2. Logika untuk memproses form saat disubmit
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // Ambil semua data dari form
+    
     $name = $_POST['name'];
     $logo_url = $_POST['logo_url'];
 
-    // 3. Buat query INSERT
+    
     $stmt = $koneksi->prepare("INSERT INTO clients (name, logo_url) VALUES (?, ?)");
-
-    // 's' berarti string. Kita punya 2 kolom.
+    
     $stmt->bind_param("ss", $name, $logo_url);
-
-    // 4. Eksekusi query
+    
     if ($stmt->execute()) {
         $alert_message = '<div class="alert alert-success alert-dismissible fade show" role="alert">
                             <strong>Sukses!</strong> Klien baru berhasil ditambahkan.

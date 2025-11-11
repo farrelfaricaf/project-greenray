@@ -1,18 +1,18 @@
 <?php
-// 1. Hubungkan ke database
+
 include '../koneksi.php';
 
-$alert_message = ""; // Variabel untuk menyimpan pesan notifikasi
+$alert_message = ""; 
 $consultation_id = null;
-$consultation = []; // Array untuk menyimpan data
+$consultation = []; 
 
-// 2. Ambil ID dari URL (GET Request)
+
 if (isset($_GET['id'])) {
     $consultation_id = $_GET['id'];
 
-    // 3. Ambil data lama dari database
+    
     $stmt_select = $koneksi->prepare("SELECT * FROM consultation_requests WHERE id = ?");
-    $stmt_select->bind_param("i", $consultation_id); // 'i' untuk integer
+    $stmt_select->bind_param("i", $consultation_id); 
     $stmt_select->execute();
     $result = $stmt_select->get_result();
 
@@ -23,14 +23,14 @@ if (isset($_GET['id'])) {
     }
     $stmt_select->close();
 } else {
-    // Jika tidak ada ID di URL
+    
     $alert_message = '<div class="alert alert-danger">Error: ID Konsultasi tidak valid.</div>';
 }
 
-// 4. Logika untuk memproses form saat disubmit (POST Request)
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // Ambil semua data dari form
+    
     $consultation_id = $_POST['consultation_id'];
     $full_name = $_POST['full_name'];
     $email = $_POST['email'];
@@ -50,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $result_investment_estimate = $_POST['result_investment_estimate'];
     $result_roi_years = $_POST['result_roi_years'];
 
-    // 5. Buat query UPDATE
+    
     $stmt_update = $koneksi->prepare("UPDATE consultation_requests SET 
         full_name = ?, email = ?, phone = ?, address = ?, kelurahan = ?, kecamatan = ?, postal_code = ?, 
         calc_monthly_bill = ?, calc_va_capacity = ?, calc_location = ?, calc_property_type = ?, 
@@ -58,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         result_monthly_savings = ?, result_system_capacity_kwp = ?, result_investment_estimate = ?, result_roi_years = ? 
         WHERE id = ?");
 
-    // s = string, i = integer, d = double/decimal. ID (integer) ada di akhir
+    
     $stmt_update->bind_param(
         "sssssssisssssiiddi",
         $full_name,
@@ -78,17 +78,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $result_system_capacity_kwp,
         $result_investment_estimate,
         $result_roi_years,
-        $consultation_id // ID untuk klausa WHERE
+        $consultation_id 
     );
 
-    // 6. Eksekusi query
+    
     if ($stmt_update->execute()) {
         $alert_message = '<div class="alert alert-success alert-dismissible fade show" role="alert">
                             <strong>Sukses!</strong> Data konsultasi berhasil diperbarui.
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                           </div>';
 
-        // Ambil lagi data terbaru untuk ditampilkan di form
+        
         $stmt_select = $koneksi->prepare("SELECT * FROM consultation_requests WHERE id = ?");
         $stmt_select->bind_param("i", $consultation_id);
         $stmt_select->execute();
@@ -105,7 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt_update->close();
 }
 
-// Jika data $consultation kosong (karena error atau ID tidak ada), isi dengan string kosong
+
 if (empty($consultation)) {
     $consultation = array_fill_keys([
         'full_name',
@@ -241,7 +241,7 @@ if (empty($consultation)) {
 
                     <?php echo $alert_message; ?>
 
-                    <?php if (!empty($consultation)): // Hanya tampilkan form jika data ditemukan ?>
+                    <?php if (!empty($consultation)): ?>
                         <div class="card mb-4">
                             <div class="card-header">
                                 <i class="fas fa-edit me-1"></i>

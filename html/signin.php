@@ -1,3 +1,56 @@
+<?php
+// WAJIB ADA DI BARIS PALING ATAS
+session_start();
+
+// 1. Hubungkan ke database
+include '../koneksi.php';
+
+$error_message = ""; // Variabel untuk menyimpan pesan error
+
+// 2. Cek jika request-nya adalah POST
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+  // --- PERBAIKAN "SUPER-AMAN" ADA DI SINI ---
+  // Cek dulu apakah 'email' dan 'password' ADA di data POST
+  if (isset($_POST['email']) && isset($_POST['password'])) {
+
+    $email = $koneksi->real_escape_string($_POST['email']);
+    $password = $_POST['password'];
+
+    // 4. Ambil data user dari DB
+    $sql_select = "SELECT id, first_name, email, password, profile_image_url FROM users WHERE email = '$email'";
+    $result = $koneksi->query($sql_select);
+
+    if ($result && $result->num_rows == 1) {
+      $user = $result->fetch_assoc();
+
+      // 5. Verifikasi password
+      if (password_verify($password, $user['password'])) {
+
+        // 6. SUKSES! Simpan data user ke SESSION
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['user_name'] = $user['first_name'];
+        $_SESSION['user_email'] = $user['email'];
+        $_SESSION['user_profile_pic'] = $user['profile_image_url'];
+
+        // Arahkan (redirect) ke halaman home
+        header("Location: home.php");
+        exit;
+
+      } else {
+        $error_message = "Email atau password yang Anda masukkan salah.";
+      }
+    } else {
+      $error_message = "Email atau password yang Anda masukkan salah.";
+    }
+
+  } else {
+    // Ini terjadi jika ada form lain yang submit ke halaman ini tanpa field yang lengkap
+    $error_message = "Terjadi kesalahan pada form. Silakan coba lagi.";
+  }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -22,22 +75,26 @@
       <h1 class="fw-bold">Sign In Account</h1>
       <p class="text-muted">Enter your personal data to access your account</p>
 
-      <form class="signup-form needs-validation" novalidate>
+      <?php if (!empty($error_message)): ?>
+        <div class="alert alert-danger">
+          <?php echo $error_message; ?>
+        </div>
+      <?php endif; ?>
 
-        <div>
-          <div class="form-group mb-4">
-            <label for="email" class="fw-medium">Email</label>
-            <input type="email" class="form-control" id="email" placeholder="eg. johnfrans@gmail.com" required />
-            <div class="invalid-feedback">
-              Please enter a valid email address.
-            </div>
+      <form class="form-content" action="signin.php" method="POST" novalidate>
+        <div class="form-group mb-4">
+          <label for="email" class="fw-medium">Email</label>
+          <input type="email" class="form-control" id="email" name="email" placeholder="eg. johnfrans@gmail.com"
+            required />
+          <div class="invalid-feedback">
+            Please enter a valid email address.
           </div>
         </div>
 
         <div class="form-group mb-4">
           <label for="password" class="fw-medium">Password</label>
-          <input type="password" class="form-control" id="password" placeholder="Enter your password" required
-            minlength="8" />
+          <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password"
+            required minlength="8" />
           <div class="invalid-feedback">
             Password must be at least 8 characters.
           </div>
@@ -49,8 +106,7 @@
         </button>
 
         <p class="login-text mt-3">
-          Don’t have an account? <a href="..\html\signup.html" class="fw-semibold">Sign Up</a>
-        </p>
+          Don’t have an account? <a href="signup.php" class="fw-semibold">Sign Up</a> </p>
       </form>
     </div>
 

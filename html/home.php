@@ -1,3 +1,19 @@
+<?php
+// WAJIB ADA DI BARIS PALING ATAS
+session_start();
+
+// Hubungkan ke database (jika kamu perlu data lain, seperti untuk footer)
+include '../koneksi.php';
+
+// Cek status login
+$is_logged_in = isset($_SESSION['user_id']);
+
+if ($is_logged_in) {
+    // Ambil data dari session yang sudah disimpan saat login
+    $user_name = $_SESSION['user_name'] ?? 'User';
+    $profile_pic = $_SESSION['user_profile_pic'] ?? '../img/default-profile.png'; // Asumsi path default
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,6 +33,64 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
         rel="stylesheet">
     <link rel="icon" type="image/png" href="..\img\favicon.png" sizes="180px180">
+    <style>
+        /* CSS untuk Dropdown Profil */
+        .profile-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* INI YANG MEMPERBAIKI UKURAN GAMBAR */
+        .profile-picture-header {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            /* Memastikan gambar tidak gepeng */
+            cursor: pointer;
+            border: 2px solid #136000;
+            /* Border hijau GreenRay */
+        }
+
+        .dropdown-menu-header {
+            display: none;
+            /* Sembunyi by default */
+            position: absolute;
+            right: 0;
+            top: 60px;
+            /* Jarak dari ikon */
+            background-color: white;
+            min-width: 180px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            border-radius: 8px;
+            overflow: hidden;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .dropdown-menu-header.show {
+            display: block;
+            /* Tampilkan saat di-klik */
+        }
+
+        .dropdown-menu-header .dropdown-item,
+        .dropdown-menu-header .dropdown-item-info {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 0.95rem;
+        }
+
+        .dropdown-menu-header .dropdown-item:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown-menu-header .dropdown-item-info {
+            background-color: #f9f9f9;
+            font-weight: 500;
+        }
+    </style>
 </head>
 
 <body>
@@ -31,15 +105,39 @@
                         <div class="non-active"><a href="..\html\calc.html">Calculator</a></div>
                         <div class="non-active"><a href="..\html\katalog.html">Catalog</a></div>
                     </div>
+
                     <div class="header-actions">
-                        <a class="login-btn" href="..\html\signin.html">
-                            <div class="login-text">Login</div>
-                            <span class="akar-icons--door"></span>
-                        </a>
-                        <a class="contact-us-btn" href="..\html\contact-us.html">
-                            <div class="contact-us-text">Contact Us</div>
-                            <span class="mynaui--arrow-right"></span>
-                        </a>
+
+                        <?php if ($is_logged_in): // JIKA USER SUDAH LOGIN ?>
+
+                            <div class="profile-dropdown">
+                                <a href="#" class="profile-toggle" id="profileToggle">
+                                    <img src="../<?php echo htmlspecialchars($profile_pic); ?>" alt="Profil"
+                                        class="profile-picture-header">
+                                </a>
+                                <div class="dropdown-menu-header" id="profileDropdownMenu">
+                                    <div class="dropdown-item-info">
+                                        Halo, <strong><?php echo htmlspecialchars($user_name); ?></strong>!
+                                    </div>
+                                    <a class="dropdown-item" href="profil.php">Profil Saya</a>
+                                    <a class="dropdown-item" href="contact-us.php">Bantuan / Kontak</a> <a
+                                        class="dropdown-item" href="logout.php">Logout</a>
+                                </div>
+                            </div>
+
+                        <?php else: // JIKA USER ADALAH TAMU (BELUM LOGIN) ?>
+
+                            <a class="login-btn" href="signin.php">
+                                <div class="login-text">Login</div>
+                                <span class="akar-icons--door"></span>
+                            </a>
+                            <a class="contact-us-btn" href="contact-us.php">
+                                <div class="contact-us-text">Contact Us</div>
+                                <span class="mynaui--arrow-right"></span>
+                            </a>
+
+                        <?php endif; ?>
+
                     </div>
                 </div>
                 <img class="head-img" src="..\img\home-img.png" />
@@ -508,6 +606,24 @@
         xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
         </script>
     <script src="..\javascript\dropdown.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const profileToggle = document.getElementById('profileToggle');
+            const profileDropdownMenu = document.getElementById('profileDropdownMenu');
+
+            if (profileToggle) {
+                profileToggle.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    profileDropdownMenu.classList.toggle('show');
+                });
+                window.addEventListener('click', function (e) {
+                    if (profileToggle && !profileToggle.contains(e.target) && !profileDropdownMenu.contains(e.target)) {
+                        profileDropdownMenu.classList.remove('show');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>

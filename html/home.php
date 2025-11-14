@@ -102,7 +102,7 @@ if ($is_logged_in) {
                     <div class="header-menu">
                         <div class="active-head"><a href="..\html\home.html">Home</a></div>
                         <div class="non-active"><a href="..\html\portofolio.html">Portfolio</a></div>
-                        <div class="non-active"><a href="..\html\calc.html">Calculator</a></div>
+                        <div class="non-active"><a href="calc.php">Calculator</a></div>
                         <div class="non-active"><a href="..\html\katalog.html">Catalog</a></div>
                     </div>
 

@@ -1,19 +1,3 @@
-const TARIFF_PLN = {
-    "900 VA": 1352.00,
-    "1300 VA": 1444.70, 
-    "2200 VA": 1444.70, 
-    "3500 VA": 1699.53,
-    "5500 VA": 1699.53,
-    "6600+ VA": 1699.53
-};
-
-const SOLAR_IRRADIANCE = {
-    "Jakarta": 4.50,
-    "Bandung": 4.20,
-    "Surabaya": 5.26, 
-    "Medan": 4.10,
-};
-
 const EFFICIENCY_FACTOR = 0.85;
 const SAFETY_FACTOR = 1.25;
 const DAYS_IN_MONTH = 30.44;

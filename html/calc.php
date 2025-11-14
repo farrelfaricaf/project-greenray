@@ -1,3 +1,44 @@
+<?php
+// WAJIB ADA DI BARIS PALING ATAS
+session_start();
+
+// 1. Hubungkan ke database
+include '../koneksi.php';
+
+// 2. Siapkan array untuk menampung data
+$location_options = []; // Untuk dropdown HTML (data-options)
+$tariff_options = [];   // Untuk dropdown HTML (data-options)
+$location_js_map = [];  // Untuk objek JavaScript (SOLAR_IRRADIANCE)
+$tariff_js_map = [];    // Untuk objek JavaScript (TARIFF_PLN)
+
+// 3. Ambil Data Lokasi dari DB
+$query_loc = "SELECT city_name, irradiance_factor FROM locations WHERE is_active = 1 ORDER BY city_name ASC";
+$result_loc = $koneksi->query($query_loc);
+if ($result_loc) {
+    while ($row = $result_loc->fetch_assoc()) {
+        $location_options[] = $row['city_name'];
+        $location_js_map[$row['city_name']] = (float) $row['irradiance_factor']; // Data untuk JS
+    }
+}
+
+// 4. Ambil Data Tarif dari DB
+$query_tariff = "SELECT va_capacity, tariff_per_kwh FROM power_tariffs WHERE is_active = 1 ORDER BY id ASC";
+$result_tariff = $koneksi->query($query_tariff);
+if ($result_tariff) {
+    while ($row = $result_tariff->fetch_assoc()) {
+        $tariff_options[] = $row['va_capacity'];
+        $tariff_js_map[$row['va_capacity']] = (float) $row['tariff_per_kwh']; // Data untuk JS
+    }
+}
+
+// (Logika untuk cek login user, jika ada)
+$is_logged_in = isset($_SESSION['user_id']);
+if ($is_logged_in) {
+    $user_name = $_SESSION['user_name'] ?? 'User';
+    $profile_pic = $_SESSION['user_profile_pic'] ?? '../img/default-profile.png';
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,6 +58,64 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
         rel="stylesheet">
     <link rel="icon" type="image/png" href="../img/favicon.png" sizes="180px180">
+    <style>
+        /* CSS untuk Dropdown Profil */
+        .profile-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* INI YANG MEMPERBAIKI UKURAN GAMBAR */
+        .profile-picture-header {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            /* Memastikan gambar tidak gepeng */
+            cursor: pointer;
+            border: 2px solid #136000;
+            /* Border hijau GreenRay */
+        }
+
+        .dropdown-menu-header {
+            display: none;
+            /* Sembunyi by default */
+            position: absolute;
+            right: 0;
+            top: 60px;
+            /* Jarak dari ikon */
+            background-color: white;
+            min-width: 180px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            border-radius: 8px;
+            overflow: hidden;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .dropdown-menu-header.show {
+            display: block;
+            /* Tampilkan saat di-klik */
+        }
+
+        .dropdown-menu-header .dropdown-item,
+        .dropdown-menu-header .dropdown-item-info {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 0.95rem;
+        }
+
+        .dropdown-menu-header .dropdown-item:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown-menu-header .dropdown-item-info {
+            background-color: #f9f9f9;
+            font-weight: 500;
+        }
+    </style>
 </head>
 
 <body>
@@ -25,20 +124,44 @@
             <div class="hero">
                 <img class="green-ray-logo-1" src="../img/GreenRay_Logo 1-1.png" />
                 <div class="header-menu">
-                    <div class="non-active"><a href="../html/home.html">Home</a></div>
+                    <div class="non-active"><a href="home.php">Home</a></div>
                     <div class="non-active"><a href="../html/portofolio.html">Portfolio</a></div>
                     <div class="active-head"><a href="../html/calc.html">Calculator</a></div>
                     <div class="non-active"><a href="../html/katalog.html">Catalog</a></div>
                 </div>
+
                 <div class="header-actions">
-                    <a class="login-btn" href="../html/signin.html">
-                        <div class="login-text">Login</div>
-                        <span class="akar-icons--door"></span>
-                    </a>
-                    <a class="contact-us-btn" href="../html/contact-us.html">
-                        <div class="contact-us-text">Contact Us</div>
-                        <span class="mynaui--arrow-right"></span>
-                    </a>
+
+                    <?php if ($is_logged_in): // JIKA USER SUDAH LOGIN ?>
+
+                        <div class="profile-dropdown">
+                            <a href="#" class="profile-toggle" id="profileToggle">
+                                <img src="../<?php echo htmlspecialchars($profile_pic); ?>" alt="Profil"
+                                    class="profile-picture-header">
+                            </a>
+                            <div class="dropdown-menu-header" id="profileDropdownMenu">
+                                <div class="dropdown-item-info">
+                                    Halo, <strong><?php echo htmlspecialchars($user_name); ?></strong>!
+                                </div>
+                                <a class="dropdown-item" href="profil.php">Profil Saya</a>
+                                <a class="dropdown-item" href="contact-us.php">Bantuan / Kontak</a> <a class="dropdown-item"
+                                    href="logout.php">Logout</a>
+                            </div>
+                        </div>
+
+                    <?php else: // JIKA USER ADALAH TAMU (BELUM LOGIN) ?>
+
+                        <a class="login-btn" href="signin.php">
+                            <div class="login-text">Login</div>
+                            <span class="akar-icons--door"></span>
+                        </a>
+                        <a class="contact-us-btn" href="contact-us.php">
+                            <div class="contact-us-text">Contact Us</div>
+                            <span class="mynaui--arrow-right"></span>
+                        </a>
+
+                    <?php endif; ?>
+
                 </div>
             </div>
 
@@ -77,8 +200,8 @@
                             <div class="input-column">
                                 <div class="title-input">Pilih Daya VA</div>
                                 <div class="custom-dropdown static-dropdown"
-                                    data-options="900 VA,1300 VA,2200 VA,3500 VA" data-placeholder="Pilih Daya VA"
-                                    tabindex="0">
+                                    data-options="<?php echo implode(',', $tariff_options); ?>"
+                                    data-placeholder="Pilih Daya VA" tabindex="0">
                                     <div class="dropdown-header">
                                         <div class="selected-value">Pilih Daya VA</div>
                                         <span class="ep--arrow-down-bold arrow-icon"></span>
@@ -89,7 +212,8 @@
                             </div>
                             <div class="input-column">
                                 <div class="title-input">Di mana lokasi rumah Anda?</div>
-                                <div class="custom-dropdown" data-options="Jakarta,Bandung,Surabaya,Medan"
+                                <div class="custom-dropdown"
+                                    data-options="<?php echo implode(',', $location_options); ?>"
                                     data-placeholder="Pilih Lokasi" data-searchable="true" tabindex="0">
                                     <div class="dropdown-header">
                                         <div class="selected-value">Pilih Lokasi</div>
@@ -705,6 +829,11 @@
         </div>
     </div>
 
+    <script>
+        // Kita membuat objek JS dari data PHP yang sudah kita siapkan di Langkah 2
+        const TARIFF_PLN = <?php echo json_encode($tariff_js_map); ?>;
+        const SOLAR_IRRADIANCE = <?php echo json_encode($location_js_map); ?>;
+    </script>
     <script src="../javascript/dropdown.js"></script>
     <script src="../javascript/card-select.js"></script>
     <script src="../javascript/step-transition.js"></script>

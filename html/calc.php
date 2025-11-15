@@ -5,36 +5,116 @@ session_start();
 // 1. Hubungkan ke database
 include '../koneksi.php';
 
-// 2. Siapkan array untuk menampung data
-$location_options = []; // Untuk dropdown HTML (data-options)
-$tariff_options = [];   // Untuk dropdown HTML (data-options)
-$location_js_map = [];  // Untuk objek JavaScript (SOLAR_IRRADIANCE)
-$tariff_js_map = [];    // Untuk objek JavaScript (TARIFF_PLN)
+$alert_message = ""; // Variabel untuk menyimpan pesan notifikasi
 
-// 3. Ambil Data Lokasi dari DB
-$query_loc = "SELECT city_name, irradiance_factor FROM locations WHERE is_active = 1 ORDER BY city_name ASC";
-$result_loc = $koneksi->query($query_loc);
+// 2. LOGIKA UNTUK MENERIMA DATA FORM SAAT DI-SUBMIT
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    // Ambil user_id dari session jika login, jika tidak, NULL
+    $user_id = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : NULL;
+
+    // Ambil semua data dari form (visible dan hidden)
+    $full_name = $_POST['full_name'];
+    $email = $_POST['email']; // Ini dari hidden input (Step 5)
+    $phone = $_POST['phone'];
+    $address = $_POST['address'];
+    $kelurahan = $_POST['kelurahan'];
+    $kecamatan = $_POST['kecamatan'];
+    $postal_code = $_POST['postal_code'];
+
+    $calc_monthly_bill = (int) str_replace(['Rp ', '.'], '', $_POST['calc_monthly_bill']);
+    $calc_va_capacity = $_POST['calc_va_capacity'];
+    $calc_location = $_POST['calc_location'];
+    $calc_property_type = $_POST['calc_property_type'];
+    $calc_installation_timeline = $_POST['calc_installation_timeline'];
+    $calc_roof_constraints = $_POST['calc_roof_constraints'];
+    $calc_roof_area = $_POST['roofArea']; // Ambil data dari input 'roofArea'
+    $calc_notes = $_POST['notes'];
+
+    $result_monthly_savings = (int) $_POST['result_monthly_savings'];
+    $result_system_capacity_kwp = (float) $_POST['result_system_capacity_kwp'];
+    $result_investment_estimate = (int) $_POST['result_investment_estimate'];
+    $result_roi_years = (float) $_POST['result_roi_years'];
+
+    // 3. Buat query INSERT (Gunakan Prepared Statements agar aman)
+    $stmt = $koneksi->prepare("INSERT INTO consultation_requests 
+        (user_id, full_name, email, phone, address, kelurahan, kecamatan, postal_code, 
+        calc_monthly_bill, calc_va_capacity, calc_location, calc_property_type, 
+        calc_installation_timeline, calc_roof_constraints, 
+        calc_roof_area, calc_notes,
+        result_monthly_savings, result_system_capacity_kwp, result_investment_estimate, result_roi_years) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+    // Tipe data: i (int), s (string), d (double)
+    $stmt->bind_param(
+        "isssssssisssssssssidid",
+        $user_id,
+        $full_name,
+        $email,
+        $phone,
+        $address,
+        $kelurahan,
+        $kecamatan,
+        $postal_code,
+        $calc_monthly_bill,
+        $calc_va_capacity,
+        $calc_location,
+        $calc_property_type,
+        $calc_installation_timeline,
+        $calc_roof_constraints,
+        $calc_roof_area,
+        $calc_notes,
+        $result_monthly_savings,
+        $result_system_capacity_kwp,
+        $result_investment_estimate,
+        $result_roi_years
+    );
+
+    // 4. Eksekusi query
+    if ($stmt->execute()) {
+        // Jika berhasil, kita bisa arahkan ke halaman "Terima Kasih"
+        // Untuk sekarang, kita tampilkan pesan sukses saja
+        $alert_message = '<div class="alert alert-success">Terima kasih! Data konsultasi Anda telah terkirim. Tim kami akan segera menghubungi Anda.</div>';
+    } else {
+        $alert_message = '<div class="alert alert-danger">Error: Gagal menyimpan data. ' . $stmt->error . '</div>';
+    }
+    $stmt->close();
+}
+
+
+// 5. LOGIKA UNTUK MENGAMBIL DATA DROPDOWN
+$location_options = [];
+$tariff_options = [];
+$location_js_map = [];
+$tariff_js_map = [];
+
+$result_loc = $koneksi->query("SELECT city_name, irradiance_factor FROM locations WHERE is_active = 1 ORDER BY city_name ASC");
 if ($result_loc) {
     while ($row = $result_loc->fetch_assoc()) {
         $location_options[] = $row['city_name'];
-        $location_js_map[$row['city_name']] = (float) $row['irradiance_factor']; // Data untuk JS
+        $location_js_map[$row['city_name']] = (float) $row['irradiance_factor'];
     }
 }
 
-// 4. Ambil Data Tarif dari DB
-$query_tariff = "SELECT va_capacity, tariff_per_kwh FROM power_tariffs WHERE is_active = 1 ORDER BY id ASC";
-$result_tariff = $koneksi->query($query_tariff);
+$result_tariff = $koneksi->query("SELECT va_capacity, tariff_per_kwh FROM power_tariffs WHERE is_active = 1 ORDER BY id ASC");
 if ($result_tariff) {
     while ($row = $result_tariff->fetch_assoc()) {
         $tariff_options[] = $row['va_capacity'];
-        $tariff_js_map[$row['va_capacity']] = (float) $row['tariff_per_kwh']; // Data untuk JS
+        $tariff_js_map[$row['va_capacity']] = (float) $row['tariff_per_kwh'];
     }
 }
 
-// (Logika untuk cek login user, jika ada)
+
+// 6. LOGIKA UNTUK STATUS LOGIN (HEADER & AUTO-FILL)
 $is_logged_in = isset($_SESSION['user_id']);
+$user_name = '';
+$user_email = '';
+$user_phone = ''; // (Kamu bisa tambahkan 'phone' ke tabel users jika mau)
+$profile_pic = '../img/default-profile.png';
+
 if ($is_logged_in) {
     $user_name = $_SESSION['user_name'] ?? 'User';
+    $user_email = $_SESSION['user_email'] ?? '';
     $profile_pic = $_SESSION['user_profile_pic'] ?? '../img/default-profile.png';
 }
 ?>
@@ -418,8 +498,8 @@ if ($is_logged_in) {
                                     <div class="title-input">
                                         What's your email address?
                                     </div>
-                                    <input type="email" class="input-calc" placeholder="example@gmail.com"
-                                        id="emailInput" />
+                                    <input type="email" class="input-calc" name="email" placeholder="example@gmail.com"
+                                        id="emailInput" value="<?php echo htmlspecialchars($user_email); ?>" <?php echo $is_logged_in ? 'readonly' : ''; ?> />
                                 </div>
                                 <div class="btn-container">
                                     <div class="btn-group">
@@ -506,6 +586,9 @@ if ($is_logged_in) {
                                 </p>
                             </div>
 
+                            <?php if (!empty($alert_message))
+                                echo $alert_message; ?>
+
                             <div class="bg-success text-white rounded-4 p-4 p-md-5 mb-5 shadow-sm">
                                 <h2 class="h3 fw-bold mb-4">📊 Ringkasan Sistem Panel Surya Anda</h2>
                                 <div class="row g-3">
@@ -536,17 +619,30 @@ if ($is_logged_in) {
                                 </div>
                             </div>
 
-                            <form id="orderForm" class="needs-validation" novalidate>
+                            <form id="orderForm" class="needs-validation" action="calc.php" method="POST" novalidate>
+
+                                <input type="hidden" name="calc_va_capacity" id="hidden_va_capacity">
+                                <input type="hidden" name="calc_monthly_bill" id="hidden_monthly_bill">
+                                <input type="hidden" name="calc_location" id="hidden_location">
+                                <input type="hidden" name="calc_property_type" id="hidden_property_type">
+                                <input type="hidden" name="calc_installation_timeline"
+                                    id="hidden_installation_timeline">
+                                <input type="hidden" name="calc_roof_constraints" id="hidden_roof_constraints">
+                                <input type="hidden" name="email" id="hidden_email">
+                                <input type="hidden" name="result_monthly_savings" id="hidden_monthly_savings">
+                                <input type="hidden" name="result_system_capacity_kwp" id="hidden_system_capacity_kwp">
+                                <input type="hidden" name="result_investment_estimate" id="hidden_investment_estimate">
+                                <input type="hidden" name="result_roi_years" id="hidden_roi_years">
 
                                 <div class="mb-5">
                                     <h3 class="h4 fw-bold text-dark border-bottom pb-2 mb-4">1. Informasi Pribadi</h3>
                                     <div class="row g-3">
                                         <div class="col-md-6">
-                                            <label for="fullName" class="form-label">Nama Lengkap <span
+                                            <label for="full_name" class="form-label">Nama Lengkap <span
                                                     class="text-danger">*</span></label>
-                                            <input type="text" id="fullName" name="fullName"
-                                                class="form-control form-control-lg"
-                                                placeholder="Masukkan nama lengkap Anda" required>
+                                            <input type="text" id="fullName" class="form-control form-control-lg"
+                                                placeholder="Masukkan nama lengkap Anda" name="full_name"
+                                                value="<?php echo htmlspecialchars($user_name); ?>" required>
                                             <div class="invalid-feedback">
                                                 Nama lengkap wajib diisi.
                                             </div>
@@ -555,10 +651,10 @@ if ($is_logged_in) {
                                         <div class="col-md-6">
                                             <label for="phone" class="form-label">Nomor Telepon/WhatsApp <span
                                                     class="text-danger">*</span></label>
-                                            <input type="tel" id="phone" name="phone"
-                                                class="form-control form-control-lg" placeholder="contoh: 081234567890"
-                                                pattern="08[0-9]{8,11}"
+                                            <input type="tel" id="phone" class="form-control form-control-lg"
+                                                placeholder="contoh: 081234567890" pattern="08[0-9]{8,11}"
                                                 title="Harap masukkan nomor telepon yang valid (diawali 08, total 10-13 digit)."
+                                                name="phone" value="<?php echo htmlspecialchars($user_phone); ?>"
                                                 required>
                                             <div class="invalid-feedback">
                                                 Harap masukkan nomor telepon yang valid (diawali 08, 10-13 digit).
@@ -602,19 +698,18 @@ if ($is_logged_in) {
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <label for="city" class="form-label">Kota/Kabupaten <span
+                                            <label for="calc_location" class="form-label">Kota/Kabupaten <span
                                                     class="text-danger">*</span></label>
-                                            <input type="text" id="city" name="city"
-                                                class="form-control form-control-lg" placeholder="contoh: Surabaya"
-                                                required readonly>
+                                            <input type="text" id="city" class="form-control form-control-lg"
+                                                placeholder="contoh: Surabaya" required readonly>
                                             <div class="invalid-feedback">
                                                 Kota/Kabupaten wajib diisi.
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <label for="postalCode" class="form-label">Kode Pos <span
+                                            <label for="postal_code" class="form-label">Kode Pos <span
                                                     class="text-danger">*</span></label>
-                                            <input type="text" id="postalCode" name="postalCode"
+                                            <input type="text" id="postalCode" name="postal_code"
                                                 class="form-control form-control-lg" placeholder="contoh: 60111"
                                                 maxlength="5" required>
                                             <div class="invalid-feedback">
@@ -628,22 +723,21 @@ if ($is_logged_in) {
                                     <h3 class="h4 fw-bold text-dark border-bottom pb-2 mb-4">3. Detail Instalasi</h3>
                                     <div class="row g-3">
                                         <div class="col-md-6">
-                                            <label for="propertyType" class="form-label">Tipe Properti</label>
-                                            <input type="text" id="propertyType" name="propertyType"
-                                                class="form-control form-control-lg"
+                                            <label for="calc_property_type" class="form-label">Tipe Properti</label>
+                                            <input type="text" id="propertyType" class="form-control form-control-lg"
                                                 value="Multi-Storey House (Rumah Bertingkat)" readonly>
                                         </div>
                                         <div class="col-md-6">
-                                            <label for="installationTime" class="form-label">Preferensi Waktu
+                                            <label for="calc_installation_timeline" class="form-label">Preferensi Waktu
                                                 Instalasi</label>
-                                            <input type="text" id="installationTime" name="installationTime"
+                                            <input type="text" id="installationTime"
                                                 class="form-control form-control-lg"
                                                 value="3-6 months time (Dalam 3-6 bulan)" readonly>
                                         </div>
                                         <div class="col-md-6">
-                                            <label for="roofConstraints" class="form-label">Kendala Atap</label>
-                                            <input type="text" id="roofConstraints" name="roofConstraints"
-                                                class="form-control form-control-lg" placeholder="Memuat..." readonly>
+                                            <label for="calc_roof_constraints" class="form-label">Kendala Atap</label>
+                                            <input type="text" id="roofConstraints" class="form-control form-control-lg"
+                                                placeholder="Memuat..." readonly>
                                         </div>
                                         <div class="col-md-6">
                                             <label for="roofArea" class="form-label">Estimasi Luas Atap
@@ -759,7 +853,7 @@ if ($is_logged_in) {
                         <button type="button" class="btn btn-lg btn-step7-back" data-bs-dismiss="modal">
                             <span>Batal</span>
                         </button>
-                        <a href="../html/home.html" role="button" class="btn btn-lg btn-outline-dark">
+                        <a href="home.php" role="button" class="btn btn-lg btn-outline-dark">
                             Ya, Kembali
                         </a>
                     </div>
@@ -809,7 +903,7 @@ if ($is_logged_in) {
                 <div class="menu-container-footer">
                     <div class="title-footer">Quick Links</div>
                     <div class="dec-container-footer">
-                        <div class="list-footer"><a href="../html/home.html">Home</a></div>
+                        <div class="list-footer"><a href="home.php">Home</a></div>
                         <div class="list-footer"><a href="../html/portofolio.html">Our Portfolio</a></div>
                         <div class="list-footer"><a href="../html/calc.html">Saving Calculator</a></div>
                     </div>
@@ -830,7 +924,6 @@ if ($is_logged_in) {
     </div>
 
     <script>
-        // Kita membuat objek JS dari data PHP yang sudah kita siapkan di Langkah 2
         const TARIFF_PLN = <?php echo json_encode($tariff_js_map); ?>;
         const SOLAR_IRRADIANCE = <?php echo json_encode($location_js_map); ?>;
     </script>
@@ -843,6 +936,71 @@ if ($is_logged_in) {
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
     <script src="../javascript/validation-calc.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const profileToggle = document.getElementById('profileToggle');
+            const profileDropdownMenu = document.getElementById('profileDropdownMenu');
+            if (profileToggle) {
+                profileToggle.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    profileDropdownMenu.classList.toggle('show');
+                });
+                window.addEventListener('click', function (e) {
+                    if (profileToggle && !profileToggle.contains(e.target) && !profileDropdownMenu.contains(e.target)) {
+                        profileDropdownMenu.classList.remove('show');
+                    }
+                });
+            }
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // PERBAIKAN 1: Gunakan 'orderForm'
+            const form = document.getElementById('orderForm');
+
+            if (form) {
+                form.addEventListener('submit', function (e) {
+
+                    console.log('Form Submit terdeteksi, menyalin data...');
+
+                    // PERBAIKAN 2: Ambil data dari variabel global yang benar
+                    const data = window.CALCULATOR_DATA;
+                    const results = window.CALCULATOR_RESULTS;
+
+                    // Salin data dari Step 1 (dari file step-transition.js)
+                    // Key-nya adalah 'step-1'
+                    if (data['step-1']) {
+                        document.getElementById('hidden_monthly_bill').value = data['step-1'].bill;
+                        document.getElementById('hidden_va_capacity').value = data['step-1'].daya;
+                        document.getElementById('hidden_location').value = data['step-1'].lokasi;
+                    }
+
+                    // Salin data dari Step 2, 3, 4 (dari file card-select.js)
+                    // Key-nya adalah ID dari elemen card-container
+                    document.getElementById('hidden_property_type').value = data['property-type-selection'];
+                    document.getElementById('hidden_installation_timeline').value = data['timeline-selection'];
+                    document.getElementById('hidden_roof_constraints').value = data['constraints-selection'];
+
+                    // Salin data dari Step 5 (dari file step-transition.js)
+                    // Key-nya adalah ID input
+                    document.getElementById('hidden_email').value = data['emailInput'];
+
+                    // Salin data dari Step 6 (Hasil Kalkulasi)
+                    // PERBAIKAN 3: Gunakan nama properti yang benar dari calculation-logic.js
+                    if (results) {
+                        document.getElementById('hidden_monthly_savings').value = results.monthlySavings;
+                        document.getElementById('hidden_system_capacity_kwp').value = results.systemCapacity; // Bukan systemCapacityKwp
+                        document.getElementById('hidden_investment_estimate').value = results.investment; // Bukan investmentEstimate
+                        document.getElementById('hidden_roi_years').value = results.roiYears;
+                    }
+
+                    console.log('Data tersembunyi selesai disalin. Mengirim ke PHP...');
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>

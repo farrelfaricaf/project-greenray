@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function () {
         
         // === TAMBAHKAN BARIS INI ===
         // Pindahkan pengguna ke halaman home
-        window.location.href = '../html/home.html';
+        window.location.href = '../html/home.php';
         // ============================
     });
 

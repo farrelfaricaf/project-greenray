@@ -10,33 +10,29 @@ $alert_message = ""; // Variabel untuk menyimpan pesan notifikasi
 // 2. LOGIKA UNTUK MENERIMA DATA FORM SAAT DI-SUBMIT
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // Ambil user_id dari session jika login, jika tidak, NULL
+    // (Ambil semua data $_POST seperti sebelumnya... )
     $user_id = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : NULL;
-
-    // Ambil semua data dari form (visible dan hidden)
     $full_name = $_POST['full_name'];
-    $email = $_POST['email']; // Ini dari hidden input (Step 5)
+    $email = $_POST['email'];
     $phone = $_POST['phone'];
     $address = $_POST['address'];
     $kelurahan = $_POST['kelurahan'];
     $kecamatan = $_POST['kecamatan'];
     $postal_code = $_POST['postal_code'];
-
     $calc_monthly_bill = (int) str_replace(['Rp ', '.'], '', $_POST['calc_monthly_bill']);
     $calc_va_capacity = $_POST['calc_va_capacity'];
     $calc_location = $_POST['calc_location'];
     $calc_property_type = $_POST['calc_property_type'];
     $calc_installation_timeline = $_POST['calc_installation_timeline'];
     $calc_roof_constraints = $_POST['calc_roof_constraints'];
-    $calc_roof_area = $_POST['roofArea']; // Ambil data dari input 'roofArea'
+    $calc_roof_area = $_POST['roofArea'];
     $calc_notes = $_POST['notes'];
-
     $result_monthly_savings = (int) $_POST['result_monthly_savings'];
     $result_system_capacity_kwp = (float) $_POST['result_system_capacity_kwp'];
     $result_investment_estimate = (int) $_POST['result_investment_estimate'];
     $result_roi_years = (float) $_POST['result_roi_years'];
 
-    // 3. Buat query INSERT (Gunakan Prepared Statements agar aman)
+    // 3. Buat query INSERT (Tanpa order_number)
     $stmt = $koneksi->prepare("INSERT INTO consultation_requests 
         (user_id, full_name, email, phone, address, kelurahan, kecamatan, postal_code, 
         calc_monthly_bill, calc_va_capacity, calc_location, calc_property_type, 
@@ -45,9 +41,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         result_monthly_savings, result_system_capacity_kwp, result_investment_estimate, result_roi_years) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-    // Tipe data: i (int), s (string), d (double)
     $stmt->bind_param(
-        "isssssssisssssssssidid",
+        "isssssssisssssssidid",
         $user_id,
         $full_name,
         $email,
@@ -71,10 +66,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     );
 
     // 4. Eksekusi query
+    // 4. Eksekusi query
     if ($stmt->execute()) {
-        // Jika berhasil, kita bisa arahkan ke halaman "Terima Kasih"
-        // Untuk sekarang, kita tampilkan pesan sukses saja
-        $alert_message = '<div class="alert alert-success">Terima kasih! Data konsultasi Anda telah terkirim. Tim kami akan segera menghubungi Anda.</div>';
+        // ▼▼▼ LOGIKA NOMOR PESANAN BARU (DIPERBAIKI) ▼▼▼
+
+        // Dapatkan ID dari data yang BARU SAJA di-insert
+        $new_id = $stmt->insert_id;
+
+        // Buat Order Number unik (cth: GR-1001, GR-1002)
+        $order_number = 'GR-' . (0000 + $new_id); // (Saya ganti 10 jadi 1000 agar lebih bagus)
+
+        // Update baris tadi dengan Order Number yang baru
+        $koneksi->query("UPDATE consultation_requests SET order_number = '$order_number' WHERE id = $new_id");
+
+        // SIAPKAN VARIABEL INI UNTUK MEMICU MODAL JS DI BAWAH
+        $sukses_order_number = $order_number;
+
+        // Kita tidak pakai $alert_message lagi
+        // $alert_message = '<div class="alert alert-success">...</div>';
+
+        // ▲▲▲ AKHIR LOGIKA NOMOR PESANAN ▲▲▲
+
     } else {
         $alert_message = '<div class="alert alert-danger">Error: Gagal menyimpan data. ' . $stmt->error . '</div>';
     }
@@ -621,13 +633,13 @@ if ($is_logged_in) {
 
                             <form id="orderForm" class="needs-validation" action="calc.php" method="POST" novalidate>
 
-                                <input type="hidden" name="calc_va_capacity" id="hidden_va_capacity">
-                                <input type="hidden" name="calc_monthly_bill" id="hidden_monthly_bill">
                                 <input type="hidden" name="calc_location" id="hidden_location">
                                 <input type="hidden" name="calc_property_type" id="hidden_property_type">
                                 <input type="hidden" name="calc_installation_timeline"
                                     id="hidden_installation_timeline">
                                 <input type="hidden" name="calc_roof_constraints" id="hidden_roof_constraints">
+                                <input type="hidden" name="calc_va_capacity" id="hidden_va_capacity">
+                                <input type="hidden" name="calc_monthly_bill" id="hidden_monthly_bill">
                                 <input type="hidden" name="email" id="hidden_email">
                                 <input type="hidden" name="result_monthly_savings" id="hidden_monthly_savings">
                                 <input type="hidden" name="result_system_capacity_kwp" id="hidden_system_capacity_kwp">
@@ -954,53 +966,24 @@ if ($is_logged_in) {
         });
     </script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
+    <?php
+    // Jika variabel $sukses_order_number di-set oleh PHP di atas, jalankan skrip ini
+    if (!empty($sukses_order_number)) {
+        echo "<script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Ambil modal Bootstrap
+                var successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                
+                // Set nomor pesanan yang BENAR (dari PHP)
+                document.getElementById('order-number-display').innerText = '" . htmlspecialchars($sukses_order_number) . "';
+                
+                // Tampilkan modal
+                successModal.show();
+            });
+        </script>";
+    }
+    ?>
 
-            // PERBAIKAN 1: Gunakan 'orderForm'
-            const form = document.getElementById('orderForm');
-
-            if (form) {
-                form.addEventListener('submit', function (e) {
-
-                    console.log('Form Submit terdeteksi, menyalin data...');
-
-                    // PERBAIKAN 2: Ambil data dari variabel global yang benar
-                    const data = window.CALCULATOR_DATA;
-                    const results = window.CALCULATOR_RESULTS;
-
-                    // Salin data dari Step 1 (dari file step-transition.js)
-                    // Key-nya adalah 'step-1'
-                    if (data['step-1']) {
-                        document.getElementById('hidden_monthly_bill').value = data['step-1'].bill;
-                        document.getElementById('hidden_va_capacity').value = data['step-1'].daya;
-                        document.getElementById('hidden_location').value = data['step-1'].lokasi;
-                    }
-
-                    // Salin data dari Step 2, 3, 4 (dari file card-select.js)
-                    // Key-nya adalah ID dari elemen card-container
-                    document.getElementById('hidden_property_type').value = data['property-type-selection'];
-                    document.getElementById('hidden_installation_timeline').value = data['timeline-selection'];
-                    document.getElementById('hidden_roof_constraints').value = data['constraints-selection'];
-
-                    // Salin data dari Step 5 (dari file step-transition.js)
-                    // Key-nya adalah ID input
-                    document.getElementById('hidden_email').value = data['emailInput'];
-
-                    // Salin data dari Step 6 (Hasil Kalkulasi)
-                    // PERBAIKAN 3: Gunakan nama properti yang benar dari calculation-logic.js
-                    if (results) {
-                        document.getElementById('hidden_monthly_savings').value = results.monthlySavings;
-                        document.getElementById('hidden_system_capacity_kwp').value = results.systemCapacity; // Bukan systemCapacityKwp
-                        document.getElementById('hidden_investment_estimate').value = results.investment; // Bukan investmentEstimate
-                        document.getElementById('hidden_roi_years').value = results.roiYears;
-                    }
-
-                    console.log('Data tersembunyi selesai disalin. Mengirim ke PHP...');
-                });
-            }
-        });
-    </script>
 </body>
 
 </html>

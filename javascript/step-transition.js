@@ -164,9 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return false;
             }
 
-            window.CALCULATOR_DATA[stepId] = {
-                email: emailValue,
-            };
+            window.CALCULATOR_DATA[stepId] = emailValue;
             return true; 
         }
         

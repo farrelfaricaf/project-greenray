@@ -2,7 +2,7 @@
 document.addEventListener('DOMContentLoaded', function () {
 
     // --- Inisialisasi Modal & Variabel ---
-    let currentValidForm = null; // Untuk menyimpan form yang siap disubmit
+    let currentValidForm = null; 
     
     // Inisialisasi Modal Konfirmasi Submit
     const submitModalEl = document.getElementById('submitModal');
@@ -13,52 +13,49 @@ document.addEventListener('DOMContentLoaded', function () {
     const submitModal = new bootstrap.Modal(submitModalEl);
     const confirmSubmitBtn = document.getElementById('confirmSubmitBtn');
 
-    // Inisialisasi Modal Sukses
-    const successModalEl = document.getElementById('successModal');
-    if (!successModalEl) {
-        console.error('Modal #successModal tidak ditemukan di HTML.');
-        return;
-    }
-    const successModal = new bootstrap.Modal(successModalEl);
-    const orderNumberDisplay = document.getElementById('order-number-display');
+    // (Kita TIDAK LAGI menginisialisasi #successModal di sini, 
+    // karena PHP yang akan menampilkannya)
 
     // --- SCRIPT VALIDASI BOOTSTRAP ---
-    var forms = document.querySelectorAll('#step-7 .needs-validation');
+    var forms = document.querySelectorAll('#orderForm.needs-validation'); // Target 'orderForm'
 
     Array.prototype.slice.call(forms)
         .forEach(function (form) {
+            
+            // Saat tombol "Kirim Pesanan" (type="submit") diklik...
             form.addEventListener('submit', function (event) {
+                
+                // Selalu hentikan submit bawaan
                 event.preventDefault();
                 event.stopPropagation();
                 
                 if (!form.checkValidity()) {
-                    console.log('Form tidak valid.');
+                    console.log('Form tidak valid, tampilkan error.');
+                    form.classList.add('was-validated'); // Tampilkan error validasi
                 } else {
-                    currentValidForm = form; 
+                    console.log('Form valid, tampilkan modal konfirmasi.');
+                    // Jika form valid, simpan form-nya dan tampilkan modal konfirmasi
+                    currentValidForm = form;
                     submitModal.show();
                 }
-
-                form.classList.add('was-validated');
             }, false);
         });
 
-    // --- Tambahkan Listener ke Tombol "Ya, Kirim" di dalam Modal ---
+    // --- Event Listener untuk Tombol "Ya, Kirim Pesanan" di dalam Modal ---
     if (confirmSubmitBtn) {
-        confirmSubmitBtn.addEventListener('click', function() {
-            submitModal.hide();
+        confirmSubmitBtn.addEventListener('click', function () {
             if (currentValidForm) {
-                handleFormSubmission(currentValidForm);
+                console.log('Konfirmasi diterima. Memproses form...');
+                submitModal.hide(); // Sembunyikan modal konfirmasi
+                submitValidForm(currentValidForm); // Panggil fungsi submit
             }
         });
     }
 
-    // --- FUNGSI SUBMIT KUSTOM KAMU ---
-    function handleFormSubmission(form) {
-        const formData = new FormData(form);
-        const data = {};
-        formData.forEach((value, key) => { data[key] = value; });
-        console.log('Form Data:', data);
-
+    // --- FUNGSI SUBMIT UTAMA (INI YANG DIPERBAIKI) ---
+    function submitValidForm(form) {
+        
+        // Tampilkan loading spinner di tombol
         const submitBtn = document.getElementById('submitBtn');
         submitBtn.disabled = true;
         submitBtn.innerHTML = `
@@ -66,54 +63,43 @@ document.addEventListener('DOMContentLoaded', function () {
             <span>Mengirim...</span>
         `;
 
-        // Simulate API call
-        setTimeout(function () {
-            
-            const orderNumber = 'GR-' + Math.floor(Math.random() * 100000);
-            if (orderNumberDisplay) {
-                orderNumberDisplay.innerText = orderNumber;
-            }
-            successModal.show();
+        // ▼▼▼ LOGIKA "JEMBATAN" (KITA PINDAH KE SINI) ▼▼▼
+        console.log('Menyalin data dari JS ke hidden input...');
+        const data = window.CALCULATOR_DATA;
+        const results = window.CALCULATOR_RESULTS;
 
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = `
-                <span>Kirim Pesanan</span>
-                <svg class="step7-arrow-icon" viewBox="0 0 23 23" fill="none">
-                    <path d="M11.5 2L11.5 21M11.5 21L2 11.5M11.5 21L21 11.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" transform="rotate(-90 11.5 11.5)"/>
-                </svg>
-            `;
-            
-        }, 1500);
+        // Salin data dari Step 1 (key dari step-transition.js)
+        if (data['step-1']) {
+            document.getElementById('hidden_monthly_bill').value = data['step-1'].bill.replace(/\D/g, '');
+            document.getElementById('hidden_va_capacity').value = data['step-1'].daya;
+            document.getElementById('hidden_location').value = data['step-1'].lokasi;
+        }
+        // Salin data dari Step 2, 3, 4 (key dari card-select.js)
+        document.getElementById('hidden_property_type').value = data['step-2'];
+        document.getElementById('hidden_installation_timeline').value = data['step-3'];
+        document.getElementById('hidden_roof_constraints').value = data['step-4'];
+        // Salin data dari Step 5 (key dari step-transition.js)
+        document.getElementById('hidden_email').value = data['step-5'];
+        // Salin data dari Step 6 (Hasil Kalkulasi)
+        if (results) {
+            document.getElementById('hidden_monthly_savings').value = results.monthlySavings;
+            document.getElementById('hidden_system_capacity_kwp').value = results.systemCapacity;
+            document.getElementById('hidden_investment_estimate').value = results.investment;
+            document.getElementById('hidden_roi_years').value = results.roiYears;
+        }
+        console.log('Salin data selesai.');
+        // ▲▲▲ AKHIR LOGIKA "JEMBATAN" ▲▲▲
+
+        // Kirim form ke PHP
+        console.log('Mengirim form ke server...');
+        form.submit(); // Ini adalah submit HTML tradisional
     }
 
-    // --- Event listener saat Modal Sukses ditutup ---
-    successModalEl.addEventListener('hidden.bs.modal', function () {
-        // Reset form
-        if (currentValidForm) {
-            currentValidForm.reset();
-            currentValidForm.classList.remove('was-validated');
-            currentValidForm = null; 
-        }
-        
-        // === TAMBAHKAN BARIS INI ===
-        // Pindahkan pengguna ke halaman home
-        window.location.href = '../html/home.php';
-        // ============================
-    });
-
-    // --- FILTER INPUT ---
+    // --- FILTER INPUT (Biarkan) ---
     const phoneInput = document.getElementById('phone');
     if (phoneInput) {
         phoneInput.addEventListener('input', function (e) {
             this.value = this.value.replace(/[^0-9]/g, '');
         });
     }
-
-    const postalCodeInput = document.getElementById('postalCode');
-    if (postalCodeInput) {
-        postalCodeInput.addEventListener('input', function (e) {
-            this.value = this.value.replace(/[^0-9]/g, '');
-        });
-    }
-
 });

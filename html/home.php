@@ -100,8 +100,8 @@ if ($is_logged_in) {
                 <div class="hero">
                     <img class="green-ray-logo-1" src="..\img\GreenRay_Logo 1-1.png" />
                     <div class="header-menu">
-                        <div class="active-head"><a href="..\html\home.html">Home</a></div>
-                        <div class="non-active"><a href="..\html\portofolio.html">Portfolio</a></div>
+                        <div class="active-head"><a href="home.php">Home</a></div>
+                        <div class="non-active"><a href="portfolio.php">Portfolio</a></div>
                         <div class="non-active"><a href="calc.php">Calculator</a></div>
                         <div class="non-active"><a href="..\html\katalog.html">Catalog</a></div>
                     </div>
@@ -119,7 +119,7 @@ if ($is_logged_in) {
                                     <div class="dropdown-item-info">
                                         Halo, <strong><?php echo htmlspecialchars($user_name); ?></strong>!
                                     </div>
-                                    <a class="dropdown-item" href="profil.php">Profil Saya</a>
+                                    <a class="dropdown-item" href="profile.php">Profil Saya</a>
                                     <a class="dropdown-item" href="contact-us.php">Bantuan / Kontak</a> <a
                                         class="dropdown-item" href="logout.php">Logout</a>
                                 </div>

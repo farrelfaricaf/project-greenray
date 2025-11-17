@@ -101,6 +101,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           <small class="text-muted">Must be at least 8 characters.</small>
         </div>
 
+        <div class="d-flex justify-content-end mb-3 mt-n3">
+          <a href="reset_password.php" class="text-muted small text-decoration-none">Lupa Password?</a>
+        </div>
         <button type="submit" class="btn btn-success fw-bold w-100" id="signinButton">
           Sign In
         </button>

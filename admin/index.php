@@ -69,6 +69,7 @@ $js_monthly_data = json_encode($monthly_data);
     <meta name="description" content="Admin GreenRay" />
     <meta name="author" content="Farrel" />
     <title>Dashboard - GreenRay Admin</title>
+    <link rel="icon" type="image/png" href="..\img\favicon.png" sizes="180px180">
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <link href="css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>

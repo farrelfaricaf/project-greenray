@@ -117,6 +117,7 @@ if (!empty($consultation)) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>Lihat Konsultasi #<?php echo $consultation_id; ?> - GreenRay Admin</title>
+    <link rel="icon" type="image/png" href="..\img\favicon.png" sizes="180px180">
     <link href="css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     <link rel="icon" type="image/png" href="../img/favicon.png?v=1.1" sizes="180x180">

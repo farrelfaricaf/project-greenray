@@ -1,7 +1,8 @@
 <?php
-// ======================================================
-// KODE LAMA KAMU (TETAP DI SINI)
-// ======================================================
+require_once __DIR__ . '/vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
 $host = "localhost";
 $user = "root";
 $password = ""; // Password default Laragon biasanya kosong
@@ -19,10 +20,6 @@ if ($koneksi->connect_error) {
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
-
-// Path ini mengasumsikan folder 'vendor' ada di root (satu level di atas 'admin' atau 'html')
-// Sesuaikan jika perlu.
-require_once __DIR__ . '/vendor/autoload.php';
 
 /**
  * Fungsi Universal untuk mengirim email menggunakan PHPMailer
@@ -43,15 +40,15 @@ function sendEmail($to_email, $subject, $html_body, $alt_body)
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
         // GANTI INI: Masukkan email Gmail kamu
-        $mail->Username = 'greenraysolarpanel@gmail.com';
+        $mail->Username   = $_ENV['GMAIL_USER'];
         // GANTI INI: Masukkan 16 KARAKTER "App Password" kamu
-        $mail->Password = 'hqob klmc hyin djep';
+        $mail->Password   = $_ENV['GMAIL_PASS'];
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->Port = 465;
 
         // Pengirim & Penerima
         // GANTI INI JUGA: Sesuaikan nama pengirim
-        $mail->setFrom('greenraysolarpanel@gmail.com', 'Reply from Admin GreenRay');
+        $mail->setFrom($_ENV['GMAIL_USER'], $_ENV['GMAIL_SENDER_NAME']);
         $mail->addAddress($to_email); // Email target (user)
 
         // Konten Email

@@ -1,0 +1,5 @@
+# File konfigurasi sensitif
+.env
+
+# Folder dependensi (Composer)
+/vendor/

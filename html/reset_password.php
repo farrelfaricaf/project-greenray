@@ -2,63 +2,6 @@
 include "../koneksi.php";
 session_start();
 
-// ========================================================================
-// KONFIGURASI PHPMailer DIMULAI DI SINI
-// ========================================================================
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
-
-// Sesuaikan path ini jika folder vendor kamu ada di tempat lain
-require '../vendor/autoload.php';
-
-/**
- * Fungsi baru untuk mengirim email OTP menggunakan PHPMailer
- * @param string $to_email - Alamat email penerima
- * @param string $otp_code - Kode OTP 6 digit
- * @param string $subject - Judul email
- * @return bool - true jika sukses, false jika gagal
- */
-function sendEmailOTP($to_email, $otp_code, $subject)
-{
-    $mail = new PHPMailer(true);
-
-    try {
-        // Pengaturan Server (SMTP Gmail)
-        $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com';
-        $mail->SMTPAuth = true;
-        // GANTI INI: Masukkan email Gmail kamu yang akan dipakai sebagai pengirim
-        $mail->Username = 'greenraysolarpanel@gmail.com';
-        // GANTI INI: Masukkan 16 KARAKTER "App Password" kamu
-        $mail->Password = 'hqob klmc hyin djep';
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-        $mail->Port = 465;
-
-        // Pengirim & Penerima
-        // GANTI INI JUGA: Sesuaikan nama pengirim
-        $mail->setFrom('greenraysolarpanel@gmail.com', 'GreenRay Solar Panel');
-        $mail->addAddress($to_email); // Email target (user)
-
-        // Konten Email
-        $mail->isHTML(true);
-        $mail->Subject = $subject;
-        $mail->Body = 'Halo, <br><br>Ini adalah kode OTP Anda: <b>' . $otp_code . '</b><br>Kode ini akan kedaluwarsa dalam 10 menit. Jangan berikan kode ini kepada siapa pun.';
-        $mail->AltBody = 'Ini adalah kode OTP Anda: ' . $otp_code . '. Kode akan kedaluwarsa dalam 10 menit.';
-
-        $mail->send();
-        return true; // Sukses
-    } catch (Exception $e) {
-        // Kamu bisa mencatat error jika perlu, tapi jangan tampilkan ke user
-        // error_log("Mailer Error: {$mail->ErrorInfo}");
-        return false; // Gagal
-    }
-}
-// ========================================================================
-// KONFIGURASI PHPMailer SELESAI
-// ========================================================================
-
-
 if (!isset($_SESSION['fp_step']))
     $_SESSION['fp_step'] = 'email';
 $step = $_SESSION['fp_step'];
@@ -106,7 +49,10 @@ if (isset($_POST['send_email'])) {
 
                 // === PERUBAHAN DI SINI ===
                 // Mengirim email menggunakan fungsi PHPMailer yang baru
-                $sent = sendEmailOTP($email, $otp, "Kode OTP Reset Password GreenRay");
+                $subject = "Kode OTP Reset Password GreenRay";
+                $html_body = "Halo, <br><br>Ini adalah kode OTP Anda: <b>$otp</b><br>Kode ini akan kedaluwarsa dalam 10 menit. Jangan berikan kode ini kepada siapa pun.";
+                $alt_body = "Ini adalah kode OTP Anda: $otp. Kode akan kedaluwarsa dalam 10 menit.";
+                $sent = sendEmail($email, $subject, $html_body, $alt_body);
                 // =========================
 
                 if ($sent) {
@@ -164,7 +110,10 @@ if (isset($_POST['resend_otp'])) {
 
             // === PERUBAHAN DI SINI ===
             // Mengirim email menggunakan fungsi PHPMailer yang baru
-            $sent = sendEmailOTP($_SESSION['fp_email'], $otp, "Kode OTP Reset Password GreenRay (Baru)");
+            $subject = "Kode OTP Reset Password GreenRay (Baru)";
+            $html_body = "Halo, <br><br>Ini adalah kode OTP baru Anda: <b>$otp</b><br>Kode ini akan kedaluwarsa dalam 10 menit.";
+            $alt_body = "Ini adalah kode OTP baru Anda: $otp.";
+            $sent = sendEmail($_SESSION['fp_email'], $subject, $html_body, $alt_body);
             // =========================
 
             $success = $sent ? "OTP baru dikirim." : "(Local) Gagal kirim. OTP: $otp";
@@ -235,16 +184,23 @@ $show_modal = isset($_GET['done']) && isset($_SESSION['fp_done']);
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    <link rel="icon" type="image/png" href="..\img\favicon.png" sizes="180px180">
     <style>
         body {
             background: #f7f9fc;
             font-family: Inter, Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            margin: 0;
         }
 
         .card-mat {
             max-width: 760px;
-            margin: 40px auto;
+            margin: 0;
+            width: 100%;
             background: #fff;
             padding: 30px;
             border-radius: 18px;
@@ -254,19 +210,23 @@ $show_modal = isset($_GET['done']) && isset($_SESSION['fp_done']);
         .header {
             display: flex;
             gap: 16px;
+            align-items: center;
         }
 
         .logo-dot {
             width: 44px;
             height: 44px;
             border-radius: 12px;
-            background: linear-gradient(135deg, #7c4dff, #b84cff);
+            /* WARNA HIJAU */
+            background: linear-gradient(135deg, #198754, #20c997);
+            /* Contoh gradasi hijau */
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
             color: white;
             font-size: 20px;
+            flex-shrink: 0;
         }
 
         .stepper {
@@ -283,7 +243,16 @@ $show_modal = isset($_GET['done']) && isset($_SESSION['fp_done']);
         }
 
         .step.active {
-            background: linear-gradient(90deg, #7c4dff, #b84cff);
+            /* WARNA HIJAU */
+            background: linear-gradient(90deg, #198754, #20c997);
+            /* Contoh gradasi hijau */
+        }
+
+        /* Kelas baru untuk container OTP */
+        .otp-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
         }
 
         .otp-box {
@@ -295,6 +264,8 @@ $show_modal = isset($_GET['done']) && isset($_SESSION['fp_done']);
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-grow: 1;
+            flex-basis: 0;
         }
 
         .otp-box input {
@@ -303,6 +274,7 @@ $show_modal = isset($_GET['done']) && isset($_SESSION['fp_done']);
             font-size: 20px;
             border: 0;
             background: transparent;
+            padding: 0;
         }
 
         .strength {
@@ -312,10 +284,11 @@ $show_modal = isset($_GET['done']) && isset($_SESSION['fp_done']);
             margin-top: 6px;
         }
 
+        /* WARNA HIJAU pada strength fill (valid) */
         .strength-fill {
             width: 0%;
             height: 100%;
-            background: linear-gradient(90deg, #ff6b6b, #f59e0b, #10b981);
+            background: linear-gradient(90deg, #ff6b6b, #f59e0b, #198754);
             transition: .2s;
         }
 
@@ -324,9 +297,35 @@ $show_modal = isset($_GET['done']) && isset($_SESSION['fp_done']);
             user-select: none;
         }
 
+        /* WARNA HIJAU pada validasi teks */
         .valid {
-            color: #10b981;
+            color: #198754;
             font-weight: 600;
+        }
+
+        /* Penyesuaian untuk layar kecil (HP) */
+        @media (max-width: 576px) {
+            .card-mat {
+                padding: 20px;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .otp-container {
+                gap: 5px;
+            }
+
+            .otp-box {
+                height: 48px;
+            }
+
+            .otp-box input {
+                font-size: 18px;
+            }
         }
     </style>
 </head>

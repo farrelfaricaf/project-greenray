@@ -1,7 +1,7 @@
 <?php
 
 include '../koneksi.php';
-
+include 'auth_check.php';
 
 $total_projects = $koneksi->query("SELECT COUNT(*) as total FROM projects")->fetch_assoc()['total'];
 $total_consultations = $koneksi->query("SELECT COUNT(*) as total FROM consultation_requests")->fetch_assoc()['total'];
@@ -86,7 +86,7 @@ $js_monthly_data = json_encode($monthly_data);
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
                     aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#!">Logout</a></li>
+                    <li><a class="dropdown-item" href="logout.php">Logout</a></li>
                 </ul>
             </li>
         </ul>

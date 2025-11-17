@@ -1,6 +1,7 @@
 <?php
 // 1. Hubungkan ke database
 include '../koneksi.php';
+include 'auth_check.php';
 
 // 2. Cek apakah ada ID yang dikirim melalui URL (GET)
 if (isset($_GET['id'])) {

@@ -1,5 +1,7 @@
 <?php
 include '../koneksi.php';
+include 'auth_check.php';
+
 if (isset($_GET['id'])) {
     $user_id = $_GET['id'];
     $stmt = $koneksi->prepare("DELETE FROM users WHERE id = ?");

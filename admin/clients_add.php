@@ -1,6 +1,7 @@
 <?php
 // 1. Hubungkan ke database
 include '../koneksi.php';
+include 'auth_check.php';
 
 $alert_message = ""; // Variabel untuk menyimpan pesan notifikasi
 

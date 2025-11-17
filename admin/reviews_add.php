@@ -1,6 +1,7 @@
 <?php
 
 include '../koneksi.php';
+include 'auth_check.php';
 
 $alert_message = "";
 

@@ -1,5 +1,7 @@
 <?php
 include '../koneksi.php';
+include 'auth_check.php';
+
 if (isset($_GET['id'])) {
     $tariff_id = $_GET['id'];
     $stmt = $koneksi->prepare("DELETE FROM power_tariffs WHERE id = ?");

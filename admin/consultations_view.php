@@ -1,37 +1,112 @@
 <?php
-
+include 'auth_check.php';
 include '../koneksi.php';
 
 $alert_message = "";
 $consultation_id = null;
-$consultation = []; 
+$consultation = [];
+$replies_history = []; // Untuk riwayat balasan
+
+$admin_name = $_SESSION['admin_name'] ?? 'Admin';
+
+// ======================================================
+// LOGIKA UNTUK MENGIRIM BALASAN KONSULTASI
+// ======================================================
+if (isset($_POST['send_reply'])) {
+    $consultation_id = $_POST['consultation_id'];
+    $reply_to_email = $_POST['reply_to_email'];
+    $user_name = $_POST['user_name'];
+    $reply_message = $_POST['reply_message'];
+    $original_subject = "Hasil Konsultasi Kalkulator GreenRay"; // Subjek default
+
+    if (empty($reply_message)) {
+        $alert_message = '<div class="alert alert-danger">Error: Isi balasan tidak boleh kosong.</div>';
+    } else {
+        // Panggil fungsi sendEmail() dari koneksi.php
+        // Kita tidak mengutip pesan asli di sini karena emailnya sudah berisi template
+        if (sendEmail($reply_to_email, $original_subject, nl2br(htmlspecialchars($reply_message)), $reply_message)) {
+
+            // SUKSES KIRIM EMAIL, SEKARANG SIMPAN KE DB
+            // Kita gunakan 'consultation' sebagai reply_type
+            $stmt_save_reply = $koneksi->prepare("INSERT INTO admin_replies (reference_id, reply_type, admin_name, reply_body) VALUES (?, 'consultation', ?, ?)");
+            $stmt_save_reply->bind_param("iss", $consultation_id, $admin_name, $reply_message);
+            $stmt_save_reply->execute();
+            $stmt_save_reply->close();
+
+            $alert_message = '<div class="alert alert-success">Balasan berhasil terkirim ke ' . htmlspecialchars($reply_to_email) . '.</div>';
+
+        } else {
+            $alert_message = '<div class="alert alert-danger">Error: Gagal mengirim email balasan. Cek konfigurasi SMTP kamu.</div>';
+        }
+    }
+}
 
 
+// ======================================================
+// LOGIKA UNTUK MENAMPILKAN KONSULTASI
+// ======================================================
 if (isset($_GET['id'])) {
     $consultation_id = $_GET['id'];
 
-    
+    // Ambil data konsultasi
     $stmt = $koneksi->prepare("SELECT * FROM consultation_requests WHERE id = ?");
-    $stmt->bind_param("i", $consultation_id); 
+    $stmt->bind_param("i", $consultation_id);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
         $consultation = $result->fetch_assoc();
 
-        
-        
-        
-        
+        // Ambil riwayat balasan untuk konsultasi ini
+        $stmt_replies = $koneksi->prepare("SELECT * FROM admin_replies WHERE reference_id = ? AND reply_type = 'consultation' ORDER BY sent_at DESC");
+        $stmt_replies->bind_param("i", $consultation_id);
+        $stmt_replies->execute();
+        $result_replies = $stmt_replies->get_result();
+        while ($row = $result_replies->fetch_assoc()) {
+            $replies_history[] = $row;
+        }
+        $stmt_replies->close();
 
     } else {
         $alert_message = '<div class="alert alert-danger">Error: Data Konsultasi tidak ditemukan!</div>';
     }
     $stmt->close();
 } else {
-    $alert_message = '<div class="alert alert-danger">Error: ID Konsultasi tidak valid.</div>';
+    // Jika $consultation_id tidak ada di GET, mungkin dia dari POST
+    if ($consultation_id == null && isset($_POST['consultation_id'])) {
+        $consultation_id = $_POST['consultation_id'];
+    } else {
+        $alert_message = '<div class="alert alert-danger">Error: ID Konsultasi tidak valid.</div>';
+    }
 }
 
+// Jika alert muncul (dari POST), kita perlu load ulang data konsultasi
+if (!empty($alert_message) && $consultation_id && empty($consultation)) {
+    $stmt = $koneksi->prepare("SELECT * FROM consultation_requests WHERE id = ?");
+    $stmt->bind_param("i", $consultation_id);
+    $stmt->execute();
+    $consultation = $stmt->get_result()->fetch_assoc();
+
+    // Load ulang juga riwayatnya
+    $stmt_replies = $koneksi->prepare("SELECT * FROM admin_replies WHERE reference_id = ? AND reply_type = 'consultation' ORDER BY sent_at DESC");
+    $stmt_replies->bind_param("i", $consultation_id);
+    $stmt_replies->execute();
+    $result_replies = $stmt_replies->get_result();
+    while ($row = $result_replies->fetch_assoc()) {
+        $replies_history[] = $row;
+    }
+    $stmt_replies->close();
+}
+
+// Buat template balasan
+$default_reply_message = "";
+if (!empty($consultation)) {
+    $user_name = htmlspecialchars($consultation['full_name']);
+    $system_kwp = htmlspecialchars($consultation['result_system_capacity_kwp']);
+    $savings_rp = number_format($consultation['result_monthly_savings'], 0, ',', '.');
+
+    $default_reply_message = "Halo $user_name,\n\nTerima kasih atas permintaan konsultasi Anda melalui website GreenRay.\n\nBerdasarkan perhitungan, estimasi sistem yang ideal untuk Anda adalah $system_kwp kWp dengan potensi penghematan Rp $savings_rp / bulan.\n\nTim kami ingin menjadwalkan survey lokasi virtual (via video call/foto) atau survey langsung untuk memvalidasi data dan memberikan penawaran final.\n\nApakah Anda ada waktu luang di minggu ini?\n\nSalam,\n$admin_name\nTim GreenRay";
+}
 
 ?>
 <!DOCTYPE html>
@@ -46,11 +121,9 @@ if (isset($_GET['id'])) {
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     <link rel="icon" type="image/png" href="../img/favicon.png?v=1.1" sizes="180x180">
     <style>
-        /* Style kustom untuk halaman view */
         .dl-horizontal dt {
             float: left;
             width: 200px;
-            /* Lebar label */
             clear: left;
             text-align: right;
             overflow: hidden;
@@ -61,7 +134,6 @@ if (isset($_GET['id'])) {
 
         .dl-horizontal dd {
             margin-left: 220px;
-            /* Jarak setelah label */
             margin-bottom: 0.5rem;
         }
     </style>
@@ -78,7 +150,7 @@ if (isset($_GET['id'])) {
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
                     aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#!">Logout</a></li>
+                    <li><a class="dropdown-item" href="logout.php">Logout</a></li>
                 </ul>
             </li>
         </ul>
@@ -89,24 +161,15 @@ if (isset($_GET['id'])) {
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                        <div class="sb-sidenav-menu-heading">Utama</div>
                         <a class="nav-link" href="index.php">... Dashboard</a>
-
-                        <div class="sb-sidenav-menu-heading">Manajemen Konten</div>
                         <a class="nav-link" href="projects.php">... Proyek</a>
-                        <a class="nav-link" href="products.php">... Produk</a>
-                        <div class="sb-sidenav-menu-heading">Interaksi User</div>
-                        <a class="nav-link active" href="consultations.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-calculator"></i></div>
-                            Konsultasi
-                        </a>
+                        <a class="nav-link active" href="consultations.php">... Konsultasi</a>
                         <a class="nav-link" href="contact_messages.php">... Pesan Kontak</a>
-
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
                     <div class="small">Logged in as:</div>
-                    Admin
+                    <?php echo htmlspecialchars($admin_name); ?>
                 </div>
             </nav>
         </div>
@@ -128,94 +191,71 @@ if (isset($_GET['id'])) {
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="card mb-4">
-                                    <div class="card-header">
-                                        <i class="fas fa-user me-1"></i>
-                                        Data Klien
-                                    </div>
+                                    <div class="card-header"><i class="fas fa-user me-1"></i> Data Klien</div>
                                     <div class="card-body">
                                         <dl class="dl-horizontal">
                                             <dt>ID User (jika login)</dt>
                                             <dd><?php echo $consultation['user_id'] ? $consultation['user_id'] : '<i>(Tamu)</i>'; ?>
                                             </dd>
-
                                             <dt>Nama Lengkap</dt>
                                             <dd><?php echo htmlspecialchars($consultation['full_name']); ?></dd>
-
                                             <dt>Email</dt>
-                                            <dd><?php echo htmlspecialchars($consultation['email']); ?></dd>
-
+                                            <dd><a
+                                                    href="mailto:<?php echo htmlspecialchars($consultation['email']); ?>"><?php echo htmlspecialchars($consultation['email']); ?></a>
+                                            </dd>
                                             <dt>Telepon</dt>
                                             <dd><?php echo htmlspecialchars($consultation['phone']); ?></dd>
-
                                             <dt>Alamat</dt>
                                             <dd><?php echo nl2br(htmlspecialchars($consultation['address'])); ?></dd>
-
                                             <dt>Kelurahan</dt>
                                             <dd><?php echo htmlspecialchars($consultation['kelurahan']); ?></dd>
-
                                             <dt>Kecamatan</dt>
                                             <dd><?php echo htmlspecialchars($consultation['kecamatan']); ?></dd>
-
                                             <dt>Kode Pos</dt>
                                             <dd><?php echo htmlspecialchars($consultation['postal_code']); ?></dd>
                                         </dl>
                                     </div>
                                 </div>
                             </div>
-
                             <div class="col-lg-6">
                                 <div class="card mb-4">
-                                    <div class="card-header">
-                                        <i class="fas fa-keyboard me-1"></i>
-                                        Input Kalkulator
-                                    </div>
+                                    <div class="card-header"><i class="fas fa-keyboard me-1"></i> Input Kalkulator</div>
                                     <div class="card-body">
                                         <dl class="dl-horizontal">
                                             <dt>Tagihan Bulanan</dt>
                                             <dd>Rp
                                                 <?php echo number_format($consultation['calc_monthly_bill'], 0, ',', '.'); ?>
                                             </dd>
-
                                             <dt>Daya VA</dt>
                                             <dd><?php echo htmlspecialchars($consultation['calc_va_capacity']); ?></dd>
-
                                             <dt>Lokasi</dt>
                                             <dd><?php echo htmlspecialchars($consultation['calc_location']); ?></dd>
-
                                             <dt>Tipe Properti</dt>
                                             <dd><?php echo htmlspecialchars($consultation['calc_property_type']); ?></dd>
-
                                             <dt>Timeline Instalasi</dt>
                                             <dd><?php echo htmlspecialchars($consultation['calc_installation_timeline']); ?>
                                             </dd>
-
                                             <dt>Hambatan Atap</dt>
                                             <dd><?php echo htmlspecialchars($consultation['calc_roof_constraints']); ?></dd>
                                         </dl>
                                     </div>
                                 </div>
-
                                 <div class="card mb-4">
-                                    <div class="card-header bg-primary text-white">
-                                        <i class="fas fa-chart-line me-1"></i>
-                                        Hasil Kalkulasi
-                                    </div>
+                                    <div class="card-header bg-primary text-white"><i class="fas fa-chart-line me-1"></i>
+                                        Hasil Kalkulasi</div>
                                     <div class="card-body">
                                         <dl class="dl-horizontal">
                                             <dt>Estimasi Hemat</dt>
                                             <dd><strong>Rp
                                                     <?php echo number_format($consultation['result_monthly_savings'], 0, ',', '.'); ?>
                                                     / bulan</strong></dd>
-
                                             <dt>Sistem (kWp)</dt>
                                             <dd><strong><?php echo htmlspecialchars($consultation['result_system_capacity_kwp']); ?>
                                                     kWp</strong></dd>
-
                                             <dt>Estimasi Investasi</dt>
                                             <dd><strong>Rp
                                                     <?php echo number_format($consultation['result_investment_estimate'], 0, ',', '.'); ?></strong>
                                             </dd>
-
                                             <dt>ROI (Tahun)</dt>
                                             <dd><strong><?php echo htmlspecialchars($consultation['result_roi_years']); ?>
                                                     tahun</strong></dd>
@@ -225,11 +265,58 @@ if (isset($_GET['id'])) {
                             </div>
                         </div>
 
-                        <a href="consultations.php" class="btn btn-secondary">
+                        <div class="card mb-4">
+                            <div class="card-header bg-success text-white">
+                                <i class="fas fa-reply me-1"></i>
+                                Balas Konsultasi Ini
+                            </div>
+                            <div class="card-body">
+                                <form action="consultations_view.php?id=<?php echo $consultation_id; ?>" method="POST">
+                                    <input type="hidden" name="consultation_id" value="<?php echo $consultation_id; ?>">
+                                    <input type="hidden" name="reply_to_email"
+                                        value="<?php echo htmlspecialchars($consultation['email']); ?>">
+                                    <input type="hidden" name="user_name"
+                                        value="<?php echo htmlspecialchars($consultation['full_name']); ?>">
+
+                                    <div class="mb-3">
+                                        <label for="reply_message" class="form-label">Isi Balasan (Template sudah disiapkan,
+                                            silakan diedit jika perlu):</label>
+                                        <textarea class="form-control" id="reply_message" name="reply_message" rows="12"
+                                            required><?php echo $default_reply_message; ?></textarea>
+                                    </div>
+                                    <button type="submit" name="send_reply" class="btn btn-success">
+                                        <i class="fas fa-paper-plane me-1"></i> Kirim Balasan ke Email Klien
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-history me-1"></i>
+                                Riwayat Balasan
+                            </div>
+                            <div class="card-body">
+                                <?php if (empty($replies_history)): ?>
+                                    <p class="text-muted text-center">Belum ada balasan untuk konsultasi ini.</p>
+                                <?php else: ?>
+                                    <?php foreach ($replies_history as $reply): ?>
+                                        <div class="p-3 bg-light rounded border mb-3">
+                                            <p class="mb-1">
+                                                <strong>Oleh:</strong> <?php echo htmlspecialchars($reply['admin_name']); ?><br>
+                                                <strong>Tanggal:</strong>
+                                                <?php echo date('d M Y, H:i', strtotime($reply['sent_at'])); ?>
+                                            </p>
+                                            <hr class="my-2">
+                                            <p class="mb-0"><?php echo nl2br(htmlspecialchars($reply['reply_body'])); ?></p>
+                                        </div>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
+                        <a href="consultations.php" class="btn btn-secondary mb-4">
                             <i class="fas fa-arrow-left me-1"></i> Kembali ke Daftar
-                        </a>
-                        <a href="consultations_edit.php?id=<?php echo $consultation_id; ?>" class="btn btn-warning">
-                            <i class="fas fa-edit me-1"></i> Edit Data Ini
                         </a>
 
                     <?php else: ?>

@@ -1,5 +1,7 @@
 <?php
 include '../koneksi.php';
+// Kita perlu panggil auth_check.php di sini juga
+include 'auth_check.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -25,7 +27,7 @@ include '../koneksi.php';
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
                     aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#!">Logout</a></li>
+                    <li><a class="dropdown-item" href="logout.php">Logout</a></li>
                 </ul>
             </li>
         </ul>
@@ -98,7 +100,7 @@ include '../koneksi.php';
                 </div>
                 <div class="sb-sidenav-footer">
                     <div class="small">Logged in as:</div>
-                    Admin
+                    <?php echo htmlspecialchars($_SESSION['admin_name'] ?? 'Admin'); ?>
                 </div>
             </nav>
         </div>
@@ -133,7 +135,7 @@ include '../koneksi.php';
                                 </thead>
                                 <tbody>
                                     <?php
-                                    
+
                                     $query_consults = "SELECT id, created_at, full_name, email, phone, calc_location, 
                                             result_system_capacity_kwp, result_monthly_savings 
                                     FROM consultation_requests 
@@ -141,12 +143,12 @@ include '../koneksi.php';
                                     $result_consults = $koneksi->query($query_consults);
 
                                     if ($result_consults && $result_consults->num_rows > 0) {
-                                        
+
                                         while ($row = $result_consults->fetch_assoc()) {
 
-                                            
+
                                             $tanggal = date('d M Y, H:i', strtotime($row['created_at']));
-                                            
+
                                             $penghematan = "Rp " . number_format($row['result_monthly_savings'], 0, ',', '.');
 
                                             echo '<tr>';
@@ -158,10 +160,19 @@ include '../koneksi.php';
                                             echo '<td>' . htmlspecialchars($row['calc_location']) . '</td>';
                                             echo '<td>' . htmlspecialchars($row['result_system_capacity_kwp']) . ' kWp</td>';
                                             echo '<td>' . htmlspecialchars($penghematan) . '</td>';
+
+                                            // ===================================
+                                            // PERUBAHAN DI BLOK 'echo' INI
+                                            // ===================================
                                             echo '<td>
-                                                <a href="consultations_view.php?id=' . $row['id'] . '" class="btn btn-info btn-sm">Lihat Detail</a>
+                                                <a href="consultations_view.php?id=' . $row['id'] . '" class="btn btn-info btn-sm">Lihat</a>
+                                                <a href="consultations_edit.php?id=' . $row['id'] . '" class="btn btn-warning btn-sm">Edit</a>
                                                 <a href="consultations_delete.php?id=' . $row['id'] . '" class="btn btn-danger btn-sm" onclick="return confirm(\'Yakin ingin menghapus data konsultasi ini?\');">Hapus</a>
                                             </td>';
+                                            // ===================================
+                                            // AKHIR PERUBAHAN
+                                            // ===================================
+                                    
                                             echo '</tr>';
                                         }
                                     } else {

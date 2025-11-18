@@ -101,7 +101,7 @@ if ($is_logged_in) {
                     <img class="green-ray-logo-1" src="..\img\GreenRay_Logo 1-1.png" />
                     <div class="header-menu">
                         <div class="active-head"><a href="home.php">Home</a></div>
-                        <div class="non-active"><a href="portfolio.php">Portfolio</a></div>
+                        <div class="non-active"><a href="portofolio.php">Portfolio</a></div>
                         <div class="non-active"><a href="calc.php">Calculator</a></div>
                         <div class="non-active"><a href="..\html\katalog.html">Catalog</a></div>
                     </div>

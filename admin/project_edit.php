@@ -1,103 +1,88 @@
 <?php
-
 include '../koneksi.php';
 include 'auth_check.php';
 
 $alert_message = "";
 $project_id = null;
-$project = []; 
+$project = [];
 
-
-if (isset($_GET['id'])) {
-    $project_id = $_GET['id'];
-
-    
-    $stmt_select = $koneksi->prepare("SELECT * FROM projects WHERE id = ?");
-    $stmt_select->bind_param("i", $project_id);
-    $stmt_select->execute();
-    $result = $stmt_select->get_result();
-
-    if ($result->num_rows > 0) {
-        $project = $result->fetch_assoc();
-    } else {
-        $alert_message = '<div class="alert alert-danger">Error: Proyek tidak ditemukan!</div>';
+// Fungsi helper (sudah benar dari sebelumnya)
+function convertNewlinesToHtmlList($plain_text)
+{
+    $normalized_text = str_replace(["\r\n", "\r"], "\n", $plain_text);
+    $lines = explode("\n", $normalized_text);
+    $lines = array_filter(array_map('trim', $lines));
+    if (empty($lines)) {
+        return '';
     }
-    $stmt_select->close();
-} else {
-    $alert_message = '<div class="alert alert-danger">Error: ID Proyek tidak valid.</div>';
+    $li_items = array_map(function ($line) {
+        return '<li class="mb-2">' . htmlspecialchars($line) . '</li>';
+    }, $lines);
+    return implode('', $li_items);
+}
+function convertHtmlListToNewlines($html)
+{
+    if (empty(trim($html))) {
+        return '';
+    }
+    $text = html_entity_decode($html);
+    $text = preg_replace('/<\/li>\s*/i', "\n", $text);
+    $text = strip_tags($text);
+    return trim($text);
 }
 
-
+// Logika POST (Update data)
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-    
     $current_hero_image_path = $_POST['current_hero_image'];
-    $hero_image_path_db = $current_hero_image_path; 
+    $hero_image_path_db = $current_hero_image_path;
 
-    
-    
     if (isset($_FILES['hero_image_file']) && $_FILES['hero_image_file']['error'] == 0 && $_FILES['hero_image_file']['size'] > 0) {
-
+        // ... (Logika upload file kamu sudah benar) ...
         $target_dir = "../uploads/projects/";
         $file_name = uniqid() . '-' . basename($_FILES["hero_image_file"]["name"]);
         $target_file = $target_dir . $file_name;
-        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-
-        
         $check = getimagesize($_FILES["hero_image_file"]["tmp_name"]);
         if ($check !== false) {
             if (move_uploaded_file($_FILES["hero_image_file"]["tmp_name"], $target_file)) {
-                
                 $hero_image_path_db = "uploads/projects/" . $file_name;
-
-                
                 if (!empty($current_hero_image_path) && file_exists("../" . $current_hero_image_path)) {
                     unlink("../" . $current_hero_image_path);
                 }
             } else {
-                $alert_message = '<div class="alert alert-danger">Error: Gagal memindahkan file baru.</div>';
+                $alert_message = '<div class="alert alert-danger">Error: Gagal memindahkan file.</div>';
             }
         } else {
-            $alert_message = '<div class="alert alert-danger">Error: File baru bukan gambar.</div>';
+            $alert_message = '<div class="alert alert-danger">Error: File bukan gambar.</div>';
         }
     }
-    
-    
 
-    
     $project_id = $_POST['project_id'];
     $slug = $_POST['slug'];
     $title = $_POST['title'];
     $subtitle_goal = $_POST['subtitle_goal'];
     $category = $_POST['category'];
     $location_text = $_POST['location_text'];
-
     $stat_capacity = $_POST['stat_capacity'];
     $stat_co2_reduction = $_POST['stat_co2_reduction'];
     $stat_timeline = $_POST['stat_timeline'];
     $stat_investment = $_POST['stat_investment'];
-
     $overview_result = $_POST['overview_result'];
     $overview_details = $_POST['overview_details'];
     $overview_generation = $_POST['overview_generation'];
+    $challenges_html = convertNewlinesToHtmlList($_POST['challenges_html']);
+    $solutions_html = convertNewlinesToHtmlList($_POST['solutions_html']);
+    $impact_html = convertNewlinesToHtmlList($_POST['impact_html']);
 
-    $challenges_html = $_POST['challenges_html'];
-    $solutions_html = $_POST['solutions_html'];
-    $impact_html = $_POST['impact_html'];
-
+    // AMBIL JSON DARI HIDDEN INPUT
     $tech_specs_json = $_POST['tech_specs_json'];
 
-    
     if (empty($alert_message)) {
-
-        
         $stmt_update = $koneksi->prepare("UPDATE projects SET 
             slug = ?, title = ?, subtitle_goal = ?, category = ?, location_text = ?, hero_image_url = ?, 
             stat_capacity = ?, stat_co2_reduction = ?, stat_timeline = ?, stat_investment = ?, 
             overview_result = ?, overview_details = ?, overview_generation = ?, 
             challenges_html = ?, solutions_html = ?, impact_html = ?, tech_specs_json = ? 
             WHERE id = ?");
-
         $stmt_update->bind_param(
             "sssssssssssssssssi",
             $slug,
@@ -105,7 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $subtitle_goal,
             $category,
             $location_text,
-            $hero_image_path_db, 
+            $hero_image_path_db,
             $stat_capacity,
             $stat_co2_reduction,
             $stat_timeline,
@@ -116,56 +101,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $challenges_html,
             $solutions_html,
             $impact_html,
-            $tech_specs_json,
-            $project_id 
+            $tech_specs_json, // Data JSON dari hidden input
+            $project_id
         );
-
-        
         if ($stmt_update->execute()) {
-            $alert_message = '<div class="alert alert-success alert-dismissible fade show" role="alert">
-                                <strong>Sukses!</strong> Proyek berhasil diperbarui.
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                              </div>';
-
-            
-            $stmt_select = $koneksi->prepare("SELECT * FROM projects WHERE id = ?");
-            $stmt_select->bind_param("i", $project_id);
-            $stmt_select->execute();
-            $project = $stmt_select->get_result()->fetch_assoc();
-            $stmt_select->close();
-
+            $alert_message = '<div class="alert alert-success">Proyek berhasil diperbarui.</div>';
         } else {
-            $alert_message = '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                <strong>Error!</strong> Gagal memperbarui: ' . $stmt_update->error . '
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                              </div>';
+            $alert_message = '<div class="alert alert-danger">Error: ' . $stmt_update->error . '</div>';
         }
-
         $stmt_update->close();
     }
 }
 
+// Logika GET (Ambil data untuk ditampilkan)
+if ($_SERVER["REQUEST_METHOD"] != "POST") {
+    if (isset($_GET['id'])) {
+        $project_id = $_GET['id'];
+        $stmt_select = $koneksi->prepare("SELECT * FROM projects WHERE id = ?");
+        $stmt_select->bind_param("i", $project_id);
+        $stmt_select->execute();
+        $result = $stmt_select->get_result();
+        if ($result->num_rows > 0) {
+            $project = $result->fetch_assoc();
+        } else {
+            $alert_message = '<div class="alert alert-danger">Error: Proyek tidak ditemukan!</div>';
+            $project_id = null;
+        }
+        $stmt_select->close();
+    } else {
+        $alert_message = '<div class="alert alert-danger">Error: ID Proyek tidak valid.</div>';
+    }
+}
 
-if (empty($project)) {
-    $project = array_fill_keys([
-        'slug',
-        'title',
-        'subtitle_goal',
-        'category',
-        'location_text',
-        'hero_image_url',
-        'stat_capacity',
-        'stat_co2_reduction',
-        'stat_timeline',
-        'stat_investment',
-        'overview_result',
-        'overview_details',
-        'overview_generation',
-        'challenges_html',
-        'solutions_html',
-        'impact_html',
-        'tech_specs_json'
-    ], '');
+// Ambil ulang data setelah POST
+if ($_SERVER["REQUEST_METHOD"] == "POST" && $project_id && empty($project)) {
+    $stmt_select = $koneksi->prepare("SELECT * FROM projects WHERE id = ?");
+    $stmt_select->bind_param("i", $project_id);
+    $stmt_select->execute();
+    $project = $stmt_select->get_result()->fetch_assoc();
+    $stmt_select->close();
 }
 ?>
 <!DOCTYPE html>
@@ -182,28 +156,95 @@ if (empty($project)) {
 </head>
 
 <body class="sb-nav-fixed">
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
+                class="fas fa-bars"></i></button>
+        <a class="navbar-brand ps-3" href="index.php">GreenRay Admin</a>
 
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">...</nav>
+        <ul class="navbar-nav ms-auto me-3 me-lg-4">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+                    aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="logout.php">Logout</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
 
     <div id="layoutSidenav">
-
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
+                        <div class="sb-sidenav-menu-heading">Utama</div>
+                        <a class="nav-link" href="index.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Dashboard
+                        </a>
+
+                        <div class="sb-sidenav-menu-heading">Manajemen Konten</div>
                         <a class="nav-link active" href="projects.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-briefcase"></i></div>
                             Proyek
                         </a>
+                        <a class="nav-link" href="products.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-solar-panel"></i></div>
+                            Produk
+                        </a>
+                        <a class="nav-link" href="clients.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-handshake"></i></div>
+                            Klien
+                        </a>
+                        <a class="nav-link" href="reviews.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-star"></i></div>
+                            Reviews
+                        </a>
+                        <a class="nav-link" href="faqs.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-question-circle"></i></div>
+                            FAQ
+                        </a>
+
+                        <div class="sb-sidenav-menu-heading">Interaksi User</div>
+                        <a class="nav-link" href="consultations.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-calculator"></i></div>
+                            Konsultasi (Leads)
+                        </a>
+                        <a class="nav-link" href="contact_messages.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-envelope"></i></div>
+                            Pesan Kontak
+                        </a>
+
+                        <div class="sb-sidenav-menu-heading">Pengaturan Sistem</div>
+                        <a class="nav-link" href="users.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                            Users
+                        </a>
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                            data-bs-target="#collapseKalkulator" aria-expanded="false"
+                            aria-controls="collapseKalkulator">
+                            <div class="sb-nav-link-icon"><i class="fas fa-cogs"></i></div>
+                            Setting Kalkulator
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseKalkulator" aria-labelledby="headingOne"
+                            data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="locations.php">Manajemen Lokasi</a>
+                                <a class="nav-link" href="tariffs.php">Manajemen Tarif</a>
+                            </nav>
+                        </div>
                     </div>
                 </div>
-                <div class="sb-sidenav-footer">...</div>
+                <div class="sb-sidenav-footer">
+                    <div class="small">Logged in as:</div>
+                    Admin
+                </div>
             </nav>
         </div>
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-
                     <h1 class="mt-4">Edit Proyek</h1>
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item"><a href="index.php">Dashboard</a></li>
@@ -213,16 +254,12 @@ if (empty($project)) {
 
                     <?php echo $alert_message; ?>
 
-                    <?php if (!empty($project_id) && !empty($project)): ?>
+                    <?php if ($project_id && !empty($project)): ?>
                         <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="fas fa-edit me-1"></i>
-                                Formulir Edit Proyek (ID: <?php echo $project_id; ?>)
-                            </div>
+                            <div class="card-header"><i class="fas fa-edit me-1"></i> Formulir Edit Proyek</div>
                             <div class="card-body">
-
                                 <form action="project_edit.php?id=<?php echo $project_id; ?>" method="POST"
-                                    enctype="multipart/form-data">
+                                    enctype="multipart/form-data" id="project-form">
                                     <input type="hidden" name="project_id" value="<?php echo $project_id; ?>">
                                     <input type="hidden" name="current_hero_image"
                                         value="<?php echo htmlspecialchars($project['hero_image_url']); ?>">
@@ -257,22 +294,17 @@ if (empty($project)) {
                                                 value="<?php echo htmlspecialchars($project['location_text']); ?>" required>
                                         </div>
                                     </div>
-
                                     <div class="mb-3">
                                         <label class="small mb-1">Gambar Saat Ini:</label><br>
                                         <?php if (!empty($project['hero_image_url'])): ?>
                                             <img src="../<?php echo htmlspecialchars($project['hero_image_url']); ?>"
-                                                alt="Gambar Hero Saat Ini"
-                                                style="height: 100px; border-radius: 5px; border: 1px solid #ddd;">
-                                        <?php else: ?>
-                                            <small class="text-muted">Belum ada gambar.</small>
-                                        <?php endif; ?>
+                                                alt="Gambar Hero" style="height: 100px; border-radius: 5px;">
+                                        <?php else: ?><small class="text-muted">Belum ada gambar.</small><?php endif; ?>
                                     </div>
                                     <div class="mb-3">
                                         <label class="small mb-1" for="hero_image_file">Upload Gambar Utama Baru
                                             (Opsional)</label>
                                         <input class="form-control" id="hero_image_file" name="hero_image_file" type="file">
-                                        <small class="text-muted">Biarkan kosong jika tidak ingin mengganti gambar.</small>
                                     </div>
                                     <h5 class="mt-4 text-dark">Statistik (4 Kartu)</h5>
                                     <div class="row gx-3 mb-3">
@@ -299,7 +331,6 @@ if (empty($project)) {
                                                 value="<?php echo htmlspecialchars($project['stat_investment']); ?>">
                                         </div>
                                     </div>
-
                                     <h5 class="mt-4 text-dark">Project Overview</h5>
                                     <div class="mb-3">
                                         <label class="small mb-1" for="overview_result">Result</label>
@@ -318,42 +349,47 @@ if (empty($project)) {
                                             rows="3"><?php echo htmlspecialchars($project['overview_generation']); ?></textarea>
                                     </div>
 
-                                    <h5 class="mt-4 text-dark">Detail Lainnya (HTML/JSON)</h5>
+                                    <h5 class="mt-4 text-dark">Detail Lainnya</h5>
                                     <div class="mb-3">
-                                        <label class="small mb-1" for="challenges_html">Challenges (HTML List)</label>
+                                        <label class="small mb-1" for="challenges_html">Challenges</label>
                                         <textarea class="form-control" id="challenges_html" name="challenges_html"
-                                            rows="4"><?php echo htmlspecialchars($project['challenges_html']); ?></textarea>
+                                            rows="4"><?php echo convertHtmlListToNewlines($project['challenges_html']); ?></textarea>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="small mb-1" for="solutions_html">Solutions (HTML List)</label>
+                                        <label class="small mb-1" for="solutions_html">Solutions</label>
                                         <textarea class="form-control" id="solutions_html" name="solutions_html"
-                                            rows="4"><?php echo htmlspecialchars($project['solutions_html']); ?></textarea>
+                                            rows="4"><?php echo convertHtmlListToNewlines($project['solutions_html']); ?></textarea>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="small mb-1" for="impact_html">Impact (HTML List)</label>
+                                        <label class="small mb-1" for="impact_html">Impact</label>
                                         <textarea class="form-control" id="impact_html" name="impact_html"
-                                            rows="4"><?php echo htmlspecialchars($project['impact_html']); ?></textarea>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="small mb-1" for="tech_specs_json">Technical Specs (JSON)</label>
-                                        <textarea class="form-control" id="tech_specs_json" name="tech_specs_json"
-                                            rows="4"><?php echo htmlspecialchars($project['tech_specs_json']); ?></textarea>
+                                            rows="4"><?php echo convertHtmlListToNewlines($project['impact_html']); ?></textarea>
                                     </div>
 
-                                    <button class="btn btn-primary" type="submit">Update Proyek</button>
-                                    <a href="projects.php" class="btn btn-secondary">Kembali ke Daftar</a>
+                                    <h5 class="mt-4 text-dark">Technical Specifications</h5>
+                                    <div id="tech-specs-container">
+                                    </div>
+                                    <div class="mb-3">
+                                        <button type="button" class="btn btn-outline-success mt-2" id="add-spec-btn">
+                                            <i class="fas fa-plus me-1"></i> Tambah Spesifikasi
+                                        </button>
+                                    </div>
+                                    <input type="hidden" id="tech_specs_json" name="tech_specs_json">
+
+                                    <div class="mt-4 border-top pt-3">
+                                        <button class="btn btn-primary" type="submit">Update Proyek</button>
+                                        <a href="projects.php" class="btn btn-secondary">Batal</a>
+                                    </div>
                                 </form>
                             </div>
                         </div>
+                    <?php else: ?>
+                        <div class="alert alert-warning">Tidak dapat memuat data proyek.</div>
+                        <a href="projects.php" class="btn btn-secondary">Kembali ke Daftar</a>
                     <?php endif; ?>
                 </div>
             </main>
             <footer class="py-4 bg-light mt-auto">
-                <div class="container-fluid px-4">
-                    <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; GreenRay 2025</div>
-                    </div>
-                </div>
             </footer>
         </div>
     </div>
@@ -361,6 +397,96 @@ if (empty($project)) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
     <script src="js/scripts.js"></script>
+
+    <script>
+        // Masukkan data JSON dari PHP ke variabel JavaScript
+        const existingSpecs = <?php echo !empty($project['tech_specs_json']) ? $project['tech_specs_json'] : '[]'; ?>;
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // --- Script Slugify (dari sebelumnya) ---
+            const titleInput = document.getElementById('title');
+            const slugInput = document.getElementById('slug');
+            if (titleInput && slugInput) {
+                function slugify(text) {
+                    return text.toString().toLowerCase()
+                        .replace(/\s+/g, '-')
+                        .replace(/[^\w\-]+/g, '')
+                        .replace(/\-\-+/g, '-')
+                        .replace(/^-+/, '')
+                        .replace(/-+$/, '');
+                }
+                titleInput.addEventListener('input', function () {
+                    slugInput.value = slugify(titleInput.value);
+                });
+            }
+
+            // --- Script untuk Dynamic Tech Specs (BARU) ---
+            const container = document.getElementById('tech-specs-container');
+            const addBtn = document.getElementById('add-spec-btn');
+            const hiddenInput = document.getElementById('tech_specs_json');
+            const form = document.getElementById('project-form');
+
+            function createSpecRow(label = '', value = '') {
+                const row = document.createElement('div');
+                row.className = 'row gx-2 mb-2 dynamic-spec-row';
+                row.innerHTML = `
+                    <div class="col-md-5">
+                        <label class="small mb-1">Label</label>
+                        <input class="form-control spec-label" type="text" placeholder="Cth: Tipe Panel" value="${label}">
+                    </div>
+                    <div class="col-md-5">
+                        <label class="small mb-1">Value</label>
+                        <input class="form-control spec-value" type="text" placeholder="Cth: Monocrystalline 400W" value="${value}">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="small mb-1 d-block">&nbsp;</label>
+                        <button type="button" class="btn btn-danger w-100 remove-spec-btn">Hapus</button>
+                    </div>
+                `;
+
+                row.querySelector('.remove-spec-btn').addEventListener('click', function () {
+                    row.remove();
+                });
+                container.appendChild(row);
+            }
+
+            if (addBtn) {
+                addBtn.addEventListener('click', function () {
+                    createSpecRow();
+                });
+            }
+
+            // --- BARU: Pre-fill data untuk Halaman Edit ---
+            if (existingSpecs && Array.isArray(existingSpecs)) {
+                existingSpecs.forEach(spec => {
+                    // Cek untuk memastikan formatnya benar
+                    if (spec.label && spec.value) {
+                        createSpecRow(spec.label, spec.value);
+                    }
+                });
+            }
+
+            // Event listener untuk form submit
+            if (form) {
+                form.addEventListener('submit', function (e) {
+                    const specs = [];
+                    const rows = container.querySelectorAll('.dynamic-spec-row');
+                    rows.forEach(row => {
+                        const label = row.querySelector('.spec-label').value.trim();
+                        const value = row.querySelector('.spec-value').value.trim();
+                        if (label && value) {
+                            specs.push({
+                                label: label,
+                                value: value
+                            });
+                        }
+                    });
+                    hiddenInput.value = JSON.stringify(specs);
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>

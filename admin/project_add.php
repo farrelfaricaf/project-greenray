@@ -1,33 +1,55 @@
 <?php
 
 include '../koneksi.php';
-include 'auth_check.php';
 
-$alert_message = ""; 
+$alert_message = "";
 
+// ======================================================
+// FUNGSI HELPER BARU
+// ======================================================
+/**
+ * Mengubah teks dengan format baris baru menjadi daftar HTML.
+ * @param string $plain_text Teks dari textarea (cth: "Poin 1\nPoin 2")
+ * @return string Teks dalam format HTML (cth: "<ul><li>Poin 1</li><li>Poin 2</li></ul>")
+ */
+function convertNewlinesToHtmlList($plain_text)
+{
+    // 1. Ganti semua jenis newline (Windows \r\n, Mac \r) menjadi \n
+    $normalized_text = str_replace(["\r\n", "\r"], "\n", $plain_text);
+
+    // 2. Pecah teks berdasarkan \n
+    $lines = explode("\n", $normalized_text);
+
+    // 3. Hapus baris kosong dan spasi
+    $lines = array_filter(array_map('trim', $lines));
+
+    if (empty($lines)) {
+        return '';
+    }
+
+    // 4. Bungkus dengan <li>
+    $li_items = array_map(function ($line) {
+        return '<li class="mb-2">' . htmlspecialchars($line) . '</li>'; // mb-2 untuk spasi
+    }, $lines);
+
+    // 5. Gabungkan <li> saja
+    return implode('', $li_items);
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    
-    $hero_image_path_db = ""; 
+    $hero_image_path_db = "";
 
-    
     if (isset($_FILES['hero_image_file']) && $_FILES['hero_image_file']['error'] == 0) {
-
-        $target_dir = "../uploads/projects/"; 
-
-        
+        // ... (Logika upload file kamu tetap sama) ...
+        $target_dir = "../uploads/projects/";
         $file_name = uniqid() . '-' . basename($_FILES["hero_image_file"]["name"]);
         $target_file = $target_dir . $file_name;
         $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
-        
         $check = getimagesize($_FILES["hero_image_file"]["tmp_name"]);
         if ($check !== false) {
-            
             if (move_uploaded_file($_FILES["hero_image_file"]["tmp_name"], $target_file)) {
-                
-                
                 $hero_image_path_db = "uploads/projects/" . $file_name;
             } else {
                 $alert_message = '<div class="alert alert-danger">Error: Gagal memindahkan file yang di-upload.</div>';
@@ -36,18 +58,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $alert_message = '<div class="alert alert-danger">Error: File yang di-upload bukan gambar.</div>';
         }
     } else {
-        
         $alert_message = '<div class="alert alert-danger">Error: Gambar utama (hero image) wajib di-upload.</div>';
     }
-    
 
-    
+
     $slug = $_POST['slug'];
     $title = $_POST['title'];
     $subtitle_goal = $_POST['subtitle_goal'];
     $category = $_POST['category'];
     $location_text = $_POST['location_text'];
-    
 
     $stat_capacity = $_POST['stat_capacity'];
     $stat_co2_reduction = $_POST['stat_co2_reduction'];
@@ -58,16 +77,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $overview_details = $_POST['overview_details'];
     $overview_generation = $_POST['overview_generation'];
 
-    $challenges_html = $_POST['challenges_html'];
-    $solutions_html = $_POST['solutions_html'];
-    $impact_html = $_POST['impact_html'];
+    // ======================================================
+    // PERUBAHAN DI SINI: Konversi teks biasa ke HTML
+    // ======================================================
+    $challenges_html = convertNewlinesToHtmlList($_POST['challenges_html']);
+    $solutions_html = convertNewlinesToHtmlList($_POST['solutions_html']);
+    $impact_html = convertNewlinesToHtmlList($_POST['impact_html']);
+    // ======================================================
 
     $tech_specs_json = $_POST['tech_specs_json'];
 
-    
+
     if (empty($alert_message)) {
 
-        
         $stmt = $koneksi->prepare("INSERT INTO projects 
             (slug, title, subtitle_goal, category, location_text, hero_image_url, 
             stat_capacity, stat_co2_reduction, stat_timeline, stat_investment, 
@@ -82,7 +104,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $subtitle_goal,
             $category,
             $location_text,
-            $hero_image_path_db, 
+            $hero_image_path_db,
             $stat_capacity,
             $stat_co2_reduction,
             $stat_timeline,
@@ -92,11 +114,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $overview_generation,
             $challenges_html,
             $solutions_html,
-            $impact_html,
+            $impact_html, // Variabel yang sudah dikonversi
             $tech_specs_json
         );
 
-        
         if ($stmt->execute()) {
             $alert_message = '<div class="alert alert-success alert-dismissible fade show" role="alert">
                                 <strong>Sukses!</strong> Proyek baru berhasil ditambahkan.
@@ -120,34 +141,102 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>Tambah Proyek - GreenRay Admin</title>
-    <link rel="icon" type="image/png" href="..\img\favicon.png" sizes="180px180">
     <link href="css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <link rel="icon" type="image/png" href="../img/favicon.png?v=1.1" sizes="180x180">
 </head>
 
 <body class="sb-nav-fixed">
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
+                class="fas fa-bars"></i></button>
+        <a class="navbar-brand ps-3" href="index.php">GreenRay Admin</a>
 
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">...</nav>
+        <ul class="navbar-nav ms-auto me-3 me-lg-4">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+                    aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="logout.php">Logout</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
 
     <div id="layoutSidenav">
-
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
+                        <div class="sb-sidenav-menu-heading">Utama</div>
+                        <a class="nav-link" href="index.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Dashboard
+                        </a>
+
+                        <div class="sb-sidenav-menu-heading">Manajemen Konten</div>
                         <a class="nav-link active" href="projects.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-briefcase"></i></div>
                             Proyek
                         </a>
+                        <a class="nav-link" href="products.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-solar-panel"></i></div>
+                            Produk
+                        </a>
+                        <a class="nav-link" href="clients.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-handshake"></i></div>
+                            Klien
+                        </a>
+                        <a class="nav-link" href="reviews.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-star"></i></div>
+                            Reviews
+                        </a>
+                        <a class="nav-link" href="faqs.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-question-circle"></i></div>
+                            FAQ
+                        </a>
+
+                        <div class="sb-sidenav-menu-heading">Interaksi User</div>
+                        <a class="nav-link" href="consultations.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-calculator"></i></div>
+                            Konsultasi (Leads)
+                        </a>
+                        <a class="nav-link" href="contact_messages.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-envelope"></i></div>
+                            Pesan Kontak
+                        </a>
+
+                        <div class="sb-sidenav-menu-heading">Pengaturan Sistem</div>
+                        <a class="nav-link" href="users.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                            Users
+                        </a>
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                            data-bs-target="#collapseKalkulator" aria-expanded="false"
+                            aria-controls="collapseKalkulator">
+                            <div class="sb-nav-link-icon"><i class="fas fa-cogs"></i></div>
+                            Setting Kalkulator
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseKalkulator" aria-labelledby="headingOne"
+                            data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="locations.php">Manajemen Lokasi</a>
+                                <a class="nav-link" href="tariffs.php">Manajemen Tarif</a>
+                            </nav>
+                        </div>
                     </div>
                 </div>
-                <div class="sb-sidenav-footer">...</div>
+                <div class="sb-sidenav-footer">
+                    <div class="small">Logged in as:</div>
+                    Admin
+                </div>
             </nav>
         </div>
+
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-
                     <h1 class="mt-4">Tambah Proyek Baru</h1>
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item"><a href="index.php">Dashboard</a></li>
@@ -163,9 +252,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             Formulir Proyek Baru
                         </div>
                         <div class="card-body">
-
                             <form action="project_add.php" method="POST" enctype="multipart/form-data">
-
                                 <h5 class="mt-3 text-dark">Info Dasar</h5>
                                 <div class="row gx-3 mb-3">
                                     <div class="col-md-6">
@@ -196,7 +283,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             placeholder="Cth: Surabaya, East Java" required>
                                     </div>
                                 </div>
-
                                 <div class="mb-3">
                                     <label class="small mb-1" for="hero_image_file">Upload Gambar Utama (Hero)</label>
                                     <input class="form-control" id="hero_image_file" name="hero_image_file" type="file"
@@ -245,29 +331,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 </div>
 
                                 <h5 class="mt-4 text-dark">Detail Lainnya (HTML/JSON)</h5>
+
                                 <div class="mb-3">
-                                    <label class="small mb-1" for="challenges_html">Challenges (HTML List)</label>
+                                    <label class="small mb-1" for="challenges_html">Challenges</label>
                                     <textarea class="form-control" id="challenges_html" name="challenges_html" rows="4"
-                                        placeholder="Tulis sebagai <ul><li>...</li></ul>"></textarea>
+                                        placeholder="Tulis per baris. Setiap baris baru akan menjadi satu poin list."></textarea>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="small mb-1" for="solutions_html">Solutions (HTML List)</label>
+                                    <label class="small mb-1" for="solutions_html">Solutions</label>
                                     <textarea class="form-control" id="solutions_html" name="solutions_html" rows="4"
-                                        placeholder="Tulis sebagai <ul><li>...</li></ul>"></textarea>
+                                        placeholder="Tulis per baris. Setiap baris baru akan menjadi satu poin list."></textarea>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="small mb-1" for="impact_html">Impact (HTML List)</label>
+                                    <label class="small mb-1" for="impact_html">Impact</label>
                                     <textarea class="form-control" id="impact_html" name="impact_html" rows="4"
-                                        placeholder="Tulis sebagai <ul><li>...</li></ul>"></textarea>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="small mb-1" for="tech_specs_json">Technical Specs (JSON)</label>
-                                    <textarea class="form-control" id="tech_specs_json" name="tech_specs_json" rows="4"
-                                        placeholder='Cth: [{"label": "Panel Type", "value": "Monocrystalline 400W"}, {"label": "Panel Count", "value": "8 panels"}]'></textarea>
+                                        placeholder="Tulis per baris. Setiap baris baru akan menjadi satu poin list."></textarea>
                                 </div>
 
-                                <button class="btn btn-primary" type="submit">Simpan Proyek</button>
-                                <a href="projects.php" class="btn btn-secondary">Batal</a>
+                                <h5 class="mt-4 text-dark">Technical Specifications</h5>
+                                <div id="tech-specs-container">
+                                </div>
+                                <div class="mb-3">
+                                    <button type="button" class="btn btn-outline-success mt-2" id="add-spec-btn">
+                                        <i class="fas fa-plus me-1"></i> Tambah Spesifikasi
+                                    </button>
+                                </div>
+                                <input type="hidden" id="tech_specs_json" name="tech_specs_json">
+
+                                <div class="mt-4 border-top pt-3">
+                                    <button class="btn btn-primary" type="submit">Simpan Proyek</button>
+                                    <a href="projects.php" class="btn btn-secondary">Batal</a>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -275,11 +369,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
             </main>
             <footer class="py-4 bg-light mt-auto">
-                <div class="container-fluid px-4">
-                    <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; GreenRay 2025</div>
-                    </div>
-                </div>
             </footer>
         </div>
     </div>
@@ -287,6 +376,90 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
     <script src="js/scripts.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // --- Script Slugify (dari sebelumnya) ---
+            const titleInput = document.getElementById('title');
+            const slugInput = document.getElementById('slug');
+            if (titleInput && slugInput) {
+                function slugify(text) {
+                    return text.toString().toLowerCase()
+                        .replace(/\s+/g, '-')
+                        .replace(/[^\w\-]+/g, '')
+                        .replace(/\-\-+/g, '-')
+                        .replace(/^-+/, '')
+                        .replace(/-+$/, '');
+                }
+                titleInput.addEventListener('input', function () {
+                    slugInput.value = slugify(titleInput.value);
+                });
+            }
+
+            // --- Script untuk Dynamic Tech Specs (BARU) ---
+            const container = document.getElementById('tech-specs-container');
+            const addBtn = document.getElementById('add-spec-btn');
+            const hiddenInput = document.getElementById('tech_specs_json');
+            const form = document.getElementById('project-form');
+
+            // Fungsi untuk membuat baris input baru
+            function createSpecRow(label = '', value = '') {
+                const row = document.createElement('div');
+                row.className = 'row gx-2 mb-2 dynamic-spec-row';
+                row.innerHTML = `
+                    <div class="col-md-5">
+                        <label class="small mb-1">Label</label>
+                        <input class="form-control spec-label" type="text" placeholder="Cth: Tipe Panel" value="${label}">
+                    </div>
+                    <div class="col-md-5">
+                        <label class="small mb-1">Value</label>
+                        <input class="form-control spec-value" type="text" placeholder="Cth: Monocrystalline 400W" value="${value}">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="small mb-1 d-block">&nbsp;</label>
+                        <button type="button" class="btn btn-danger w-100 remove-spec-btn">Hapus</button>
+                    </div>
+                `;
+
+                // Tambahkan event listener untuk tombol hapus
+                row.querySelector('.remove-spec-btn').addEventListener('click', function () {
+                    row.remove();
+                });
+
+                container.appendChild(row);
+            }
+
+            // Event listener untuk tombol "Tambah Spesifikasi"
+            if (addBtn) {
+                addBtn.addEventListener('click', function () {
+                    createSpecRow(); // Tambah baris kosong
+                });
+            }
+
+            // Event listener untuk form submit
+            if (form) {
+                form.addEventListener('submit', function (e) {
+                    const specs = [];
+                    const rows = container.querySelectorAll('.dynamic-spec-row');
+
+                    rows.forEach(row => {
+                        const label = row.querySelector('.spec-label').value.trim();
+                        const value = row.querySelector('.spec-value').value.trim();
+
+                        if (label && value) { // Hanya simpan jika keduanya diisi
+                            specs.push({
+                                label: label,
+                                value: value
+                            });
+                        }
+                    });
+
+                    // Ubah array objek menjadi string JSON dan masukkan ke input tersembunyi
+                    hiddenInput.value = JSON.stringify(specs);
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>

@@ -71,7 +71,7 @@ $koneksi->close();
 
     <style>
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             background: linear-gradient(135deg, #e0f2f1 0%, #c8e6c9 100%);
             display: flex;
             justify-content: center;
@@ -147,11 +147,21 @@ $koneksi->close();
             font-size: 0.9rem;
         }
 
+        .forgot-pass {
+            font-size: 0.9rem;
+            text-decoration: none;
+            color: #28a745;
+            font-weight: 500;
+        }
+        .forgot-pass:hover {
+            text-decoration: underline;
+            color: #1e7e34;
+        }
+
         @media (max-width: 576px) {
             .card {
                 padding: 20px;
             }
-
             .card-header h3 {
                 font-size: 1.5rem;
             }
@@ -183,7 +193,9 @@ $koneksi->close();
                     <label for="inputPassword">Password</label>
                 </div>
                 <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-                    <button type="submit" class="btn btn-success w-100">Login</button>
+                    <a class="forgot-pass" href="../html/reset_password.php">Lupa Password?</a>
+
+                    <button type="submit" class="btn btn-success">Login</button>
                 </div>
             </form>
         </div>

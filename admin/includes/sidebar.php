@@ -55,6 +55,10 @@ $page = basename($_SERVER['PHP_SELF']);
                     <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                     Users
                 </a>
+                <a class="nav-link <?php echo ($page == 'admins.php') ? 'active' : ''; ?>" href="admins.php">
+                    <div class="sb-nav-link-icon"><i class="fas fa-user-shield"></i></div>
+                    Administrator
+                </a>
 
                 <?php
                 $is_calc_active = ($page == 'locations.php' || $page == 'locations_add.php' || $page == 'locations_edit.php' || $page == 'tariffs.php' || $page == 'tariffs_add.php' || $page == 'tariffs_edit.php');

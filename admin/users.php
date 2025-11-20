@@ -47,7 +47,7 @@ include 'auth_check.php';
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $query_users = "SELECT id, first_name, last_name, email, created_at FROM users ORDER BY id DESC";
+                                    $query_users = "SELECT id, first_name, last_name, email, created_at FROM users WHERE role = 'user' ORDER BY id DESC";
                                     $result_users = $koneksi->query($query_users);
                                     if ($result_users && $result_users->num_rows > 0) {
                                         while ($row = $result_users->fetch_assoc()) {

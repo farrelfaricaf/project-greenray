@@ -11,7 +11,7 @@ $project_title = "";
 if (isset($_GET['id'])) {
     $project_id = $_GET['id'];
 
-    
+
     $stmt_title = $koneksi->prepare("SELECT title FROM projects WHERE id = ?");
     $stmt_title->bind_param("i", $project_id);
     $stmt_title->execute();
@@ -19,19 +19,19 @@ if (isset($_GET['id'])) {
     if ($row_title = $result_title->fetch_assoc()) {
         $project_title = $row_title['title'];
     } else {
-        die("Error: Proyek tidak ditemukan."); 
+        die("Error: Proyek tidak ditemukan.");
     }
     $stmt_title->close();
 
 } else {
-    die("Error: ID Proyek tidak valid."); 
+    die("Error: ID Proyek tidak valid.");
 }
 
 
 if (isset($_GET['delete_image_id'])) {
     $image_id_to_delete = $_GET['delete_image_id'];
 
-    
+
     $stmt_select = $koneksi->prepare("SELECT image_url FROM project_gallery_images WHERE id = ? AND project_id = ?");
     $stmt_select->bind_param("ii", $image_id_to_delete, $project_id);
     $stmt_select->execute();
@@ -39,10 +39,10 @@ if (isset($_GET['delete_image_id'])) {
     if ($row_img = $result_img->fetch_assoc()) {
         $image_path = "../" . $row_img['image_url'];
         if (file_exists($image_path) && !empty($row_img['image_url'])) {
-            unlink($image_path); 
+            unlink($image_path);
         }
 
-        
+
         $stmt_delete = $koneksi->prepare("DELETE FROM project_gallery_images WHERE id = ?");
         $stmt_delete->bind_param("i", $image_id_to_delete);
         $stmt_delete->execute();
@@ -51,7 +51,7 @@ if (isset($_GET['delete_image_id'])) {
         $alert_message = '<div class="alert alert-success">Gambar berhasil dihapus.</div>';
     }
     $stmt_select->close();
-    
+
     header("Location: project_gallery.php?id=" . $project_id);
     exit;
 }
@@ -61,10 +61,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['gallery_image_file'])
 
     $image_path_db = "";
 
-    
+
     if (isset($_FILES['gallery_image_file']) && $_FILES['gallery_image_file']['error'] == 0) {
 
-        $target_dir = "../uploads/projects/"; 
+        $target_dir = "../uploads/projects/";
         $file_name = uniqid() . '-gallery-' . basename($_FILES["gallery_image_file"]["name"]);
         $target_file = $target_dir . $file_name;
         $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
@@ -72,9 +72,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['gallery_image_file'])
         $check = getimagesize($_FILES["gallery_image_file"]["tmp_name"]);
         if ($check !== false) {
             if (move_uploaded_file($_FILES["gallery_image_file"]["tmp_name"], $target_file)) {
-                $image_path_db = "uploads/projects/" . $file_name; 
+                $image_path_db = "uploads/projects/" . $file_name;
 
-                
+
                 $stmt_insert = $koneksi->prepare("INSERT INTO project_gallery_images (project_id, image_url, alt_text) VALUES (?, ?, ?)");
                 $alt_text = "Galeri " . $project_title;
                 $stmt_insert->bind_param("iss", $project_id, $image_path_db, $alt_text);
@@ -124,35 +124,12 @@ $stmt_gallery_list->close();
 
 <body class="sb-nav-fixed">
 
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <a class="navbar-brand ps-3" href="index.php">GreenRay Admin</a>
-        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
-                class="fas fa-bars"></i></button>
-        <ul class="navbar-nav ms-auto me-3 me-lg-4">
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
-                    aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="logout.php">Logout</a></li>
-                </ul>
-            </li>
-        </ul>
-    </nav>
+    <?php include 'includes/navbar.php'; ?>
+
     <div id="layoutSidenav">
 
-        <div id="layoutSidenav_nav">
-            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                <div class="sb-sidenav-menu">
-                    <div class="nav">
-                        <a class="nav-link active" href="projects.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-briefcase"></i></div>
-                            Proyek
-                        </a>
-                    </div>
-                </div>
-                <div class="sb-sidenav-footer">...</div>
-            </nav>
-        </div>
+        <?php include 'includes/sidebar.php'; ?>
+        
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
@@ -219,13 +196,8 @@ $stmt_gallery_list->close();
 
                 </div>
             </main>
-            <footer class="py-4 bg-light mt-auto">
-                <div class="container-fluid px-4">
-                    <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; GreenRay 2025</div>
-                    </div>
-                </div>
-            </footer>
+            
+            <?php include 'includes/footer.php'; ?>
         </div>
     </div>
 

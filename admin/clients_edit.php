@@ -117,23 +117,12 @@ if (empty($client)) {
 
 <body class="sb-nav-fixed">
 
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">...</nav>
+    <?php include 'includes/navbar.php'; ?>
 
     <div id="layoutSidenav">
 
-        <div id="layoutSidenav_nav">
-            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                <div class="sb-sidenav-menu">
-                    <div class="nav">
-                        <a class="nav-link active" href="clients.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-handshake"></i></div>
-                            Klien
-                        </a>
-                    </div>
-                </div>
-                <div class="sb-sidenav-footer">...</div>
-            </nav>
-        </div>
+        <?php include 'includes/sidebar.php'; ?>
+
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
@@ -192,13 +181,8 @@ if (empty($client)) {
                     <?php endif; ?>
                 </div>
             </main>
-            <footer class="py-4 bg-light mt-auto">
-                <div class="container-fluid px-4">
-                    <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; GreenRay 2025</div>
-                    </div>
-                </div>
-            </footer>
+            
+            <?php include 'includes/footer.php'; ?>
         </div>
     </div>
 

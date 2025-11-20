@@ -1,332 +1,378 @@
 <?php
-
 include '../koneksi.php';
 include 'auth_check.php';
 
 $alert_message = "";
-$project_id = null;
-$project = [];
+$product_id = $_GET['id'] ?? null;
 
-
-if (isset($_GET['id'])) {
-    
-    $project_id = (int) $_GET['id']; 
-
-    
-    $sql_select = "SELECT * FROM projects WHERE id = $project_id";
-    $result = $koneksi->query($sql_select);
-
-    if ($result && $result->num_rows > 0) {
-        $project = $result->fetch_assoc();
-    } else {
-        $alert_message = '<div class="alert alert-danger">Error: Proyek tidak ditemukan!</div>';
-    }
-} else {
-    $alert_message = '<div class="alert alert-danger">Error: ID Proyek tidak valid.</div>';
+if (!$product_id) {
+    header("Location: products.php");
+    exit;
 }
 
+// AMBIL DATA LAMA
+$stmt = $koneksi->prepare("SELECT * FROM products WHERE id = ?");
+$stmt->bind_param("i", $product_id);
+$stmt->execute();
+$product = $stmt->get_result()->fetch_assoc();
 
+if (!$product) {
+    echo "Produk tidak ditemukan.";
+    exit;
+}
+
+// --- PROSES UPDATE ---
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = $_POST['name'];
+    $slug = $_POST['slug'];
+    $subtitle = $_POST['subtitle'];
+    $description = $_POST['description'];
 
-    
-    $project_id = (int) $_POST['project_id'];
-    
-    $slug = $koneksi->real_escape_string($_POST['slug']);
-    $title = $koneksi->real_escape_string($_POST['title']);
-    $subtitle_goal = $koneksi->real_escape_string($_POST['subtitle_goal']);
-    $category = $koneksi->real_escape_string($_POST['category']);
-    $location_text = $koneksi->real_escape_string($_POST['location_text']);
+    // 1. Handle Main Image Update
+    $image_path_db = $_POST['old_image']; // Default gambar lama
+    if (isset($_FILES['image_file']) && $_FILES['image_file']['error'] == 0) {
+        $target_dir = "../uploads/products/";
+        $file_name = uniqid() . '-main-' . basename($_FILES["image_file"]["name"]);
+        move_uploaded_file($_FILES["image_file"]["tmp_name"], $target_dir . $file_name);
+        $image_path_db = "uploads/products/" . $file_name;
+    }
 
-    $stat_capacity = $koneksi->real_escape_string($_POST['stat_capacity']);
-    $stat_co2_reduction = $koneksi->real_escape_string($_POST['stat_co2_reduction']);
-    $stat_timeline = $koneksi->real_escape_string($_POST['stat_timeline']);
-    $stat_investment = $koneksi->real_escape_string($_POST['stat_investment']);
-
-    $overview_result = $koneksi->real_escape_string($_POST['overview_result']);
-    $overview_details = $koneksi->real_escape_string($_POST['overview_details']);
-    $overview_generation = $koneksi->real_escape_string($_POST['overview_generation']);
-
-    $challenges_html = $koneksi->real_escape_string($_POST['challenges_html']);
-    $solutions_html = $koneksi->real_escape_string($_POST['solutions_html']);
-    $impact_html = $koneksi->real_escape_string($_POST['impact_html']);
-    $tech_specs_json = $koneksi->real_escape_string($_POST['tech_specs_json']);
-
-    $current_hero_image = $_POST['current_hero_image']; 
-    $hero_image_path_db = $current_hero_image; 
-
-    
-    if (isset($_FILES['hero_image_file']) && $_FILES['hero_image_file']['error'] == 0 && $_FILES['hero_image_file']['size'] > 0) {
-        $target_dir = "../uploads/projects/";
-        $file_name = uniqid() . '-' . basename($_FILES["hero_image_file"]["name"]);
-        $target_file = $target_dir . $file_name;
-
-        $check = getimagesize($_FILES["hero_image_file"]["tmp_name"]);
-        if ($check !== false) {
-            if (move_uploaded_file($_FILES["hero_image_file"]["tmp_name"], $target_file)) {
-                $hero_image_path_db = $koneksi->real_escape_string("uploads/projects/" . $file_name);
-                
-                if (!empty($current_hero_image) && file_exists("../" . $current_hero_image)) {
-                    unlink("../" . $current_hero_image);
-                }
-            } else {
-                $alert_message = '<div class="alert alert-danger">Error: Gagal memindahkan file baru.</div>';
+    // 2. Handle Key Features Update
+    $features_array = [];
+    if (isset($_POST['feature_title'])) {
+        for ($i = 0; $i < count($_POST['feature_title']); $i++) {
+            if (!empty($_POST['feature_title'][$i])) {
+                $features_array[] = [
+                    'title' => $_POST['feature_title'][$i],
+                    'description' => $_POST['feature_desc'][$i]
+                ];
             }
-        } else {
-            $alert_message = '<div class="alert alert-danger">Error: File baru bukan gambar.</div>';
         }
     }
-    
+    $key_features_json = json_encode($features_array);
 
-    
-    if (empty($alert_message)) {
-        $sql_update = "UPDATE projects SET 
-            slug = '$slug', title = '$title', subtitle_goal = '$subtitle_goal', 
-            category = '$category', location_text = '$location_text', hero_image_url = '$hero_image_path_db', 
-            stat_capacity = '$stat_capacity', stat_co2_reduction = '$stat_co2_reduction', 
-            stat_timeline = '$stat_timeline', stat_investment = '$stat_investment', 
-            overview_result = '$overview_result', overview_details = '$overview_details', 
-            overview_generation = '$overview_generation', challenges_html = '$challenges_html', 
-            solutions_html = '$solutions_html', impact_html = '$impact_html', 
-            tech_specs_json = '$tech_specs_json' 
-            WHERE id = $project_id";
+    // 3. Handle Specifications Update
+    $specs_array = [];
+    if (isset($_POST['spec_title'])) {
+        $target_icon_dir = "../uploads/icons/";
+        if (!file_exists($target_icon_dir))
+            mkdir($target_icon_dir, 0777, true);
 
-        
-        if ($koneksi->query($sql_update) === TRUE) {
-            $alert_message = '<div class="alert alert-success alert-dismissible fade show" role="alert">
-                                <strong>Sukses!</strong> Proyek berhasil diperbarui.
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                              </div>';
+        for ($i = 0; $i < count($_POST['spec_title']); $i++) {
+            $title = $_POST['spec_title'][$i];
+            $sub = $_POST['spec_subtitle'][$i];
+            $type = $_POST['spec_icon_type'][$i];
 
-            
-            $result = $koneksi->query("SELECT * FROM projects WHERE id = $project_id");
-            $project = $result->fetch_assoc();
+            // Logic Icon: Default ambil dari hidden old_value
+            $icon_value = $_POST['spec_old_value'][$i];
 
-        } else {
-            $alert_message = '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                <strong>Error!</strong> Gagal memperbarui: ' . $koneksi->error . '
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                              </div>';
+            if ($type == 'class') {
+                // Kalau pilih class, ambil dari input text
+                $icon_value = $_POST['spec_icon_class'][$i];
+            } else {
+                // Kalau pilih image
+                if (isset($_FILES['spec_icon_file']['name'][$i]) && $_FILES['spec_icon_file']['error'][$i] == 0) {
+                    // Ada upload baru
+                    $icon_name = uniqid() . '-icon-' . basename($_FILES['spec_icon_file']['name'][$i]);
+                    move_uploaded_file($_FILES['spec_icon_file']['tmp_name'][$i], $target_icon_dir . $icon_name);
+                    $icon_value = "uploads/icons/" . $icon_name;
+                }
+                // Jika tidak ada upload baru, $icon_value tetap pakai yang lama (dari spec_old_value)
+            }
+
+            if (!empty($title)) {
+                $specs_array[] = [
+                    'title' => $title,
+                    'subtitle' => $sub,
+                    'icon_type' => $type,
+                    'icon_val' => $icon_value
+                ];
+            }
         }
+    }
+    $specifications_json = json_encode($specs_array);
+
+    // Update DB
+    $stmt = $koneksi->prepare("UPDATE products SET name=?, slug=?, subtitle=?, image_url=?, description=?, key_features_json=?, specifications_json=? WHERE id=?");
+    $stmt->bind_param("sssssssi", $name, $slug, $subtitle, $image_path_db, $description, $key_features_json, $specifications_json, $product_id);
+
+    if ($stmt->execute()) {
+        $alert_message = '<div class="alert alert-success">Produk berhasil diupdate!</div>';
+        // Refresh data
+        $stmt = $koneksi->prepare("SELECT * FROM products WHERE id = ?");
+        $stmt->bind_param("i", $product_id);
+        $stmt->execute();
+        $product = $stmt->get_result()->fetch_assoc();
+    } else {
+        $alert_message = '<div class="alert alert-danger">Error: ' . $stmt->error . '</div>';
     }
 }
 
-
-if (empty($project)) {
-    $project = array_fill_keys([
-        'slug',
-        'title',
-        'subtitle_goal',
-        'category',
-        'location_text',
-        'hero_image_url',
-        'stat_capacity',
-        'stat_co2_reduction',
-        'stat_timeline',
-        'stat_investment',
-        'overview_result',
-        'overview_details',
-        'overview_generation',
-        'challenges_html',
-        'solutions_html',
-        'impact_html',
-        'tech_specs_json'
-    ], '');
-}
+// Decode JSON untuk ditampilkan di form
+$features_data = json_decode($product['key_features_json'], true) ?? [];
+$specs_data = json_decode($product['specifications_json'], true) ?? [];
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>Edit Proyek #<?php echo $project_id; ?> - GreenRay Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Edit Produk - GreenRay Admin</title>
     <link rel="icon" type="image/png" href="..\img\favicon.png" sizes="180px180">
     <link href="css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <style>
+        .dynamic-row {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        .remove-row-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+    </style>
 </head>
 
 <body class="sb-nav-fixed">
-
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">...</nav>
+    <?php include 'includes/navbar.php'; ?>
 
     <div id="layoutSidenav">
+        <?php include 'includes/sidebar.php'; ?>
 
-        <div id="layoutSidenav_nav">
-            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                <div class="sb-sidenav-menu">
-                    <div class="nav">
-                        <a class="nav-link active" href="projects.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-briefcase"></i></div>
-                            Proyek
-                        </a>
-                    </div>
-                </div>
-                <div class="sb-sidenav-footer">...</div>
-            </nav>
-        </div>
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-
-                    <h1 class="mt-4">Edit Proyek</h1>
+                    <h1 class="mt-4">Edit Produk</h1>
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item"><a href="index.php">Dashboard</a></li>
-                        <li class="breadcrumb-item"><a href="projects.php">Data Proyek</a></li>
-                        <li class="breadcrumb-item active">Edit Proyek #<?php echo $project_id; ?></li>
+                        <li class="breadcrumb-item"><a href="products.php">Data Proyek</a></li>
+                        <li class="breadcrumb-item active">Edit Produk #<?php echo $product_id; ?></li>
                     </ol>
-
                     <?php echo $alert_message; ?>
 
-                    <?php if (!empty($project_id) && !empty($project)): ?>
+                    <form action="" method="POST" enctype="multipart/form-data">
                         <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="fas fa-edit me-1"></i>
-                                Formulir Edit Proyek (ID: <?php echo $project_id; ?>)
-                            </div>
+                            <div class="card-header">Info Dasar</div>
                             <div class="card-body">
-
-                                <form action="project_edit.php?id=<?php echo $project_id; ?>" method="POST"
-                                    enctype="multipart/form-data">
-                                    <input type="hidden" name="project_id" value="<?php echo $project_id; ?>">
-                                    <input type="hidden" name="current_hero_image"
-                                        value="<?php echo htmlspecialchars($project['hero_image_url']); ?>">
-
-                                    <h5 class="mt-3 text-dark">Info Dasar</h5>
-                                    <div class="row gx-3 mb-3">
-                                        <div class="col-md-6">
-                                            <label class="small mb-1" for="title">Judul Proyek</label>
-                                            <input class="form-control" id="title" name="title" type="text"
-                                                value="<?php echo htmlspecialchars($project['title']); ?>" required>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="small mb-1" for="slug">Slug (untuk URL)</label>
-                                            <input class="form-control" id="slug" name="slug" type="text"
-                                                value="<?php echo htmlspecialchars($project['slug']); ?>" required>
-                                        </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label>Nama Produk</label>
+                                        <input type="text" name="name" id="name" class="form-control"
+                                            value="<?php echo htmlspecialchars($product['name']); ?>" required>
                                     </div>
-                                    <div class="mb-3">
-                                        <label class="small mb-1" for="subtitle_goal">Subjudul / Goal</label>
-                                        <input class="form-control" id="subtitle_goal" name="subtitle_goal" type="text"
-                                            value="<?php echo htmlspecialchars($project['subtitle_goal']); ?>" required>
+                                    <div class="col-md-6">
+                                        <label>Slug</label>
+                                        <input type="text" name="slug" id="slug" class="form-control"
+                                            value="<?php echo htmlspecialchars($product['slug']); ?>" readonly>
                                     </div>
-                                    <div class="row gx-3 mb-3">
-                                        <div class="col-md-6">
-                                            <label class="small mb-1" for="category">Kategori</label>
-                                            <input class="form-control" id="category" name="category" type="text"
-                                                value="<?php echo htmlspecialchars($project['category']); ?>" required>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="small mb-1" for="location_text">Lokasi Teks</label>
-                                            <input class="form-control" id="location_text" name="location_text" type="text"
-                                                value="<?php echo htmlspecialchars($project['location_text']); ?>" required>
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="small mb-1">Gambar Saat Ini:</label><br>
-                                        <?php if (!empty($project['hero_image_url'])): ?>
-                                            <img src="../<?php echo htmlspecialchars($project['hero_image_url']); ?>"
-                                                alt="Gambar Hero Saat Ini"
-                                                style="height: 100px; border-radius: 5px; border: 1px solid #ddd;">
-                                        <?php else: ?>
-                                            <small class="text-muted">Belum ada gambar.</small>
-                                        <?php endif; ?>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="small mb-1" for="hero_image_file">Upload Gambar Utama Baru
-                                            (Opsional)</label>
-                                        <input class="form-control" id="hero_image_file" name="hero_image_file" type="file">
-                                        <small class="text-muted">Biarkan kosong jika tidak ingin mengganti gambar.</small>
-                                    </div>
-
-                                    <h5 class="mt-4 text-dark">Statistik (4 Kartu)</h5>
-                                    <div class="row gx-3 mb-3">
-                                        <div class="col-md-3">
-                                            <label class="small mb-1" for="stat_capacity">Kapasitas</label>
-                                            <input class="form-control" id="stat_capacity" name="stat_capacity" type="text"
-                                                value="<?php echo htmlspecialchars($project['stat_capacity']); ?>">
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="small mb-1" for="stat_co2_reduction">Reduksi CO2</label>
-                                            <input class="form-control" id="stat_co2_reduction" name="stat_co2_reduction"
-                                                type="text"
-                                                value="<?php echo htmlspecialchars($project['stat_co2_reduction']); ?>">
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="small mb-1" for="stat_timeline">Timeline</label>
-                                            <input class="form-control" id="stat_timeline" name="stat_timeline" type="text"
-                                                value="<?php echo htmlspecialchars($project['stat_timeline']); ?>">
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="small mb-1" for="stat_investment">Investasi</label>
-                                            <input class="form-control" id="stat_investment" name="stat_investment"
-                                                type="text"
-                                                value="<?php echo htmlspecialchars($project['stat_investment']); ?>">
-                                        </div>
-                                    </div>
-
-                                    <h5 class="mt-4 text-dark">Project Overview</h5>
-                                    <div class="mb-3">
-                                        <label class="small mb-1" for="overview_result">Result</label>
-                                        <input class="form-control" id="overview_result" name="overview_result" type="text"
-                                            value="<?php echo htmlspecialchars($project['overview_result']); ?>">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="small mb-1" for="overview_details">Details</label>
-                                        <input class="form-control" id="overview_details" name="overview_details"
-                                            type="text"
-                                            value="<?php echo htmlspecialchars($project['overview_details']); ?>">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="small mb-1" for="overview_generation">Energy Generation</label>
-                                        <textarea class="form-control" id="overview_generation" name="overview_generation"
-                                            rows="3"><?php echo htmlspecialchars($project['overview_generation']); ?></textarea>
-                                    </div>
-
-                                    <h5 class="mt-4 text-dark">Detail Lainnya (HTML/JSON)</h5>
-                                    <div class="mb-3">
-                                        <label class="small mb-1" for="challenges_html">Challenges (HTML List)</label>
-                                        <textarea class="form-control" id="challenges_html" name="challenges_html"
-                                            rows="4"><?php echo htmlspecialchars($project['challenges_html']); ?></textarea>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="small mb-1" for="solutions_html">Solutions (HTML List)</label>
-                                        <textarea class="form-control" id="solutions_html" name="solutions_html"
-                                            rows="4"><?php echo htmlspecialchars($project['solutions_html']); ?></textarea>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="small mb-1" for="impact_html">Impact (HTML List)</label>
-                                        <textarea class="form-control" id="impact_html" name="impact_html"
-                                            rows="4"><?php echo htmlspecialchars($project['impact_html']); ?></textarea>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="small mb-1" for="tech_specs_json">Technical Specs (JSON)</label>
-                                        <textarea class="form-control" id="tech_specs_json" name="tech_specs_json"
-                                            rows="4"><?php echo htmlspecialchars($project['tech_specs_json']); ?></textarea>
-                                    </div>
-
-                                    <button class="btn btn-primary" type="submit">Update Proyek</button>
-                                    <a href="projects.php" class="btn btn-secondary">Kembali ke Daftar</a>
-                                </form>
+                                </div>
+                                <div class="mb-3">
+                                    <label>Subtitle</label>
+                                    <input type="text" name="subtitle" class="form-control"
+                                        value="<?php echo htmlspecialchars($product['subtitle']); ?>">
+                                </div>
+                                <div class="mb-3">
+                                    <label>Gambar Utama</label> <br>
+                                    <img src="../<?php echo $product['image_url']; ?>" width="100" class="mb-2 border">
+                                    <input type="hidden" name="old_image" value="<?php echo $product['image_url']; ?>">
+                                    <input type="file" name="image_file" class="form-control">
+                                    <small class="text-muted">Biarkan kosong jika tidak ingin mengganti gambar.</small>
+                                </div>
+                                <div class="mb-3">
+                                    <label>Deskripsi</label>
+                                    <textarea name="description" class="form-control"
+                                        rows="3"><?php echo htmlspecialchars($product['description']); ?></textarea>
+                                </div>
                             </div>
                         </div>
-                    <?php endif;?> 
+
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span>Key Features</span>
+                                <button type="button" class="btn btn-sm btn-success" onclick="addFeature()">+ Tambah
+                                    Fitur</button>
+                            </div>
+                            <div class="card-body" id="features_container">
+                                <?php foreach ($features_data as $feat): ?>
+                                    <div class="dynamic-row">
+                                        <button type="button" class="btn btn-danger btn-sm remove-row-btn"
+                                            onclick="this.parentElement.remove()">X</button>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label class="small">Judul Fitur</label>
+                                                <input type="text" name="feature_title[]" class="form-control"
+                                                    value="<?php echo htmlspecialchars($feat['title']); ?>">
+                                            </div>
+                                            <div class="col-md-8">
+                                                <label class="small">Deskripsi Fitur</label>
+                                                <input type="text" name="feature_desc[]" class="form-control"
+                                                    value="<?php echo htmlspecialchars($feat['description']); ?>">
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span>Specifications</span>
+                                <button type="button" class="btn btn-sm btn-success" onclick="addSpec()">+ Tambah
+                                    Spesifikasi</button>
+                            </div>
+                            <div class="card-body" id="specs_container">
+                                <?php foreach ($specs_data as $spec):
+                                    // --- LOGIKA BARU (ANTI ERROR) ---
+                                    // 1. Cek apakah data pakai format baru (icon_type)
+                                    if (isset($spec['icon_type'])) {
+                                        $type = $spec['icon_type'];
+                                        $val = $spec['icon_val'] ?? '';
+                                    }
+                                    // 2. Cek apakah data pakai format manual/lama (icon_class)
+                                    elseif (isset($spec['icon_class'])) {
+                                        $type = 'class';
+                                        $val = $spec['icon_class'];
+                                    }
+                                    // 3. Jika tidak ada keduanya, set default
+                                    else {
+                                        $type = 'class';
+                                        $val = '';
+                                    }
+
+                                    $isClass = ($type == 'class');
+                                    $classVal = $isClass ? $val : '';
+                                    $imgVal = !$isClass ? $val : '';
+                                    ?>
+                                    <div class="dynamic-row">
+                                        <button type="button" class="btn btn-danger btn-sm remove-row-btn"
+                                            onclick="this.parentElement.remove()">X</button>
+                                        <input type="hidden" name="spec_old_value[]"
+                                            value="<?php echo htmlspecialchars($val); ?>">
+
+                                        <div class="row mb-2">
+                                            <div class="col-md-6">
+                                                <label class="small">Judul Spesifikasi</label>
+                                                <input type="text" name="spec_title[]" class="form-control"
+                                                    value="<?php echo htmlspecialchars($spec['title']); ?>">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="small">Subtitle</label>
+                                                <input type="text" name="spec_subtitle[]" class="form-control"
+                                                    value="<?php echo htmlspecialchars($spec['subtitle']); ?>">
+                                            </div>
+                                        </div>
+                                        <div class="row align-items-center">
+                                            <div class="col-md-4">
+                                                <label class="small">Tipe Icon</label>
+                                                <select name="spec_icon_type[]" class="form-select"
+                                                    onchange="toggleIconInput(this)">
+                                                    <option value="class" <?php echo $isClass ? 'selected' : ''; ?>>Icon
+                                                        Class (Web)</option>
+                                                    <option value="image" <?php echo !$isClass ? 'selected' : ''; ?>>Upload
+                                                        Gambar</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-8 icon-input-area">
+                                                <div class="input-class <?php echo !$isClass ? 'd-none' : ''; ?>">
+                                                    <label class="small">Nama Class Icon</label>
+                                                    <input type="text" name="spec_icon_class[]" class="form-control"
+                                                        value="<?php echo htmlspecialchars($classVal); ?>">
+                                                </div>
+                                                <div class="input-file <?php echo $isClass ? 'd-none' : ''; ?>">
+                                                    <label class="small">Upload Icon (Ganti jika perlu)</label>
+                                                    <?php if ($imgVal): ?>
+                                                        <div class="mb-1"><img src="../<?php echo $imgVal; ?>" width="30">
+                                                            <small class="text-muted">Icon saat ini</small>
+                                                        </div>
+                                                    <?php endif; ?>
+                                                    <input type="file" name="spec_icon_file[]" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary mb-5">Update Produk</button>
+                        <a href="products.php" class="btn btn-secondary mb-5">Batal</a>
+                    </form>
                 </div>
             </main>
-            <footer class="py-4 bg-light mt-auto">
-                <div class="container-fluid px-4">
-                    <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; GreenRay 2025</div>
-                    </div>
-                </div>
-            </footer>
+
+            <?php include 'includes/footer.php'; ?>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-        crossorigin="anonymous"></script>
-    <script src="js/scripts.js"></script>
+    <script>
+        // Auto Slug
+        document.getElementById('name').addEventListener('input', function () {
+            let slug = this.value.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+            document.getElementById('slug').value = slug;
+        });
+
+        // Sama persis dengan add.php, bedanya ini hanya untuk nambah row BARU
+        function addFeature() {
+            const div = document.createElement('div');
+            div.className = 'dynamic-row';
+            div.innerHTML = `
+                <button type="button" class="btn btn-danger btn-sm remove-row-btn" onclick="this.parentElement.remove()">X</button>
+                <div class="row">
+                    <div class="col-md-4"><label class="small">Judul Fitur</label><input type="text" name="feature_title[]" class="form-control"></div>
+                    <div class="col-md-8"><label class="small">Deskripsi Fitur</label><input type="text" name="feature_desc[]" class="form-control"></div>
+                </div>
+            `;
+            document.getElementById('features_container').appendChild(div);
+        }
+
+        function addSpec() {
+            const div = document.createElement('div');
+            div.className = 'dynamic-row';
+            div.innerHTML = `
+                <button type="button" class="btn btn-danger btn-sm remove-row-btn" onclick="this.parentElement.remove()">X</button>
+                <input type="hidden" name="spec_old_value[]" value=""> <div class="row mb-2">
+                    <div class="col-md-6"><label class="small">Judul Spesifikasi</label><input type="text" name="spec_title[]" class="form-control"></div>
+                    <div class="col-md-6"><label class="small">Subtitle</label><input type="text" name="spec_subtitle[]" class="form-control"></div>
+                </div>
+                <div class="row align-items-center">
+                    <div class="col-md-4">
+                        <label class="small">Tipe Icon</label>
+                        <select name="spec_icon_type[]" class="form-select" onchange="toggleIconInput(this)">
+                            <option value="class">Icon Class (Web)</option>
+                            <option value="image">Upload Gambar</option>
+                        </select>
+                    </div>
+                    <div class="col-md-8 icon-input-area">
+                        <div class="input-class"><label class="small">Nama Class Icon</label><input type="text" name="spec_icon_class[]" class="form-control"></div>
+                        <div class="input-file d-none"><label class="small">Upload Icon</label><input type="file" name="spec_icon_file[]" class="form-control"></div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('specs_container').appendChild(div);
+        }
+
+        function toggleIconInput(selectElement) {
+            const parent = selectElement.closest('.row');
+            const classInput = parent.querySelector('.input-class');
+            const fileInput = parent.querySelector('.input-file');
+            if (selectElement.value === 'class') {
+                classInput.classList.remove('d-none');
+                fileInput.classList.add('d-none');
+            } else {
+                classInput.classList.add('d-none');
+                fileInput.classList.remove('d-none');
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

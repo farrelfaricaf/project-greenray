@@ -3,24 +3,24 @@
 include '../koneksi.php';
 include 'auth_check.php';
 
-$alert_message = ""; 
+$alert_message = "";
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    
+
     $city_name = $_POST['city_name'];
     $irradiance_factor = $_POST['irradiance_factor'];
-    
+
     $is_active = isset($_POST['is_active']) ? 1 : 0;
 
-    
+
     $stmt = $koneksi->prepare("INSERT INTO locations (city_name, irradiance_factor, is_active) VALUES (?, ?, ?)");
 
-    
+
     $stmt->bind_param("sdi", $city_name, $irradiance_factor, $is_active);
 
-    
+
     if ($stmt->execute()) {
         $alert_message = '<div class="alert alert-success alert-dismissible fade show" role="alert">
                             <strong>Sukses!</strong> Lokasi baru berhasil ditambahkan.
@@ -52,71 +52,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body class="sb-nav-fixed">
 
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <a class="navbar-brand ps-3" href="index.php">GreenRay Admin</a>
-        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
-                class="fas fa-bars"></i></button>
-        <ul class="navbar-nav ms-auto me-3 me-lg-4">
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
-                    aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="logout.php">Logout</a></li>
-                </ul>
-            </li>
-        </ul>
-    </nav>
+    <?php include 'includes/navbar.php'; ?>
+
     <div id="layoutSidenav">
 
-        <div id="layoutSidenav_nav">
-            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                <div class="sb-sidenav-menu">
-                    <div class="nav">
+        <?php include 'includes/sidebar.php'; ?>
 
-                        <div class="sb-sidenav-menu-heading">Utama</div>
-                        <a class="nav-link" href="index.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Dashboard
-                        </a>
-
-                        <div class="sb-sidenav-menu-heading">Manajemen Konten</div>
-                        <a class="nav-link" href="projects.php">... Proyek</a>
-                        <a class="nav-link" href="products.php">... Produk</a>
-                        <a class="nav-link" href="clients.php">... Klien</a>
-                        <a class="nav-link" href="reviews.php">... Reviews</a>
-                        <a class="nav-link" href="faqs.php">... FAQ</a>
-
-                        <div class="sb-sidenav-menu-heading">Interaksi User</div>
-                        <a class="nav-link" href="consultations.php">... Konsultasi</a>
-                        <a class="nav-link" href="contact_messages.php">... Pesan Kontak</a>
-
-                        <div class="sb-sidenav-menu-heading">Pengaturan Sistem</div>
-                        <a class="nav-link" href="users.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
-                            Users
-                        </a>
-                        <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#collapseKalkulator"
-                            aria-expanded="true" aria-controls="collapseKalkulator">
-                            <div class="sb-nav-link-icon"><i class="fas fa-cogs"></i></div>
-                            Setting Kalkulator
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse show" id="collapseKalkulator" aria-labelledby="headingOne"
-                            data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link active" href="locations.php">Manajemen Lokasi</a>
-                                <a class="nav-link" href="tariffs.php">Manajemen Tarif</a>
-                            </nav>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="sb-sidenav-footer">
-                    <div class="small">Logged in as:</div>
-                    Admin
-                </div>
-            </nav>
-        </div>
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
@@ -164,13 +105,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                 </div>
             </main>
-            <footer class="py-4 bg-light mt-auto">
-                <div class="container-fluid px-4">
-                    <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; GreenRay 2025</div>
-                    </div>
-                </div>
-            </footer>
+            
+            <?php include 'includes/footer.php'; ?>
         </div>
     </div>
 

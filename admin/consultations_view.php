@@ -142,38 +142,12 @@ if (!empty($consultation)) {
 
 <body class="sb-nav-fixed">
 
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <a class="navbar-brand ps-3" href="index.php">GreenRay Admin</a>
-        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
-                class="fas fa-bars"></i></button>
-        <ul class="navbar-nav ms-auto me-3 me-lg-4">
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
-                    aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="logout.php">Logout</a></li>
-                </ul>
-            </li>
-        </ul>
-    </nav>
+    <?php include 'includes/navbar.php'; ?>
+
     <div id="layoutSidenav">
 
-        <div id="layoutSidenav_nav">
-            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                <div class="sb-sidenav-menu">
-                    <div class="nav">
-                        <a class="nav-link" href="index.php">... Dashboard</a>
-                        <a class="nav-link" href="projects.php">... Proyek</a>
-                        <a class="nav-link active" href="consultations.php">... Konsultasi</a>
-                        <a class="nav-link" href="contact_messages.php">... Pesan Kontak</a>
-                    </div>
-                </div>
-                <div class="sb-sidenav-footer">
-                    <div class="small">Logged in as:</div>
-                    <?php echo htmlspecialchars($admin_name); ?>
-                </div>
-            </nav>
-        </div>
+        <?php include 'includes/sidebar.php'; ?>
+        
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
@@ -327,13 +301,8 @@ if (!empty($consultation)) {
 
                 </div>
             </main>
-            <footer class="py-4 bg-light mt-auto">
-                <div class="container-fluid px-4">
-                    <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; GreenRay 2025</div>
-                    </div>
-                </div>
-            </footer>
+            
+            <?php include 'includes/footer.php'; ?>
         </div>
     </div>
 

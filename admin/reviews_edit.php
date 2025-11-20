@@ -11,7 +11,7 @@ $review = [];
 if (isset($_GET['id'])) {
     $review_id = $_GET['id'];
 
-    
+
     $stmt_select = $koneksi->prepare("SELECT * FROM reviews WHERE id = ?");
     $stmt_select->bind_param("i", $review_id);
     $stmt_select->execute();
@@ -30,18 +30,18 @@ if (isset($_GET['id'])) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    
+
     $review_id = $_POST['review_id'];
     $customer_name = $_POST['customer_name'];
     $review_text = $_POST['review_text'];
     $rating = $_POST['rating'];
     $is_visible = isset($_POST['is_visible']) ? 1 : 0;
 
-    
-    $current_image_path = $_POST['current_image_path'];
-    $image_path_db = $current_image_path; 
 
-    
+    $current_image_path = $_POST['current_image_path'];
+    $image_path_db = $current_image_path;
+
+
     if (isset($_FILES['image_file']) && $_FILES['image_file']['error'] == 0 && $_FILES['image_file']['size'] > 0) {
 
         $target_dir = "../uploads/reviews/";
@@ -52,10 +52,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $check = getimagesize($_FILES["image_file"]["tmp_name"]);
         if ($check !== false) {
             if (move_uploaded_file($_FILES["image_file"]["tmp_name"], $target_file)) {
-                
+
                 $image_path_db = "uploads/reviews/" . $file_name;
 
-                
+
                 if (!empty($current_image_path) && file_exists("../" . $current_image_path)) {
                     unlink("../" . $current_image_path);
                 }
@@ -66,11 +66,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $alert_message = '<div class="alert alert-danger">Error: File baru bukan gambar.</div>';
         }
     }
-    
 
-    
+
+
     if (empty($alert_message)) {
-        
+
         $stmt_update = $koneksi->prepare("UPDATE reviews SET 
             customer_name = ?, review_text = ?, rating = ?, image_url = ?, is_visible = ? 
             WHERE id = ?");
@@ -85,14 +85,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $review_id
         );
 
-        
+
         if ($stmt_update->execute()) {
             $alert_message = '<div class="alert alert-success alert-dismissible fade show" role="alert">
                                 <strong>Sukses!</strong> Review berhasil diperbarui.
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                               </div>';
 
-            
+
             $stmt_select = $koneksi->prepare("SELECT * FROM reviews WHERE id = ?");
             $stmt_select->bind_param("i", $review_id);
             $stmt_select->execute();
@@ -129,24 +129,12 @@ if (empty($review)) {
 
 <body class="sb-nav-fixed">
 
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">...</nav>
+    <?php include 'includes/navbar.php'; ?>
 
     <div id="layoutSidenav">
 
-        <div id="layoutSidenav_nav">
-            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                <div class="sb-sidenav-menu">
-                    <div class="nav">
-                        <a class="nav-link active" href="reviews.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-star"></i></div>
-                            Reviews
-                        </a>
-                        <a class="nav-link" href="faqs.php">... FAQ</a>
-                    </div>
-                </div>
-                <div class="sb-sidenav-footer">...</div>
-            </nav>
-        </div>
+        <?php include 'includes/sidebar.php'; ?>
+        
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
@@ -226,13 +214,8 @@ if (empty($review)) {
                     <?php endif; ?>
                 </div>
             </main>
-            <footer class="py-4 bg-light mt-auto">
-                <div class="container-fluid px-4">
-                    <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; GreenRay 2025</div>
-                    </div>
-                </div>
-            </footer>
+            
+            <?php include 'includes/footer.php'; ?>
         </div>
     </div>
 

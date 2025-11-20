@@ -19,9 +19,17 @@
 /* ============================================================================== */
 
 .header-wrapper {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 3.125rem 15px 0 15px;
+padding: 0rem 6.25rem 0rem 6.25rem; /* Margin Kiri/Kanan 6.25rem */
+display: flex;
+flex-direction: column;
+gap: 4.0rem; 
+align-items: center;
+justify-content: flex-start;
+max-width: 90rem;
+width: 100%;
+margin: 3.125rem auto 0 auto; 
+position: relative;
+z-index: 30;
 }
 .hero {
     background: #ffffff;

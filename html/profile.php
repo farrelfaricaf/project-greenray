@@ -91,8 +91,12 @@ $profile_pic = $user['profile_image_url'];
   <title>Profil Saya - GreenRay</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="../css/globals.css">
   <link rel="stylesheet" href="../css/home.css">
+  <link rel="stylesheet" href="../css/globals.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+    rel="stylesheet">
   <link rel="icon" type="image/png" href="../img/favicon.png">
 
   <style>
@@ -240,71 +244,54 @@ $profile_pic = $user['profile_image_url'];
     }
 
     tr.clickable button {
-        transition: transform 0.35s ease;
-        line-height: 1;
-        width: 28px; /* Pastikan ukurannya konsisten */
-        height: 28px;
+      transition: transform 0.35s ease;
+      line-height: 1;
+      width: 28px;
+      /* Pastikan ukurannya konsisten */
+      height: 28px;
     }
+
     tr.clickable[aria-expanded="true"] button {
-        transform: rotate(45deg); /* Putar 45 derajat */
+      transform: rotate(45deg);
+      /* Putar 45 derajat */
     }
 
     /* 2. Transisi Fade-in + Slide untuk baris detail */
     tr.collapse-row {
-        /* Memastikan transisi berjalan mulus */
-        transition: opacity 0.15s ease-out;
+      /* Memastikan transisi berjalan mulus */
+      transition: opacity 0.15s ease-out;
     }
-    
+
     tr.collapse-row td {
-        /* ... (style border & padding kamu yang sudah ada) ... */
-        
-        /* Mulai dengan transparan */
-        opacity: 0; 
+      /* ... (style border & padding kamu yang sudah ada) ... */
+
+      /* Mulai dengan transparan */
+      opacity: 0;
     }
 
     /* Saat baris terbuka penuh (class .show ditambahkan Bootstrap), buat jadi terlihat */
     tr.collapse-row.show td {
-        opacity: 1;
+      opacity: 1;
     }
 
     #nav-history .table thead th {
-        font-weight: 700; /* Membuat font tebal */
-        color: #212529;   /* Menggelapkan warna font (standar Bootstrap) */
-        text-transform: uppercase; /* Opsional: Membuatnya huruf kapital */
-        font-size: 0.85rem;      /* Opsional: Sedikit mengecilkan */
+      font-weight: 700;
+      /* Membuat font tebal */
+      color: #212529;
+      /* Menggelapkan warna font (standar Bootstrap) */
+      text-transform: uppercase;
+      /* Opsional: Membuatnya huruf kapital */
+      font-size: 0.85rem;
+      /* Opsional: Sedikit mengecilkan */
     }
   </style>
 </head>
 
 <body>
-  <div class="home-wrapper">
-    <div class="hero-wrapper" style="height: auto; min-height: auto; padding-top: 60px;">
-      <div class="hero">
-        <img class="green-ray-logo-1" src="../img/GreenRay_Logo 1-1.png" />
-        <div class="header-menu">
-          <div class="non-active"><a href="home.php">Home</a></div>
-          <div class="non-active"><a href="portofolio.php">Portfolio</a></div>
-          <div class="non-active"><a href="calc.php">Calculator</a></div>
-          <div class="non-active"><a href="katalog.php">Catalog</a></div>
-        </div>
-        <div class="header-actions">
-          <?php if ($is_logged_in): ?>
-            <div class="profile-dropdown">
-              <a href="#" class="profile-toggle" id="profileToggle">
-                <img src="../<?php echo htmlspecialchars($profile_pic); ?>" alt="Profil" class="profile-picture-header">
-              </a>
-              <div class="dropdown-menu-header" id="profileDropdownMenu">
-                <div class="dropdown-item-info">Halo, <strong><?php echo htmlspecialchars($user_name); ?></strong>!</div>
-                <a class="dropdown-item" href="profile.php">Profil Saya</a>
-                <a class="dropdown-item" href="contact-us.php">Bantuan / Kontak</a>
-                <a class="dropdown-item" href="logout.php">Logout</a>
-              </div>
-            </div>
-          <?php endif; ?>
-        </div>
-      </div>
-    </div>
+  <div class="header-wrapper">
+    <?php include 'includes/header.php'; ?>
   </div>
+
   <div class="container" style="margin-top: 80px; margin-bottom: 100px;">
     <div class="row">
       <div class="col-lg-4">
@@ -531,20 +518,6 @@ $profile_pic = $user['profile_image_url'];
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      // Logika dropdown profil
-      const profileToggle = document.getElementById('profileToggle');
-      const profileDropdownMenu = document.getElementById('profileDropdownMenu');
-      if (profileToggle) {
-        profileToggle.addEventListener('click', function (e) {
-          e.preventDefault();
-          profileDropdownMenu.classList.toggle('show');
-        });
-        window.addEventListener('click', function (e) {
-          if (profileToggle && !profileToggle.contains(e.target) && !profileDropdownMenu.contains(e.target)) {
-            profileDropdownMenu.classList.remove('show');
-          }
-        });
-      }
 
       // Logika untuk tetap di tab yang aktif setelah refresh (khususnya setelah ganti password)
       var hash = window.location.hash;

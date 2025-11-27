@@ -1,17 +1,41 @@
 <?php
-// WAJIB ADA DI BARIS PALING ATAS
 session_start();
-
-// Hubungkan ke database (jika kamu perlu data lain, seperti untuk footer)
 include '../koneksi.php';
 
-// Cek status login
-$is_logged_in = isset($_SESSION['user_id']);
+// 2. Ambil Data PRODUK (Limit 4)
+$products = [];
+$res_prod = $koneksi->query("SELECT * FROM products ORDER BY id ASC LIMIT 4");
+if ($res_prod) {
+    while ($row = $res_prod->fetch_assoc()) {
+        $products[] = $row;
+    }
+}
 
-if ($is_logged_in) {
-    // Ambil data dari session yang sudah disimpan saat login
-    $user_name = $_SESSION['user_name'] ?? 'User';
-    $profile_pic = $_SESSION['user_profile_pic'] ?? '../img/default-profile.png'; // Asumsi path default
+// 3. Ambil Data PROYEK/PORTFOLIO (Limit 3)
+$projects = [];
+$res_proj = $koneksi->query("SELECT * FROM projects ORDER BY id ASC LIMIT 3");
+if ($res_proj) {
+    while ($row = $res_proj->fetch_assoc()) {
+        $projects[] = $row;
+    }
+}
+
+// 4. Ambil Data REVIEWS (Limit 6)
+$reviews = [];
+$res_rev = $koneksi->query("SELECT * FROM reviews WHERE is_visible = 1 ORDER BY id ASC");
+if ($res_rev) {
+    while ($row = $res_rev->fetch_assoc()) {
+        $reviews[] = $row;
+    }
+}
+
+// 5. Ambil Data FAQ (Limit 3)
+$faqs = [];
+$res_faq = $koneksi->query("SELECT * FROM faqs ORDER BY id DESC");
+if ($res_faq) {
+    while ($row = $res_faq->fetch_assoc()) {
+        $faqs[] = $row;
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -26,7 +50,7 @@ if ($is_logged_in) {
     <link rel="stylesheet" href="..\css\styleguide.css">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,31 +58,26 @@ if ($is_logged_in) {
         rel="stylesheet">
     <link rel="icon" type="image/png" href="..\img\favicon.png" sizes="180px180">
     <style>
-        /* CSS untuk Dropdown Profil */
+        /* CSS Dropdown Profil */
         .profile-dropdown {
             position: relative;
             display: inline-block;
         }
 
-        /* INI YANG MEMPERBAIKI UKURAN GAMBAR */
         .profile-picture-header {
             width: 45px;
             height: 45px;
             border-radius: 50%;
             object-fit: cover;
-            /* Memastikan gambar tidak gepeng */
             cursor: pointer;
             border: 2px solid #136000;
-            /* Border hijau GreenRay */
         }
 
         .dropdown-menu-header {
             display: none;
-            /* Sembunyi by default */
             position: absolute;
             right: 0;
             top: 60px;
-            /* Jarak dari ikon */
             background-color: white;
             min-width: 180px;
             box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1);
@@ -70,7 +89,6 @@ if ($is_logged_in) {
 
         .dropdown-menu-header.show {
             display: block;
-            /* Tampilkan saat di-klik */
         }
 
         .dropdown-menu-header .dropdown-item,
@@ -90,6 +108,209 @@ if ($is_logged_in) {
             background-color: #f9f9f9;
             font-weight: 500;
         }
+
+        /* --- STYLE CARD DARI KATALOG.PHP (DISAMAKAN & DIFIX LEBARNYA) --- */
+        .card-img-top {
+            height: 200px;
+            object-fit: contain;
+            padding: 10px;
+            background-color: #f8f9fa;
+        }
+
+        .custom-bullet-list {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+            text-align: left;
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
+
+        .custom-bullet-list li {
+            color: #6c757d;
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+        }
+
+        /* PERBAIKAN LEBAR CARD DI HOME */
+        .catalog-container .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            /* Jarak antar kartu */
+            justify-content: center;
+            width: 100%;
+            /* Pastikan container mengambil lebar penuh */
+        }
+
+        /* Style Khusus untuk Kartu agar lebarnya sama persis */
+        .card.card-solar {
+            width: 280px;
+            /* Lebar tetap (fixed width) agar seragam */
+            min-width: 280px;
+            /* Mencegah kartu mengecil */
+            max-width: 280px;
+            /* Mencegah kartu melebar */
+            flex: 0 0 auto;
+            /* Mencegah flexbox mengubah ukuran kartu */
+            display: flex;
+            flex-direction: column;
+            border-radius: 12px;
+            /* Sesuaikan dengan desain */
+            border: 2px solid #e0e0e0;
+            overflow: hidden;
+            box-shadow: none;
+
+            /* Set transform ke nilai awal (agar transisi bekerja) */
+            transform: translateY(0);
+
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .card-body {
+            flex: 1;
+            /* Agar body mengisi sisa ruang */
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+        }
+
+        /* Tombol View Details (Disamakan dengan Katalog) */
+        .btn-cta-solar {
+            background: var(--hijau) !important;
+            border-radius: 0.756875rem;
+            padding: 0.756875rem 1.51375rem;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            align-self: stretch;
+            border: none;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            text-decoration: none;
+            color: var(--putih);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .btn-cta-solar:hover {
+            background-color: #0f4d00;
+            color: white;
+        }
+
+        .icon-arrow {
+            display: inline-block;
+            width: 1.26125rem;
+            height: 1.26125rem;
+            margin-left: 0.5rem;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4.5 12h15m0 0l-5.625-6m5.625 6l-5.625 6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+        }
+
+        /* Responsive: Di HP jadi 1 kolom, di Tablet 2 kolom */
+        @media (max-width: 768px) {
+            .card.card-solar {
+                width: 100%;
+                /* Di HP lebar penuh */
+                max-width: 100%;
+            }
+        }
+
+        .card-solar:hover {
+            /* Tambahkan efek scale dan shadow saat di-hover */
+            box-shadow:
+                0rem 0.0625rem 0.1875rem 0rem rgba(0, 0, 0, 0.26),
+                0rem 0.3125rem 0.3125rem 0rem rgba(0, 0, 0, 0.23),
+                0rem 0.6875rem 0.4375rem 0rem rgba(0, 0, 0, 0.13),
+                0rem 1.25rem 0.5rem 0rem rgba(0, 0, 0, 0.04),
+                0rem 1.9375rem 0.5625rem 0rem rgba(0, 0, 0, 0);
+            transform: translateY(-5px);
+            /* Efek melayang */
+        }
+
+        .portfolio-section .project-card-home {
+            height: 100%;
+            /* Agar semua kartu sama tinggi */
+            display: flex;
+            flex-direction: column;
+            border: none;
+            /* Hilangkan border bawaan bootstrap jika ada */
+            background: transparent;
+        }
+
+        .portfolio-section .project-img {
+            height: 250px;
+            /* Tinggi gambar tetap */
+            width: 100%;
+            object-fit: cover;
+            /* Gambar tidak gepeng */
+            border-radius: 12px;
+        }
+
+        .portfolio-section .project-details {
+            flex-grow: 1;
+            /* Isi ruang kosong agar tombol sejajar di bawah */
+            text-align: left;
+            /* Rata kiri */
+            padding-left: 0;
+            /* Hapus padding default UL */
+        }
+
+        .portfolio-section .btn-cta-solar {
+            /* Tombol proyek pakai style yang sama dengan produk */
+            width: 100%;
+            /* Lebar penuh */
+        }
+
+        .review-card-wrapper {
+            background: #fff;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border: 2px solid #a0a0a0ff;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .review-profile-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #136000;
+            margin-bottom: 15px;
+        }
+
+        .review-text {
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            flex-grow: 1;
+            font-style: italic;
+        }
+
+        .review-author {
+            font-weight: 700;
+            color: #136000;
+            font-size: 1rem;
+        }
+
+        .star-rating {
+            color: #FFD700;
+            /* Warna Emas */
+            font-size: 2rem;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .hero-navbar {
+            padding: 0 100px;
+        }
     </style>
 </head>
 
@@ -97,468 +318,234 @@ if ($is_logged_in) {
     <div class="beranda">
         <div class="frame-136">
             <div class="frame-138">
-                <div class="hero">
-                    <img class="green-ray-logo-1" src="..\img\GreenRay_Logo 1-1.png" />
-                    <div class="header-menu">
-                        <div class="active-head"><a href="home.php">Home</a></div>
-                        <div class="non-active"><a href="portofolio.php">Portfolio</a></div>
-                        <div class="non-active"><a href="calc.php">Calculator</a></div>
-                        <div class="non-active"><a href="..\html\katalog.html">Catalog</a></div>
-                    </div>
-
-                    <div class="header-actions">
-
-                        <?php if ($is_logged_in): // JIKA USER SUDAH LOGIN ?>
-
-                            <div class="profile-dropdown">
-                                <a href="#" class="profile-toggle" id="profileToggle">
-                                    <img src="../<?php echo htmlspecialchars($profile_pic); ?>" alt="Profil"
-                                        class="profile-picture-header">
-                                </a>
-                                <div class="dropdown-menu-header" id="profileDropdownMenu">
-                                    <div class="dropdown-item-info">
-                                        Halo, <strong><?php echo htmlspecialchars($user_name); ?></strong>!
-                                    </div>
-                                    <a class="dropdown-item" href="profile.php">Profil Saya</a>
-                                    <a class="dropdown-item" href="contact-us.php">Bantuan / Kontak</a> <a
-                                        class="dropdown-item" href="logout.php">Logout</a>
-                                </div>
-                            </div>
-
-                        <?php else: // JIKA USER ADALAH TAMU (BELUM LOGIN) ?>
-
-                            <a class="login-btn" href="signin.php">
-                                <div class="login-text">Login</div>
-                                <span class="akar-icons--door"></span>
-                            </a>
-                            <a class="contact-us-btn" href="contact-us.php">
-                                <div class="contact-us-text">Contact Us</div>
-                                <span class="mynaui--arrow-right"></span>
-                            </a>
-
-                        <?php endif; ?>
-
-                    </div>
-                </div>
+                <?php include 'includes/header.php'; ?>
                 <img class="head-img" src="..\img\home-img.png" />
             </div>
 
             <div class="abou-us-container">
                 <img class="img-container" src="..\img\home-img-container1.png" />
                 <div class="dec-about-us">
-                    <div class="heading-container">
-                        Who We Are? More Than Just Solar Panels.
-                    </div>
+                    <div class="heading-container">Who We Are? More Than Just Solar Panels.</div>
                     <div class="dec-container">
-                        We are a dedicated team of experts committed to transforming how the
-                        region uses energy. Since 2015, we have successfully completed 400
-                        projects, ranging from private homes to large commercial complexes.
-                        Our mission is simple: to provide efficient, affordable, and
-                        sustainable solar energy solutions that deliver real savings and
-                        contribute to a greener planet. Our expertise ensures every
-                        installation is seamless, safe, and built to last.
+                        We are a dedicated team of experts committed to transforming how the region uses energy. Since
+                        2015, we have successfully completed 400 projects, ranging from private homes to large
+                        commercial complexes. Our mission is simple: to provide efficient, affordable, and sustainable
+                        solar energy solutions.
                     </div>
                 </div>
             </div>
             <div class="abou-us-container">
                 <div class="dec-about-us">
-                    <div class="heading-container">
-                        Why We Exist? Powering the Future, Together.
-                    </div>
+                    <div class="heading-container">Why We Exist? Powering the Future, Together.</div>
                     <div class="dec-container">
-                        We believe every roof has the potential to be a source of clean
-                        energy. Founded on a spirit of innovation and a commitment to the
-                        environment, GreenRay doesn&#039;t just install panels—we create
-                        energy independence for every client. We combine cutting-edge
-                        technology with personalized customer service, ensuring your
-                        transition to solar is smooth and rewarding. Join us in building a
-                        brighter, energy-independent future.
+                        We believe every roof has the potential to be a source of clean energy. GreenRay doesn't just
+                        install panels—we create energy independence for every client. We combine cutting-edge
+                        technology with personalized customer service.
                     </div>
                 </div>
                 <img class="img-container" src="..\img\home-img-container2.png" />
             </div>
+
             <div class="catalog-container">
                 <div class="heading-container-2">
-                    <div class="heading-container2">
-                        Find the Perfect Solar Solution for Your Needs
-                    </div>
+                    <div class="heading-container2">Find the Perfect Solar Solution for Your Needs</div>
                     <div class="dec-container2">
-                        Whether you’re a homeowner looking to cut utility costs or a business
-                        seeking energy independence, we have a tailored package to fit your
-                        budget and capacity requirements.
+                        Whether you’re a homeowner looking to cut utility costs or a business seeking energy
+                        independence, we have a tailored package to fit your budget and capacity requirements.
                     </div>
                 </div>
+
                 <div class="card-container">
+                    <?php if (!empty($products)): ?>
+                        <?php foreach ($products as $prod): ?>
+                            <?php
+                            $feats = json_decode($prod['key_features_json'], true) ?? [];
+                            $display_feats = array_slice($feats, 0, 2);
+                            ?>
+                            <div class="card card-solar">
+                                <img src="../<?php echo htmlspecialchars($prod['image_url']); ?>" class="card-img-top"
+                                    alt="<?php echo htmlspecialchars($prod['name']); ?>">
 
-                    <div class="card catalog-card">
-                        <img class="card-img-top image-catalog" src="..\img\catalog-product1.png"
-                            alt="The SunDial Starter (2-3 kWp)" />
-                        <div class="card-body dec-card">
-                            <h5 class="card-title title-card text-center">
-                                The SunDial Starter
-                                <br />
-                                (2-3 kWp)
-                            </h5>
-                            <ul class="list-group dec-card-catalog">
-                                <li class="list-group-item dec-card-catalog-span">Small Investment, Big Savings</li>
-                                <li class="list-group-item dec-card-catalog-span">Quick Installation</li>
-                            </ul>
-                        </div>
-                        <a class="cta-card" href="..\html\detailKatalog.html">
-                            <div class="view-details">View Details</div>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" viewBox="0 0 24 24">
-                                <path fill="#fff" fill-rule="evenodd"
-                                    d="M13.47 5.47a.75.75 0 0 1 1.06 0l6 6a.75.75 0 0 1 0 1.06l-6 6a.75.75 0 1 1-1.06-1.06l4.72-4.72H4a.75.75 0 0 1 0-1.5h14.19l-4.72-4.72a.75.75 0 0 1 0-1.06"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        </a>
-                    </div>
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title text-center fw-bold mb-2">
+                                        <?php echo htmlspecialchars($prod['name']); ?>
+                                    </h5>
+                                    <p class="text-center text-muted mb-3" style="font-size: 0.9em;">
+                                        (<?php echo htmlspecialchars($prod['subtitle']); ?>)
+                                    </p>
 
-                    <div class="card catalog-card">
-                        <img class="card-img-top image-catalog" src="..\img\catalog-product2.png"
-                            alt="The Solstice Standard (4 kWp)" />
-                        <div class="card-body dec-card">
-                            <h5 class="card-title title-card text-center">
-                                The Solstice Standard
-                                <br />
-                                (4 kWp)
-                            </h5>
-                            <ul class="list-group dec-card-catalog">
-                                <li class="list-group-item dec-card-catalog-span">Blackout Protection</li>
-                                <li class="list-group-item dec-card-catalog-span">Maximize Self-Consumption</li>
-                            </ul>
-                        </div>
-                        <a class="cta-card" href="..\html\detailKatalog.html">
-                            <div class="view-details">View Details</div>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" viewBox="0 0 24 24">
-                                <path fill="#fff" fill-rule="evenodd"
-                                    d="M13.47 5.47a.75.75 0 0 1 1.06 0l6 6a.75.75 0 0 1 0 1.06l-6 6a.75.75 0 1 1-1.06-1.06l4.72-4.72H4a.75.75 0 0 1 0-1.5h14.19l-4.72-4.72a.75.75 0 0 1 0-1.06"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        </a>
-                    </div>
+                                    <ul class="custom-bullet-list flex-grow-1">
+                                        <?php if (!empty($display_feats)): ?>
+                                            <?php foreach ($display_feats as $f): ?>
+                                                <li><?php echo htmlspecialchars($f['title']); ?></li>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <li style="list-style: none;">No features listed</li>
+                                        <?php endif; ?>
+                                    </ul>
 
-                    <div class="card catalog-card">
-                        <img class="card-img-top image-catalog" src="..\img\catalog-product3.png"
-                            alt="The Zenith Premium (6+ kWp)" />
-                        <div class="card-body dec-card">
-                            <h5 class="card-title title-card text-center">
-                                The Zenith Premium
-                                <br />
-                                (6+ kWp)
-                            </h5>
-                            <ul class="list-group dec-card-catalog">
-                                <li class="list-group-item dec-card-catalog-span">Accelerated ROI</li>
-                                <li class="list-group-item dec-card-catalog-span">Seamless Integration</li>
-                            </ul>
-                        </div>
-                        <a class="cta-card" href="..\html\detailKatalog.html">
-                            <div class="view-details">View Details</div>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" viewBox="0 0 24 24">
-                                <path fill="#fff" fill-rule="evenodd"
-                                    d="M13.47 5.47a.75.75 0 0 1 1.06 0l6 6a.75.75 0 0 1 0 1.06l-6 6a.75.75 0 1 1-1.06-1.06l4.72-4.72H4a.75.75 0 0 1 0-1.5h14.19l-4.72-4.72a.75.75 0 0 1 0-1.06"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        </a>
-                    </div>
-
-                    <div class="card catalog-card">
-                        <img class="card-img-top image-catalog" src="..\img\inverter.png" alt="SolisStream Inverter" />
-                        <div class="card-body dec-card">
-                            <h5 class="card-title title-card text-center">
-                                SolisStream
-                                <br />
-                                Inverter
-                            </h5>
-                            <ul class="list-group dec-card-catalog">
-                                <li class="list-group-item dec-card-catalog-span">Seamless Energy Flow</li>
-                                <li class="list-group-item dec-card-catalog-span">Maximum Yield</li>
-                            </ul>
-                        </div>
-                        <a class="cta-card" href="..\html\detailKatalog.html">
-                            <div class="view-details">View Details</div>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" viewBox="0 0 24 24">
-                                <path fill="#fff" fill-rule="evenodd"
-                                    d="M13.47 5.47a.75.75 0 0 1 1.06 0l6 6a.75.75 0 0 1 0 1.06l-6 6a.75.75 0 1 1-1.06-1.06l4.72-4.72H4a.75.75 0 0 1 0-1.5h14.19l-4.72-4.72a.75.75 0 0 1 0-1.06"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        </a>
-                    </div>
+                                    <a href="katalog_detail.php?slug=<?php echo $prod['slug']; ?>"
+                                        class="btn btn-cta-solar w-100">
+                                        <span>View Details</span>
+                                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p class="text-center text-muted w-100">Belum ada produk.</p>
+                    <?php endif; ?>
                 </div>
+
                 <div class="cta-home">
-                    <a href="..\html\katalog.html">
+                    <a href="katalog.php">
                         <div class="view-more">View More</div>
                     </a>
                 </div>
             </div>
-            <div class="portfolio-container">
+
+            <div class="portfolio-container portfolio-section">
                 <div class="heading-container2">Our Portfolio</div>
-                <div class="portf-container">
-                    <div class="card-portf">
-                        <img class="img-container2" src="..\img\portf-img-container.png" />
-                        <div class="dec-portf">
-                            <div class="title-dec">
-                                <span>
-                                    <span class="title-dec-span">
-                                        Residential Project
-                                        <br />
-                                    </span>
-                                    <span class="title-dec-span2">Surabaya Home</span>
-                                </span>
+
+                <div class="container">
+                    <div class="row g-4 justify-content-center">
+
+                        <?php if (!empty($projects)): ?>
+                            <?php foreach ($projects as $proj): ?>
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="project-card-home">
+                                        <img class="project-img rounded-3 mb-4"
+                                            src="../<?php echo htmlspecialchars($proj['hero_image_url']); ?>"
+                                            alt="<?php echo htmlspecialchars($proj['title']); ?>">
+
+                                        <h3 class="h4 fw-bold mb-3 text-center">
+                                            <?php echo htmlspecialchars($proj['title']); ?>
+                                        </h3>
+
+                                        <ul class="project-details mb-4" style="list-style: none; padding: 0;">
+                                            <li class="mb-2"><b>Capacity:</b>
+                                                <?php echo htmlspecialchars($proj['stat_capacity']); ?></li>
+                                            <li class="mb-2"><b>Goal:</b>
+                                                <?php echo htmlspecialchars($proj['subtitle_goal']); ?></li>
+                                            <li class="mb-2">
+                                                <b>Details:</b>
+                                                <?php
+                                                $details = htmlspecialchars($proj['overview_details']);
+                                                // Potong teks jika terlalu panjang agar kartu tetap rapi
+                                                if (strlen($details) > 100) {
+                                                    echo substr($details, 0, 100) . '...';
+                                                } else {
+                                                    echo $details;
+                                                }
+                                                ?>
+                                            </li>
+                                        </ul>
+
+                                        <a href="project_detail.php?slug=<?php echo htmlspecialchars($proj['slug']); ?>"
+                                            class="btn btn-cta-solar mt-auto">
+                                            <span>View Details</span>
+                                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <div class="col-12">
+                                <p class="text-center text-muted">Belum ada proyek.</p>
                             </div>
-                            <div class="desc-prtfolio">
-                                <span>
-                                    <ul class="desc-prtfolio-span2">
-                                        <li><span>Capacity</span> : 5 kWp</li>
-                                    </ul>
-                                    <ul class="desc-prtfolio-span2">
-                                        <li><span>Goal</span> : Reduce household electricity bills.</li>
-                                    </ul>
-                                    <ul class="desc-prtfolio-span2">
-                                        <li><span>Details</span> : Estimated electricity savings up to 60% per month.
-                                            Integrated system with mobile monitoring application.</li>
-                                    </ul>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-portf">
-                        <img class="img-container2" src="..\img\portf-img-container-2.png" />
-                        <div class="dec-portf">
-                            <div class="title-dec">
-                                <span>
-                                    <span class="title-dec-span">
-                                        Educational Institution Project
-                                        <br />
-                                    </span>
-                                    <span class="title-dec-span2">Jakarta University</span>
-                                </span>
-                            </div>
-                            <div class="desc-prtfolio">
-                                <span>
-                                    <ul class="desc-prtfolio-span2">
-                                        <li><span>Capacity</span> : 50 kWp</li>
-                                    </ul>
-                                    <ul class="desc-prtfolio-span2">
-                                        <li><span>Goal</span> : Support a green campus concept and operational cost
-                                            savings.</li>
-                                    </ul>
-                                    <ul class="desc-prtfolio-span2">
-                                        <li><span>Details</span> : Estimated electricity savings of Rp 15 million per
-                                            month.
-                                            Panels installed on the laboratory and library buildings.</li>
-                                    </ul>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-portf">
-                        <img class="img-container2" src="..\img\portf-img-container-1.png" />
-                        <div class="dec-portf">
-                            <div class="title-dec">
-                                <span>
-                                    <span class="title-dec-span">
-                                        Tourism Project
-                                        <br />
-                                    </span>
-                                    <span class="title-dec-span2">Bali Resort</span>
-                                </span>
-                            </div>
-                            <div class="desc-prtfolio">
-                                <span>
-                                    <ul class="desc-prtfolio-span2">
-                                        <li><span>Capacity</span> : 30 kWp</li>
-                                    </ul>
-                                    <ul class="desc-prtfolio-span2">
-                                        <li><span>Goal</span> : Reduce resort electricity costs and support the
-                                            eco-tourism concept.</li>
-                                    </ul>
-                                    <ul class="desc-prtfolio-span2">
-                                        <li><span>Details</span> : Most lighting needs are met by solar power. Hybrid
-                                            system
-                                            with a 60 kWh battery ensures operations continue even at
-                                            night or during cloudy weather.</li>
-                                    </ul>
-                                </span>
-                            </div>
-                        </div>
+                        <?php endif; ?>
+
                     </div>
                 </div>
-                <div class="cta-home">
-                    <a href="..\html\portofolio.html">
+
+                <div class="cta-home mt-5">
+                    <a href="portofolio.php">
                         <div class="view-more">View More</div>
                     </a>
                 </div>
             </div>
+
             <div class="reviews-bigcontain">
                 <div class="heading-container-2">
-                    <div class="heading-container2">
-                        Real Results, Trusted by Our Customers
-                    </div>
-                    <div class="dec-container2">
-                        Hear firsthand how homeowners are saving money, enhancing their homes,
-                        and gaining energy independence with our solar solutions.
-                    </div>
+                    <div class="heading-container2">Real Results, Trusted by Our Customers</div>
+                    <div class="dec-container2">Hear firsthand how homeowners are saving money, enhancing their homes,
+                        and gaining energy independence.</div>
                 </div>
                 <div class="review-container">
-                    <div class="container-review">
-                        <div class="sec-container">
-                            <img class="icon-review" src="..\img\pp-reviews\img1.png" />
-                            <div class="rating-review">
-                                <img class="rating-contain" src="..\img\pp-reviews\rating-contain.png" />
-                            </div>
-                            <div class="thr-container">
-                                <div class="dec-review">
-                                    We were looking for a company that was transparent about costs
-                                    and savings projections. The team provided accurate calculations
-                                    that proved true after just one month. Highly recommended!
+                    <?php if (!empty($reviews)): ?>
+                        <?php foreach ($reviews as $rev): ?>
+                            <div class="col-md-4 d-flex">
+                                <div class="review-card-wrapper w-100">
+
+                                    <?php
+                                    $cleanPath = ltrim(str_replace('../', '', $rev['image_url']), '/');
+                                    $photo = !empty($cleanPath) ? '../' . $cleanPath : '../img/default-profile.png';
+                                    ?>
+                                    <img class="review-profile-img" src="<?php echo htmlspecialchars($photo); ?>" alt="Profile">
+
+                                    <div class="star-rating">
+                                        <?php
+                                        $rating = (int) $rev['rating'];
+                                        for ($i = 0; $i < $rating; $i++)
+                                            echo "★";
+                                        ?>
+                                    </div>
+
+                                    <div class="review-text">
+                                        "<?php echo htmlspecialchars($rev['review_text']); ?>"
+                                    </div>
+
+                                    <div class="review-author">
+                                        <?php echo htmlspecialchars($rev['customer_name']); ?>
+                                    </div>
+
                                 </div>
-                                <div class="name-review">Ava Mitchell</div>
                             </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="col-12">
+                            <p class="text-center text-muted">No reviews yet.</p>
                         </div>
-                    </div>
-                    <div class="container-review">
-                        <div class="sec-container">
-                            <img class="icon-review2" src="..\img\pp-reviews\img.png" />
-                            <div class="rating-review">
-                                <img class="rating-contain2" src="..\img\pp-reviews\rating-contain.png" />
-                            </div>
-                            <div class="thr-container">
-                                <div class="dec-review">
-                                    The installation was incredibly fast and tidy! Our monthly
-                                    electricity bill dropped immediately and significantly. The
-                                    staff was professional and clearly explained the monitoring
-                                    system.
-                                </div>
-                                <div class="name-review">Matilda Palmer</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="container-review">
-                        <div class="sec-container">
-                            <img class="icon-review3" src="..\img\pp-reviews\img6.png" />
-                            <div class="rating-review">
-                                <img class="rating-contain3" src="..\img\pp-reviews\rating-contain.png" />
-                            </div>
-                            <div class="thr-container">
-                                <div class="dec-review">
-                                    An excellent investment! Besides helping the environment, I now
-                                    feel secure against rising energy tariffs. The entire process,
-                                    from permits to installation, went off without a hitch.
-                                </div>
-                                <div class="name-review">Matthew Barrett</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="container-review">
-                        <div class="sec-container">
-                            <img class="icon-review4" src="..\img\pp-reviews\img2.png" />
-                            <div class="rating-review">
-                                <img class="rating-contain4" src="..\img\pp-reviews\rating-contain.png" />
-                            </div>
-                            <div class="thr-container">
-                                <div class="dec-review">
-                                    The panel design looks modern and doesn&#039;t detract from our
-                                    home&#039;s aesthetics. They made sure everything was working
-                                    perfectly and provided a clear warranty. Truly a future energy
-                                    solution!
-                                </div>
-                                <div class="name-review">Sophia Rodriguez</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="container-review">
-                        <div class="sec-container">
-                            <img class="icon-review5" src="..\img\pp-reviews\img4.png" />
-                            <div class="rating-review">
-                                <img class="rating-contain5" src="..\img\pp-reviews\rating-contain.png" />
-                            </div>
-                            <div class="thr-container">
-                                <div class="dec-review">
-                                    The panel material quality feels premium. I enjoy checking the
-                                    energy monitoring app daily; seeing the house generate its own
-                                    power is so satisfying. Thanks for the great service.
-                                </div>
-                                <div class="name-review">Christopher Mitchell</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="container-review">
-                        <div class="sec-container">
-                            <img class="icon-review6" src="..\img\pp-reviews\img5.png" />
-                            <div class="rating-review">
-                                <img class="rating-contain6" src="..\img\pp-reviews\rating-contain.png" />
-                            </div>
-                            <div class="thr-container">
-                                <div class="dec-review">
-                                    The panel material quality feels premium. I enjoy checking the
-                                    energy monitoring app daily; seeing the house generate its own
-                                    power is so satisfying. Thanks for the great service.
-                                </div>
-                                <div class="name-review">Daniel Harrison</div>
-                            </div>
-                        </div>
-                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
+
             <div class="faq-container">
                 <div class="title-contain">
                     <div class="title-faq">Frequently Asked Questions</div>
                     <div class="desc-contain">
-                        We understand that investing in solar power brings up many questions.
-                        Worry not! Get answers to your most common concerns here, from cost
-                        and ROI to system maintenance and lifespan.
+                        We understand that investing in solar power brings up many questions. Get answers to your
+                        most
+                        common concerns here.
                     </div>
                 </div>
                 <div class="question-contain">
-                    <div class="faq-item">
-                        <div class="dropdown-faq">
-                            <div class="text-faq-card">
-                                Is solar energy truly affordable, and what is the return on investment (ROI)?
+                    <?php
+                    // FIX 1: Ambil semua FAQ terbaru (ORDER BY id DESC) agar data baru muncul
+                    $faqs = [];
+                    $res_faq = $koneksi->query("SELECT * FROM faqs ORDER BY order_index ASC");
+                    if ($res_faq) {
+                        while ($row = $res_faq->fetch_assoc()) {
+                            $faqs[] = $row;
+                        }
+                    }
+
+                    if (!empty($faqs)):
+                        ?>
+                        <?php foreach ($faqs as $faq): ?>
+                            <div class="faq-item">
+                                <div class="dropdown-faq">
+                                    <div class="text-faq-card"><?php echo htmlspecialchars($faq['question']); ?></div>
+                                    <i class="fa-solid fa-chevron-down arrow-icon"></i>
+                                </div>
+                                <div class="faq-answer-content">
+                                    <div class="faq-answer-text"><?php echo nl2br(htmlspecialchars($faq['answer'])); ?></div>
+                                </div>
                             </div>
-                            <span class="ep--arrow-down-bold arrow-icon"></span>
-                        </div>
-                        <div class="faq-answer-content">
-                            <div class="faq-answer-text">
-                                Absolutely. While the initial investment is significant, solar power is a smart
-                                long-term asset. Our custom systems are designed to drastically reduce or eliminate your
-                                monthly electricity bills. The average system achieves a full **return on investment
-                                (ROI) within 5–7 years** through accumulated savings, making it a highly profitable
-                                investment.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="dropdown-faq">
-                            <div class="text-faq-card">
-                                How long does the installation process take, and will it disrupt my home life?
-                            </div>
-                            <span class="ep--arrow-down-bold arrow-icon"></span>
-                        </div>
-                        <div class="faq-answer-content">
-                            <div class="faq-answer-text">
-                                Installation is quick and non-intrusive. Once the design is finalized and permits are
-                                secured, the physical installation typically takes **only 1–3 working days** for
-                                standard residential homes. We handle all logistics, ensuring minimal disruption to your
-                                daily routine.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="dropdown-faq">
-                            <div class="text-faq-card">
-                                What kind of maintenance is required, and how long will the system last?
-                            </div>
-                            <span class="ep--arrow-down-bold arrow-icon"></span>
-                        </div>
-                        <div class="faq-answer-content">
-                            <div class="faq-answer-text">
-                                Solar systems require very little maintenance. We recommend professional cleaning once
-                                or twice a year, which we can provide. Our panels come with a performance guarantee of
-                                **25 years or more**, ensuring reliable, clean energy generation for decades.
-                            </div>
-                        </div>
-                    </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p class="text-muted">Belum ada FAQ.</p>
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -568,60 +555,64 @@ if ($is_logged_in) {
                         <div class="footer-logo-text">
                             <img class="green-ray-logo-12" src="..\img\GreenRay_Logo 1-1.png" />
                             <div class="footer-desc">
-                                Powering a cleaner, brighter future for Indonesia. We are your
-                                trusted partner in sustainable energy solutions, built on
-                                transparency and long-term value.
+                                Powering a cleaner, brighter future for Indonesia. We are your trusted partner in
+                                sustainable energy solutions.
                             </div>
                         </div>
                     </div>
-                    <div class="copyright">
-                        © 2025 GreenRay. All rights reserved.
-                    </div>
+                    <div class="copyright">© 2025 GreenRay. All rights reserved.</div>
                 </div>
                 <div class="footer-menu">
                     <div class="menu-container-footer">
                         <div class="title-footer">Quick Links</div>
                         <div class="dec-container-footer">
-                            <div class="list-footer"><a href="..\html\home.html">Home</a></div>
-                            <div class="list-footer"><a href="..\html\portofolio.html">Our Portfolio</a></div>
-                            <div class="list-footer"><a href="..\html\calc.html">Saving Calculator</a></div>
+                            <div class="list-footer"><a href="home.php">Home</a></div>
+                            <div class="list-footer"><a href="portofolio.php">Portfolio</a></div>
+                            <div class="list-footer"><a href="calc.php">Saving Calculator</a></div>
                         </div>
                     </div>
                     <div class="menu-container-footer">
                         <div class="title-footer">Get In Touch</div>
                         <div class="dec-container-footer">
-                            <div class="list-footer">
-                                <a href="..\html\contact-us.html">Quick Consultation via WhatsApp</a>
-                            </div>
-                            <div class="list-footer">
-                                <a href="..\html\contact-us.html">Send a Formal Inquiry Email</a>
-                            </div>
+                            <div class="list-footer"><a href="contact-us.php">Quick Consultation via WhatsApp</a></div>
+                            <div class="list-footer"><a href="contact-us.php">Send a Formal Inquiry Email</a></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
-        </script>
-    <script src="..\javascript\dropdown.js"></script>
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const profileToggle = document.getElementById('profileToggle');
-            const profileDropdownMenu = document.getElementById('profileDropdownMenu');
 
-            if (profileToggle) {
-                profileToggle.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    profileDropdownMenu.classList.toggle('show');
-                });
-                window.addEventListener('click', function (e) {
-                    if (profileToggle && !profileToggle.contains(e.target) && !profileDropdownMenu.contains(e.target)) {
-                        profileDropdownMenu.classList.remove('show');
+            // 2. FAQ Logic (DIPERBAIKI)
+            const faqItems = document.querySelectorAll('.faq-item');
+            const faqHeaders = document.querySelectorAll('.dropdown-faq');
+
+            faqHeaders.forEach(header => {
+                header.addEventListener('click', function () {
+                    // Ambil item induk dari header yang diklik
+                    const currentItem = this.closest('.faq-item');
+
+                    // Cek apakah item ini sedang terbuka
+                    const isOpen = currentItem.classList.contains('active');
+
+                    // LANGKAH 1: Tutup SEMUA FAQ terlebih dahulu
+                    faqItems.forEach(item => {
+                        item.classList.remove('active');
+                    });
+
+                    // LANGKAH 2: Jika item yang diklik tadi posisinya tertutup, barulah kita buka
+                    if (!isOpen) {
+                        currentItem.classList.add('active');
                     }
                 });
-            }
+            });
         });
     </script>
 </body>

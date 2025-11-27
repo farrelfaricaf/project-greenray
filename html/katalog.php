@@ -129,42 +129,7 @@ if ($result) {
     <div class="beranda">
 
         <div class="header-wrapper">
-            <div class="hero">
-                <img class="green-ray-logo-1" src="../img/GreenRay_Logo 1-1.png" />
-                <div class="header-menu">
-                    <div class="non-active"><a href="home.php">Home</a></div>
-                    <div class="non-active"><a href="portofolio.php">Portfolio</a></div>
-                    <div class="non-active"><a href="calc.php">Calculator</a></div>
-                    <div class="active-head"><a href="katalog.php">Catalog</a></div>
-                </div>
-                <div class="header-actions">
-                    <?php if ($is_logged_in): ?>
-                        <div class="profile-dropdown">
-                            <a href="#" class="profile-toggle" id="profileToggle">
-                                <img src="../<?php echo htmlspecialchars($profile_pic); ?>" alt="Profil"
-                                    class="profile-picture-header">
-                            </a>
-                            <div class="dropdown-menu-header" id="profileDropdownMenu">
-                                <div class="dropdown-item-info">Halo,
-                                    <strong><?php echo htmlspecialchars($user_name); ?></strong>!
-                                </div>
-                                <a class="dropdown-item" href="profile.php">Profil Saya</a>
-                                <a class="dropdown-item" href="contact-us.php">Bantuan / Kontak</a>
-                                <a class="dropdown-item" href="logout.php">Logout</a>
-                            </div>
-                        </div>
-                    <?php else: ?>
-                        <a class="login-btn" href="signin.php">
-                            <div class="login-text">Login</div>
-                            <span class="akar-icons--door"></span>
-                        </a>
-                        <a class="contact-us-btn" href="contact-us.php">
-                            <div class="contact-us-text">Contact Us</div>
-                            <span class="mynaui--arrow-right"></span>
-                        </a>
-                    <?php endif; ?>
-                </div>
-            </div>
+            <?php include 'includes/header.php'; ?>
         </div>
 
 
@@ -218,7 +183,7 @@ if ($result) {
                             <a href="katalog_detail.php?slug=<?php echo htmlspecialchars($product['slug']); ?>"
                                 class="btn btn-cta-solar">
                                 <span>View Details</span>
-                                <span class="icon-arrow"></span>
+                                <i class="fa-solid fa-arrow-right-from-bracket"></i>
                             </a>
                         </div>
                     <?php endforeach; ?>
@@ -269,24 +234,6 @@ if ($result) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
         </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const profileToggle = document.getElementById('profileToggle');
-            const profileDropdownMenu = document.getElementById('profileDropdownMenu');
-            if (profileToggle) {
-                profileToggle.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    profileDropdownMenu.classList.toggle('show');
-                });
-                window.addEventListener('click', function (e) {
-                    if (profileToggle && !profileToggle.contains(e.target) && !profileDropdownMenu.contains(e.target)) {
-                        profileDropdownMenu.classList.remove('show');
-                    }
-                });
-            }
-        });
-    </script>
 </body>
 
 </html>

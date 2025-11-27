@@ -7,7 +7,7 @@ html,
 body {
   margin: 0px;
   height: 100%;
-  font-family: "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 /* a blue color as a generic focus style */
 button:focus-visible {

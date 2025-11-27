@@ -150,7 +150,8 @@ $specs = json_decode($product['specifications_json'], true) ?? [];
                             </a>
                             <div class="dropdown-menu-header" id="profileDropdownMenu">
                                 <div class="dropdown-item-info">Halo,
-                                    <strong><?php echo htmlspecialchars($user_name); ?></strong>!</div>
+                                    <strong><?php echo htmlspecialchars($user_name); ?></strong>!
+                                </div>
                                 <a class="dropdown-item" href="profile.php">Profil Saya</a>
                                 <a class="dropdown-item" href="contact-us.php">Bantuan / Kontak</a>
                                 <a class="dropdown-item" href="logout.php">Logout</a>
@@ -174,7 +175,7 @@ $specs = json_decode($product['specifications_json'], true) ?? [];
             <div class="image-catalog">
 
                 <div class="nav-area">
-                    <a href="katalog.php" class="back-button">
+                    <a href="#" class="back-button" onclick="history.back(); return false;">
                         <span class="formkit--arrowleft"></span>
                         <div class="contact-us2">Back</div>
                     </a>

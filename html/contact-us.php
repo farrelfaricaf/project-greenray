@@ -131,42 +131,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
   <div class="main-container">
     <div class="header-wrapper">
-      <div class="hero">
-        <img class="green-ray-logo-1" src="..\img\GreenRay_Logo 1-1.png" />
-        <div class="header-menu">
-          <div class="non-active"><a href="home.php">Home</a></div>
-          <div class="non-active"><a href="portofolio.html">Portfolio</a></div>
-          <div class="non-active"><a href="calc.php">Calculator</a></div>
-          <div class="non-active"><a href="katalog.html">Catalog</a></div>
-        </div>
-
-        <div class="header-actions">
-          <?php if ($is_logged_in): // JIKA USER SUDAH LOGIN ?>
-            <div class="profile-dropdown">
-              <a href="#" class="profile-toggle" id="profileToggle">
-                <img src="../<?php echo htmlspecialchars($profile_pic); ?>" alt="Profil" class="profile-picture-header">
-              </a>
-              <div class="dropdown-menu-header" id="profileDropdownMenu">
-                <div class="dropdown-item-info">
-                  Halo, <strong><?php echo htmlspecialchars($user_name); ?></strong>!
-                </div>
-                <a class="dropdown-item" href="profile.php">Profil Saya</a>
-                <a class="dropdown-item" href="contact-us.php">Bantuan / Kontak</a>
-                <a class="dropdown-item" href="logout.php">Logout</a>
-              </div>
-            </div>
-          <?php else: // JIKA USER ADALAH TAMU (BELUM LOGIN) ?>
-            <a class="login-btn" href="signin.php">
-              <div class="login-text">Login</div>
-              <span class="akar-icons--door"></span>
-            </a>
-            <a class="contact-us-btn" href="contact-us.php">
-              <div class="contact-us-text">Contact Us</div>
-              <span class="mynaui--arrow-right"></span>
-            </a>
-          <?php endif; ?>
-        </div>
-      </div>
+      <?php include 'includes/header.php'; ?>
     </div>
 
     <div class="container main-content-area">
@@ -223,7 +188,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
 
             <div class="d-grid mb-4">
-              <button type="submit" class="btn btn-success btn-lg">Send Message</button>
+              <button type="submit" class="btn btn-success btn-lg">Send Message <i class="fa-regular fa-paper-plane"></i></button>
             </div>
 
             <div class="text-center my-4 contact-separator d-lg-none">or</div>
@@ -379,23 +344,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         });
       }
 
-      // ============================================
-      // INI ADALAH KODE YANG MEMPERBAIKI DROPDOWN
-      // ============================================
-      const profileToggle = document.getElementById('profileToggle');
-      const profileDropdownMenu = document.getElementById('profileDropdownMenu');
-      if (profileToggle) {
-        profileToggle.addEventListener('click', function (e) {
-          e.preventDefault();
-          profileDropdownMenu.classList.toggle('show');
-        });
-        // Klik di luar untuk menutup
-        window.addEventListener('click', function (e) {
-          if (profileToggle && !profileToggle.contains(e.target) && !profileDropdownMenu.contains(e.target)) {
-            profileDropdownMenu.classList.remove('show');
-          }
-        });
-      }
+
     });
 
     // (Script validasi Bootstrap)

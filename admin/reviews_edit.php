@@ -151,7 +151,7 @@ if (empty($review)) {
                     <?php if (!empty($review)): ?>
                         <div class="card mb-4">
                             <div class="card-header">
-                                <i class="fas fa-edit me-1"></i>
+                                <i class="fa-solid fa-pen-to-square me-1"></i></i>
                                 Formulir Edit Review (ID: <?php echo $review_id; ?>)
                             </div>
                             <div class="card-body">
@@ -206,7 +206,7 @@ if (empty($review)) {
                                         </label>
                                     </div>
 
-                                    <button class="btn btn-primary" type="submit">Update Review</button>
+                                    <button class="btn btn-primary" type="submit"><i class="fa-solid fa-pen-to-square me-1"></i>Update Review</button>
                                     <a href="reviews.php" class="btn btn-secondary">Kembali ke Daftar</a>
                                 </form>
                             </div>

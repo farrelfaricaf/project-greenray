@@ -82,8 +82,8 @@ include 'auth_check.php';
                                             echo '<td>' . htmlspecialchars($review_snippet) . '</td>';
                                             echo '<td>' . $status . '</td>';
                                             echo '<td>
-                                                <a href="reviews_edit.php?id=' . $row['id'] . '" class="btn btn-warning btn-sm">Edit</a>
-                                                <a href="reviews_delete.php?id=' . $row['id'] . '" class="btn btn-danger btn-sm" onclick="return confirm(\'Yakin ingin menghapus review ini?\');">Hapus</a>
+                                                <a href="reviews_edit.php?id=' . $row['id'] . '" class="btn btn-warning btn-sm"><i class="fa-solid fa-pen-to-square me-1"></i>Edit</a>
+                                                <a href="reviews_delete.php?id=' . $row['id'] . '" class="btn btn-danger btn-sm" onclick="return confirm(\'Yakin ingin menghapus review ini?\');"><i class="fa-solid fa-xmark me-1"></i>Hapus</a>
                                             </td>';
                                             echo '</tr>';
                                         }

@@ -131,17 +131,17 @@ $profile_pic = $_SESSION['user_profile_pic'] ?? '../img/default-profile.png';
 
 <div class="master-header-wrapper">
     <div class="hero-navbar">
-        <a href="home.php">
-            <img class="green-ray-logo-nav" src="../img/GreenRay_Logo 1-1.png" alt="GreenRay Logo" />
+        <a href="html/home.php">
+            <img class="green-ray-logo-nav" src="img/GreenRay_Logo 1-1.png" alt="GreenRay Logo" />
         </a>
 
         <div class="header-menu-nav">
-            <a href="home.php" class="nav-link-item <?php echo ($page == 'home.php') ? 'active-head' : ''; ?>">Home</a>
-            <a href="portofolio.php"
+            <a href="html/home.php" class="nav-link-item <?php echo ($page == 'home.php') ? 'active-head' : ''; ?>">Home</a>
+            <a href="html/portofolio.php"
                 class="nav-link-item <?php echo ($page == 'portofolio.php' || $page == 'project_detail.php') ? 'active-head' : ''; ?>">Portfolio</a>
-            <a href="calc.php"
+            <a href="html/calc.php"
                 class="nav-link-item <?php echo ($page == 'calc.php') ? 'active-head' : ''; ?>">Calculator</a>
-            <a href="katalog.php"
+            <a href="html/katalog.php"
                 class="nav-link-item <?php echo ($page == 'katalog.php' || $page == 'katalog_detail.php') ? 'active-head' : ''; ?>">Catalog</a>
         </div>
 
@@ -156,13 +156,16 @@ $profile_pic = $_SESSION['user_profile_pic'] ?? '../img/default-profile.png';
                     <div class="dropdown-menu-header" id="profileDropdownMenu">
                         <div class="dropdown-item-info">Halo, <strong><?php echo htmlspecialchars($user_name); ?></strong>!
                         </div>
-                        <a class="dropdown-item" href="profile.php"><span class="fa-regular fa-user me-2"></span> Profil Saya</a>
-                        <a class="dropdown-item" href="contact-us.php"><i class="fa-solid fa-address-card me-2"></i> Bantuan / Kontak</a>
-                        <a class="dropdown-item" href="logout.php"><i class="fa-solid fa-arrow-right-from-bracket me-2"></i> Log out</a>
+                        <a class="dropdown-item" href="profile.php"><span class="fa-regular fa-user me-2"></span> Profil
+                            Saya</a>
+                        <a class="dropdown-item" href="contact-us.php"><i class="fa-solid fa-address-card me-2"></i> Bantuan
+                            / Kontak</a>
+                        <a class="dropdown-item" href="logout.php"><i class="fa-solid fa-arrow-right-from-bracket me-2"></i>
+                            Log out</a>
                     </div>
                 </div>
             <?php else: ?>
-                <a class="btn-nav-login p-3" href="signin.php">
+                <a class="btn-nav-login p-3" href="html/signin.php">
                     Login
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
@@ -171,7 +174,7 @@ $profile_pic = $_SESSION['user_profile_pic'] ?? '../img/default-profile.png';
                         <line x1="15" y1="12" x2="3" y2="12" />
                     </svg>
                 </a>
-                <a class="btn-nav-contact p-3" href="contact-us.php">
+                <a class="btn-nav-contact p-3" href="html/contact-us.php">
                     Contact Us
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">

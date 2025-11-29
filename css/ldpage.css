@@ -52,7 +52,7 @@ header.frame-48 > div:first-child {
   border-style: solid;
   border-color: #000000;
   border-width: 0.11rem;
-  padding: 1.278125rem 1.704375rem 1.278125rem 1.704375rem;
+  padding: 1rem;
   display: flex;
   flex-direction: row;
   gap: 0.825rem;
@@ -183,6 +183,133 @@ section.frame-37 {
   font-weight: 300;
   position: relative;
   flex: 1;
+}
+
+/* --- FLIP CARD STYLES --- */
+.flip-card-container {
+  background-color: transparent;
+  width: 100%;
+  height: 320px; /* Tinggi tetap agar kartu konsisten */
+  perspective: 1000px; /* Memberikan efek 3D */
+  cursor: pointer;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s; /* Kecepatan putaran */
+  transform-style: preserve-3d;
+}
+
+/* Class ini akan ditambahkan via JS saat diklik */
+.flip-card-container.flipped .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: 1rem; /* Rounded corners */
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eee;
+}
+
+/* Tampilan Depan */
+.flip-card-front {
+  background-color: #ffffff;
+}
+
+/* Tampilan Belakang */
+.flip-card-back {
+  background-color: #136000; /* Warna Hijau GreenRay */
+  color: white;
+  transform: rotateY(180deg); /* Memutar sisi belakang */
+}
+
+/* Tombol Putar Kecil */
+.btn-flip-indicator {
+  margin-top: auto;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 50px;
+  border: 1px solid #eee;
+  background: #f9f9f9;
+  color: #555;
+  transition: 0.3s;
+}
+.flip-card-container:hover .btn-flip-indicator {
+  background: #136000;
+  color: white;
+  border-color: #136000;
+}
+
+/* --- CSS Navbar & Buttons --- */
+
+.navbar-brand .logo-img {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+
+.nav-link {
+  font-weight: 500;
+  color: #000 !important; /* Warna hitam default */
+  font-size: 1.05rem;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #136000 !important; /* Hijau saat aktif/hover */
+  font-weight: 700;
+}
+
+/* Tombol Login */
+.btn-custom-login {
+  background-color: #136000;
+  color: white;
+  border-radius: 50px;
+  padding: 10px 24px; /* Padding yang pas */
+  font-weight: 600;
+  border: 1px solid #136000;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+.btn-custom-login:hover {
+  background-color: #0f4d00;
+  border-color: #0f4d00;
+  color: white;
+  transform: translateY(-2px); /* Efek naik sedikit */
+}
+
+/* Tombol Contact Us */
+.btn-custom-contact {
+  background-color: white;
+  color: #000;
+  border: 1px solid #000;
+  border-radius: 50px;
+  padding: 10px 24px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+.btn-custom-contact:hover {
+  background-color: #f8f9fa;
+  border-color: #000;
+  color: #000;
+  transform: translateY(-2px);
 }
 
 /* HERO IMAGES (sebelumnya .frame-35) */
@@ -377,7 +504,7 @@ main > section.frame-19 {
   flex-shrink: 0;
   position: relative;
 }
-.section-3 .sub-group{
+.section-3 .sub-group {
   display: flex;
   flex-direction: column;
   gap: 1.61375rem;
@@ -638,7 +765,7 @@ main > section.frame-21 {
 .footer-desc {
   color: #000000;
   text-align: justify;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
   font-size: 1.125rem;
   font-weight: 400;
   position: relative;
@@ -647,7 +774,7 @@ main > section.frame-21 {
 .copyright {
   color: #000000;
   text-align: left;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
   font-size: 0.875rem;
   font-weight: 400;
   position: relative;
@@ -675,7 +802,7 @@ main > section.frame-21 {
 .title-footer {
   color: #000000;
   text-align: left;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
   font-size: 1.7rem;
   font-weight: 500;
   position: relative;
@@ -700,6 +827,150 @@ main > section.frame-21 {
 .list-footer a {
   text-decoration: none;
   color: black;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
   font-weight: 400;
+}
+
+/* Efek Hover Angka Statistik */
+.stats-row h2 {
+  background: linear-gradient(to right, #136000, #136000);
+  background-clip: text;
+  -webkit-background-clip: text;
+  transition: color 0.3s ease, transform 0.3s ease;
+  color: #212529; /* Warna default dark */
+}
+
+.stats-row h2:hover {
+  color: transparent; /* Trik untuk gradient text */
+  background: linear-gradient(to right, #136000, #28a745); /* Gradient hijau */
+  background-clip: text;
+  -webkit-background-clip: text;
+  transform: scale(1.05); /* Sedikit membesar */
+}
+
+/* CSS untuk Feature Cards */
+
+/* 1. Dasar Kartu */
+.feature-card {
+  border-color: #f0f0f0 !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+/* 2. Efek Hover: Naik & Bayangan */
+.feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.08) !important;
+  border-color: transparent !important;
+}
+
+/* 3. Efek Hover: Icon Membesar */
+.feature-card:hover .icon-wrapper {
+  transform: scale(1.1);
+  background-color: #136000 !important; /* Icon jadi background hijau gelap */
+  transition: all 0.3s ease;
+}
+
+/* 4. Mengubah warna icon SVG jadi putih saat hover (Opsional, jika SVG support filter) */
+.feature-card:hover .icon-wrapper img {
+  filter: brightness(0) invert(1); /* Membuat icon jadi putih */
+  transition: filter 0.3s ease;
+}
+
+/* 5. Transisi Background Halus */
+.transition-bg {
+  transition: opacity 0.3s ease;
+}
+.feature-card:hover .hover-bg-show {
+  opacity: 0.03 !important; /* Memberikan tint hijau sangat tipis di background */
+}
+
+/* CSS untuk Service Cards */
+
+/* 1. Wrapper Gambar Tetap */
+.service-img-wrapper {
+  height: 240px; /* Tinggi fix agar sejajar */
+  overflow: hidden;
+  position: relative;
+}
+
+/* 2. Agar gambar tidak gepeng (Zoom Effect) */
+.object-fit-cover {
+  object-fit: cover;
+}
+.transition-image {
+  transition: transform 0.5s ease;
+}
+
+/* 3. Efek Hover pada Kartu */
+.service-card {
+  position: relative;
+  cursor: pointer;
+  z-index: 1;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.05) !important; /* Border sangat tipis */
+}
+
+.service-img-wrapper,
+.service-content {
+  pointer-events: none; /* Tembus klik ke link di belakangnya */
+}
+
+.service-link.stretched-link::after {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  content: "";
+  pointer-events: auto; /* Link aslinya tetap aktif */
+  position: relative;
+  z-index: 11; /* Di atas stretched-link pseudo-element */
+}
+
+.hero-image-wrapper {
+  width: 100%;
+  max-width: 500px; /* Batasi lebar maksimal agar tidak terlalu besar di layar lebar */
+  margin: 0 auto; /* Tengah secara horizontal */
+  position: relative;
+}
+
+.hero-main-img {
+  width: 100%; /* Lebar selalu mengikuti wadah */
+  height: 500px; /* TINGGI TETAP (Standar) - Sesuaikan angka ini */
+  object-fit: cover; /* KUNCI: Memotong gambar agar pas tanpa gepeng */
+  object-position: center; /* Fokus ke tengah gambar */
+  border-radius: 20px; /* Sudut membulat (sama dengan rounded-4) */
+}
+
+@media (max-width: 768px) {
+  .hero-main-img {
+    height: 350px; /* Di HP tingginya dikurangi agar tidak makan tempat */
+  }
+
+  /* Floating badge di HP (opsional: sesuaikan posisi) */
+  .hero-image-wrapper .position-absolute {
+    bottom: -20px !important; /* Geser sedikit ke bawah */
+    left: 50% !important;
+    transform: translateX(-50%); /* Tengah di HP */
+    margin-left: 0 !important;
+    width: max-content;
+  }
+}
+
+.service-card:hover {
+  transform: translateY(-10px); /* Kartu naik */
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  border-color: #136000 !important; /* Border jadi hijau */
+}
+
+/* 4. Efek Zoom Gambar saat Hover Kartu */
+.service-card:hover .transition-image {
+  transform: scale(1.05);
+}
+
+/* 5. Efek Panah Bergeser */
+.transition-icon {
+  transition: transform 0.3s ease;
+}
+.service-link:hover .transition-icon {
+  transform: translateX(5px); /* Panah geser kanan */
 }

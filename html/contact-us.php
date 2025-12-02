@@ -2,6 +2,25 @@
 session_start();
 include '../koneksi.php'; // Menghubungkan ke database
 
+// Contact page settings
+$stmtContact = $koneksi->prepare("SELECT * FROM contact_settings WHERE id = 1");
+$stmtContact->execute();
+$contact = $stmtContact->get_result()->fetch_assoc();
+
+if (!$contact) {
+  $contact = [
+    'header_title' => 'Contact Us',
+    'header_subtitle' => '',
+    'address' => '',
+    'phone' => '',
+    'whatsapp' => '',
+    'email' => '',
+    'office_hours' => '',
+    'map_embed' => ''
+  ];
+}
+
+
 $alert_message = ""; // Untuk pesan error
 $show_modal = false;   // Untuk memicu modal sukses
 
@@ -139,10 +158,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <div class="col-lg-6 col-md-10 contact-form-column">
           <div class="contact-header mb-5">
-            <div class="contact-form-title">Contact Form</div>
+            <div class="contact-form-title"><?php echo htmlspecialchars($contact['header_title']); ?></div>
             <div class="contact-description">
-              We’re happy to hear from you! Write your questions, feedback, or messages in
-              the form below, and we’ll get back to you shortly.
+              <?php echo nl2br(htmlspecialchars($contact['header_subtitle'])); ?>
             </div>
           </div>
 
@@ -187,8 +205,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
               </div>
             </div>
 
-            <div class="d-grid mb-4">
-              <button type="submit" class="btn btn-success btn-lg">Send Message <i class="fa-regular fa-paper-plane"></i></button>
+            <div class="d-grid mb-4 text-center">
+              <button type="submit" class="btn btn-success btn-lg">Send Message <i
+                  class="fa-regular fa-paper-plane ms-3"></i></button>
             </div>
 
             <div class="text-center my-4 contact-separator d-lg-none">or</div>
@@ -197,59 +216,68 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <div class="col-lg-4 d-none d-lg-block pt-5 mt-5">
           <div class="d-grid gap-3 cta-sidebar">
-            <h4 class="fw-bold mb-3">Or Contact Us Directly:</h4>
-            <a href="https://wa.me/6282245452305?text=Halo%20GreenRay%2C%20saya%20%5BNAMA%20ANDA%5D%20ingin%20bertanya%20tentang%20potensi%20instalasi%20panel%20surya%20di%20rumah%20saya.%20Mohon%20bantuan%20info%20lebih%20lanjut.%20Terima%20kasih."
-              class="btn btn-primary contact-wa-btn" target="_blank">
-              <span class="mdi--whatsapp"></span>
-              Contact us via WhatsApp
-            </a>
-            <a href="#" id="email-cta-btn" class="btn btn-primary contact-email-btn" target="_blank">
-              <span class="ic--outline-email"></span>
-              Contact us via Email
-            </a>
+            <h4 class="fw-bold mb-3">Contact Information</h4>
+            <?php if (!empty($contact['map_embed'])): ?>
+              <div class="mt-4">
+                <h4 class="fw-bold mb-3">Find Us on the Map</h4>
+                <div class="ratio ratio-16x9">
+                  <?php echo $contact['map_embed']; ?>
+                </div>
+              </div>
+            <?php endif; ?>
+
+            <?php if (!empty($contact['address'])): ?>
+              <div class="mb-2">
+                <strong>Office Address</strong><br>
+                <?php echo nl2br(htmlspecialchars($contact['address'])); ?>
+              </div>
+            <?php endif; ?>
+
+            <?php if (!empty($contact['phone'])): ?>
+              <div class="mb-2">
+                <strong>Phone</strong><br>
+                <?php echo htmlspecialchars($contact['phone']); ?>
+              </div>
+            <?php endif; ?>
+
+            <?php if (!empty($contact['email'])): ?>
+              <div class="mb-2">
+                <strong>Email</strong><br>
+                <a href="mailto:<?php echo htmlspecialchars($contact['email']); ?>">
+                  <?php echo htmlspecialchars($contact['email']); ?>
+                </a>
+              </div>
+            <?php endif; ?>
+
+            <?php if (!empty($contact['office_hours'])): ?>
+              <div class="mb-3">
+                <strong>Office Hours</strong><br>
+                <?php echo htmlspecialchars($contact['office_hours']); ?>
+              </div>
+            <?php endif; ?>
+
+            <?php if (!empty($contact['whatsapp'])): ?>
+              <a href="<?php echo htmlspecialchars($contact['whatsapp']); ?>?text=<?php echo urlencode('Halo GreenRay, ...'); ?>"
+                class="btn btn-primary contact-wa-btn" target="_blank">
+                <span class="mdi--whatsapp"></span>
+                Contact us via WhatsApp
+              </a>
+            <?php endif; ?>
+
+
+            <?php if (!empty($contact['email'])): ?>
+              <a href="#" id="email-cta-btn" class="btn btn-primary contact-email-btn" target="_blank">
+                <span class="ic--outline-email"></span>
+                Contact us via Email
+              </a>
+            <?php endif; ?>
           </div>
+
         </div>
       </div>
     </div>
 
-    <div class="footer">
-      <div class="footer-content">
-        <div class="footer-info">
-          <div class="footer-logo-text">
-            <img class="green-ray-logo-12" src="..\img\GreenRay_Logo 1-1.png" />
-            <div class="footer-desc">
-              Powering a cleaner, brighter future for Indonesia. We are your
-              trusted partner in sustainable energy solutions, built on
-              transparency and long-term value.
-            </div>
-          </div>
-        </div>
-        <div class="copyright">
-          © 2025 GreenRay. All rights reserved.
-        </div>
-      </div>
-      <div class="footer-menu">
-        <div class="menu-container-footer">
-          <div class="title-footer">Quick Links</div>
-          <div class="dec-container-footer">
-            <div class="list-footer"><a href="home.php">Home</a></div>
-            <div class="list-footer"><a href="portofolio.html">Our Portfolio</a></div>
-            <div class="list-footer"><a href="calc.php">Saving Calculator</a></div>
-          </div>
-        </div>
-        <div class="menu-container-footer">
-          <div class="title-footer">Get In Touch</div>
-          <div class="dec-container-footer">
-            <div class="list-footer">
-              <a href="contact-us.php">Quick Consultation via WhatsApp</a>
-            </div>
-            <div class="list-footer">
-              <a href="contact-us.php">Send a Formal Inquiry Email</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <?php include 'includes/footer.php'; ?>
   </div>
 
   <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
@@ -332,7 +360,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         });
       }
 
-      const recipient = "info@greenray.com";
+      const recipient = "<?php echo htmlspecialchars($contact['email'] ?: 'info@greenray.com'); ?>";
       const subject = "Pertanyaan Mengenai Potensi Instalasi Panel Surya";
       const bodyTemplate = "Halo Tim GreenRay,\n\nNama saya: [NAMA ANDA]\nNomor Telepon: [NOMOR TELEPON ANDA]\n\nSaya ingin menanyakan tentang ...";
       const encodedBody = urlEncode(bodyTemplate).replace(/%0A/g, '%0D%0A');

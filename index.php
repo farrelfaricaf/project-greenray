@@ -1,3 +1,57 @@
+<?php
+session_start();
+include 'koneksi.php'; // Path koneksi di root
+
+function fixPath($path, $default = 'img/placeholder.png')
+{
+  // Hapus '../' agar path sesuai untuk root
+  $clean = str_replace('../', '', $path ?? '');
+
+  // Jika kosong atau file tidak ada, gunakan default
+  if (empty($clean)) {
+    return $default;
+  }
+  return $clean;
+}
+
+// --- 2. AMBIL DATA LANDING PAGE (Tabel: landing_page) ---
+$lp = [];
+$res_lp = $koneksi->query("SELECT * FROM landing_page WHERE id = 1");
+if ($res_lp && $res_lp->num_rows > 0) {
+  $lp = $res_lp->fetch_assoc();
+} else {
+  // Data Default (Jaga-jaga jika database kosong agar web tidak error)
+  $lp = [
+    'hero_title' => 'Solar Energy for a<br>Greener Tomorrow',
+    'hero_subtitle' => 'Switch to clean energy.',
+    'hero_button_primary' => 'Calculate Savings',
+    'hero_button_secondary' => 'Explore Catalog',
+    'stat_1_value' => '200+',
+    'stat_1_label' => 'Projects',
+    'stat_2_value' => '300+',
+    'stat_2_label' => 'Clients',
+    'stat_3_value' => '100%',
+    'stat_3_label' => 'Trusted',
+    'stat_4_value' => '50+',
+    'stat_4_label' => 'Cities',
+  ];
+}
+
+// 2. Cek Status Login (Untuk Header)
+$is_logged_in = isset($_SESSION['user_id']);
+$user_name = $_SESSION['user_name'] ?? 'User';
+$profile_pic = isset($_SESSION['user_profile_pic']) ? $_SESSION['user_profile_pic'] : 'img/default-profile.png';
+$profile_pic = str_replace('../', '', $profile_pic);
+
+$projects = [];
+$res_proj = $koneksi->query("SELECT * FROM projects ORDER BY id DESC LIMIT 3");
+if ($res_proj) {
+  while ($row = $res_proj->fetch_assoc()) {
+    $projects[] = $row;
+  }
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -90,59 +144,75 @@
   <div class="desktop-8">
     <main>
       <div class="header-wrapper">
-        <?php include 'includes/header_ldpage.php'; ?>
+        <?php include 'includes/landing/header_ldpage.php'; ?>
       </div>
 
       <section class="hero-section ps-5 pt-5 mt-5 mb-5 bg-soft-green position-relative overflow-hidden">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-
-        <div class="container position-relative z-2">
+        <div class="container position-relative z-2 py-5">
           <div class="row align-items-center gy-5 min-vh-75">
-            <div class="col-lg-6 order-2 order-lg-1">
-              <div class="hero-content pe-lg-5">
-                <div
-                  class="badge bg-white text-success shadow-sm px-3 py-2 rounded-pill mb-3 fw-bold border border-success-subtle">
-                  🌱 #1 Solar Energy Solution
-                </div>
-                <h1 class="hero-title display-4 fw-bold text-dark mb-3">
-                  Power Your Future,<br />
-                  <span class="text-success">Brighten Your World.</span>
-                </h1>
-                <p class="hero-desc lead text-secondary mb-4">
-                  Switch to clean energy with GreenRay. Seamless solar panel
-                  installation for homes and businesses across Indonesia.
-                </p>
-                <div class="d-flex gap-3 flex-wrap">
-                  <a href="html/calc.php" class="btn btn-success btn-lg rounded-pill px-4 py-3 fw-bold shadow-success">
-                    Calculate Savings
-                  </a>
-                  <a href="html/katalog.php"
-                    class="btn btn-white btn-lg rounded-pill px-4 py-3 fw-bold border shadow-sm">
-                    Explore Catalog
-                  </a>
-                </div>
+            <div class="col-lg-6 order-2 order-lg-1 text-center text-lg-start">
+              <div
+                class="badge bg-white text-success shadow-sm px-3 py-2 rounded-pill mb-3 fw-bold border border-success-subtle">
+                🌱 #1 Solar Energy Solution
+              </div>
+              <h1 class="hero-title display-4 fw-bold text-dark mb-3">
+                <?php
+                // TRIK: Pecah teks berdasarkan tombol Enter (Baris baru)
+                // Mendukung berbagai jenis enter (\r\n, \r, atau \n)
+                $lines = preg_split('/\r\n|\r|\n/', $lp['hero_title']);
 
-                <div class="row mt-5 pt-4 g-4 stats-row border-top border-success-subtle">
-                  <div class="col-4">
-                    <h3 class="fw-bold mb-0 text-dark">200+</h3>
-                    <small class="text-muted fw-medium">Projects</small>
-                  </div>
-                  <div class="col-4 border-start border-success-subtle ps-4">
-                    <h3 class="fw-bold mb-0 text-dark">300+</h3>
-                    <small class="text-muted fw-medium">Clients</small>
-                  </div>
-                  <div class="col-4 border-start border-success-subtle ps-4">
-                    <h3 class="fw-bold mb-0 text-dark">50+</h3>
-                    <small class="text-muted fw-medium">Cities</small>
-                  </div>
+                // Tampilkan Baris 1 (Warna Hitam / Default)
+                echo htmlspecialchars($lines[0] ?? '');
+
+                // Tampilkan Baris 2 (Warna Hijau), Jika ada
+                if (isset($lines[1]) && !empty($lines[1])) {
+                  echo '<br><span class="text-success">' . htmlspecialchars($lines[1]) . '</span>';
+                }
+
+                // (Opsional) Jika ada Baris 3 dst, tampilkan biasa
+                for ($i = 2; $i < count($lines); $i++) {
+                  if (!empty($lines[$i])) {
+                    echo '<br>' . htmlspecialchars($lines[$i]);
+                  }
+                }
+                ?>
+              </h1>
+              <p class="lead text-secondary mb-4 mx-auto mx-lg-0" style="max-width: 500px;">
+                <?php echo htmlspecialchars($lp['hero_subtitle']); ?>
+              </p>
+              <div class="d-flex gap-3 flex-wrap">
+                <a href="<?php echo htmlspecialchars($lp['hero_button_primary_url']); ?>"
+                  class="btn btn-success btn-lg rounded-pill px-4 py-3 fw-bold shadow-success">
+                  <?php echo htmlspecialchars($lp['hero_button_primary']); ?>
+                </a>
+                <a href="<?php echo htmlspecialchars($lp['hero_button_secondary_url']); ?>"
+                  class="btn btn-white btn-lg rounded-pill px-4 py-3 fw-bold border shadow-sm">
+                  <?php echo htmlspecialchars($lp['hero_button_secondary']); ?>
+                </a>
+              </div>
+              <div class="row mt-5 pt-4 g-4 stats-row border-top border-success-subtle">
+                <div class="col-3 border-end border-success-subtle ps-4">
+                  <h2 class="fw-bold text-success"><?php echo $lp['stat_1_value']; ?></h2>
+                  <small class="text-muted fw-medium"><?php echo $lp['stat_1_label']; ?></small>
+                </div>
+                <div class="col-3 border-end border-success-subtle ps-4">
+                  <h2 class="fw-bold text-success"><?php echo $lp['stat_2_value']; ?></h2>
+                  <small class="text-muted fw-medium"><?php echo $lp['stat_2_label']; ?></small>
+                </div>
+                <div class="col-3 border-end border-success-subtle ps-4">
+                  <h2 class="fw-bold text-success"><?php echo $lp['stat_3_value']; ?></h2>
+                  <small class="text-muted fw-medium"><?php echo $lp['stat_3_label']; ?></small>
+                </div>
+                <div class="col-3 col-sm-3">
+                  <h2 class="fw-bold text-success"><?php echo $lp['stat_4_value']; ?></h2>
+                  <small class="text-muted fw-medium"><?php echo $lp['stat_4_label']; ?></small>
                 </div>
               </div>
             </div>
 
             <div class="col-lg-6 order-1 order-lg-2 text-center">
               <div class="hero-image-wrapper position-relative">
-                <img src="img/mariana-proenca-GXiHwHkIdVs-unsplash.jpg" alt="Happy Family with Solar"
+                <img src="<?php echo fixPath($lp['hero_image']); ?>" alt="Happy Family with Solar"
                   class="img-fluid hero-main-img rounded-4 shadow-lg position-relative z-2" />
 
                 <div
@@ -200,8 +270,8 @@
                       style="width: 80px; height: 80px;">
                       <img src="img/vector/bill.svg" width="40" alt="Savings">
                     </div>
-                    <h4 class="fw-bold text-dark mb-2">Save on Bills</h4>
-                    <p class="text-secondary mb-4">Drastically reduce your monthly expenses.</p>
+                    <h4 class="fw-bold text-dark mb-2"><?php echo htmlspecialchars($lp['why_1_title']); ?></h4>
+                    <p class="text-secondary mb-4"><?php echo htmlspecialchars($lp['why_1_desc']); ?></p>
                     <button type="button" class="btn btn-outline-danger rounded-pill px-4 btn-trigger-flip">
                       More
                     </button>
@@ -209,10 +279,9 @@
 
                   <div
                     class="flip-card-back bg-danger text-white rounded-4 p-4 d-flex flex-column align-items-center justify-content-center">
-                    <h4 class="fw-bold mb-3">Maximum Savings</h4>
+                    <h4 class="fw-bold mb-3"><?php echo htmlspecialchars($lp['why_1_back_title']); ?></h4>
                     <p class="mb-4 lh-base">
-                      Our solar systems are designed to maximize output and minimize loss, giving you the best ROI and
-                      reducing your electricity bills by up to 60%.
+                      <?php echo htmlspecialchars($lp['why_1_back_desc']); ?>
                     </p>
                     <button type="button" class="btn btn-light rounded-pill px-4 btn-trigger-flip">
                       <i class="fa-solid fa-arrows-rotate fa-spin-pulse mr-3"></i> Back
@@ -234,8 +303,8 @@
                       style="width: 80px; height: 80px;">
                       <img src="img/vector/energy.svg" width="40" alt="Energy">
                     </div>
-                    <h4 class="fw-bold text-dark mb-2">Energy Independence</h4>
-                    <p class="text-secondary mb-4">Protect yourself from rising costs.</p>
+                    <h4 class="fw-bold text-dark mb-2"><?php echo htmlspecialchars($lp['why_2_title']); ?></h4>
+                    <p class="text-secondary mb-4"><?php echo htmlspecialchars($lp['why_2_desc']); ?></p>
                     <button type="button" class="btn btn-outline-warning rounded-pill px-4 btn-trigger-flip">
                       More
                     </button>
@@ -243,10 +312,9 @@
 
                   <div
                     class="flip-card-back bg-warning text-white rounded-4 p-4 d-flex flex-column align-items-center justify-content-center">
-                    <h4 class="fw-bold mb-3">Be Independent</h4>
+                    <h4 class="fw-bold mb-3"><?php echo htmlspecialchars($lp['why_2_back_title']); ?></h4>
                     <p class="mb-4 lh-base">
-                      Less reliance on the public grid. Protect yourself from rising energy costs and unexpected power
-                      outages with your own power source.
+                      <?php echo htmlspecialchars($lp['why_2_back_desc']); ?>
                     </p>
                     <button type="button" class="btn btn-light rounded-pill px-4 btn-trigger-flip">
                       <i class="fa-solid fa-arrows-rotate fa-spin-pulse mr-3"></i> Back
@@ -268,8 +336,8 @@
                       style="width: 80px; height: 80px;">
                       <img src="img/vector/contribute.svg" width="40" alt="Eco">
                     </div>
-                    <h4 class="fw-bold text-dark mb-2">Eco-Friendly</h4>
-                    <p class="text-secondary mb-4">Reduce your carbon footprint.</p>
+                    <h4 class="fw-bold text-dark mb-2"><?php echo htmlspecialchars($lp['why_3_title']); ?></h4>
+                    <p class="text-secondary mb-4"><?php echo htmlspecialchars($lp['why_3_desc']); ?></p>
                     <button type="button" class="btn btn-outline-success rounded-pill px-4 btn-trigger-flip">
                       More
                     </button>
@@ -277,10 +345,9 @@
 
                   <div
                     class="flip-card-back bg-success text-white rounded-4 p-4 d-flex flex-column align-items-center justify-content-center">
-                    <h4 class="fw-bold mb-3">Go Green</h4>
+                    <h4 class="fw-bold mb-3"><?php echo htmlspecialchars($lp['why_3_back_title']); ?></h4>
                     <p class="mb-4 lh-base">
-                      Switching to solar is one of the most impactful ways to contribute to a cleaner earth. Save the
-                      planet while saving money.
+                      <?php echo htmlspecialchars($lp['why_3_back_desc']); ?>
                     </p>
                     <button type="button" class="btn btn-light rounded-pill px-4 btn-trigger-flip">
                       <i class="fa-solid fa-arrows-rotate fa-spin-pulse mr-3"></i> Back
@@ -295,64 +362,89 @@
         </div>
       </section>
 
-      <section class="portfolio-section px-5 py-5 bg-light-custom">
+      <section class="portfolio-section py-5 bg-light-custom" style="background-color: #f8f9fa;">
         <div class="container">
+
           <div class="d-flex justify-content-between align-items-end mb-5">
             <div>
-              <h2 class="section-title display-5 fw-bold text-dark mb-2">Recent Projects</h2>
-              <p class="text-secondary mb-0">See how we help our clients achieve energy independence.</p>
+              <h2 class="display-5 fw-bold text-dark mb-2">Recent Projects</h2>
+              <p class="text-secondary mb-0 fs-5">See how we help our clients achieve energy independence.</p>
             </div>
             <a href="html/portofolio.php"
-              class="btn btn-outline-success rounded-pill px-4 d-none d-md-inline-block">View All Projects</a>
+              class="btn btn-outline-success rounded-pill px-4 d-none d-md-inline-block fw-bold">
+              View All Projects
+            </a>
           </div>
 
           <div class="row g-4">
-            <div class="col-md-4">
-              <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden hover-lift">
-                <img src="img/rumah.jpg" class="card-img-top object-fit-cover" alt="Surabaya Home"
-                  style="height: 250px;">
-                <div class="card-body p-4">
-                  <div class="badge bg-success bg-opacity-10 text-success mb-2">Residential</div>
-                  <h5 class="card-title fw-bold">Surabaya Smart Home</h5>
-                  <p class="card-text text-muted small mb-3">Capacity: 5 kWp • Bill Reduction: 60%</p>
-                  <a href="html/portofolio.php" class="stretched-link text-decoration-none fw-bold text-success">View
-                    Details &rarr;</a>
-                </div>
-              </div>
-            </div>
+            <?php if (!empty($projects)): ?>
+              <?php foreach ($projects as $proj): ?>
+                <?php
+                // 1. Bersihkan path gambar (hapus ../ karena kita di root)
+                $img_path = str_replace('../', '', $proj['hero_image_url']);
 
-            <div class="col-md-4">
-              <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden hover-lift">
-                <img src="img/toko.jpg" class="card-img-top object-fit-cover" alt="Bandung Store"
-                  style="height: 250px;">
-                <div class="card-body p-4">
-                  <div class="badge bg-primary bg-opacity-10 text-primary mb-2">Commercial</div>
-                  <h5 class="card-title fw-bold">Bandung Retail Store</h5>
-                  <p class="card-text text-muted small mb-3">Capacity: 20 kWp • ROI: 3.5 Years</p>
-                  <a href="html/portofolio.php" class="stretched-link text-decoration-none fw-bold text-success">View
-                    Details &rarr;</a>
-                </div>
-              </div>
-            </div>
+                // 2. Tentukan Warna Badge Kategori secara otomatis
+                $cat = htmlspecialchars($proj['category']);
+                $badge_class = 'bg-success text-success'; // Default Hijau (Residential)
+                if (stripos($cat, 'Commercial') !== false)
+                  $badge_class = 'bg-primary text-primary'; // Biru
+                if (stripos($cat, 'Industrial') !== false)
+                  $badge_class = 'bg-warning text-warning'; // Kuning
+                ?>
 
-            <div class="col-md-4">
-              <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden hover-lift">
-                <img src="img/industri.jpg" class="card-img-top object-fit-cover" alt="Semarang Factory"
-                  style="height: 250px;">
-                <div class="card-body p-4">
-                  <div class="badge bg-warning bg-opacity-10 text-warning mb-2">Industrial</div>
-                  <h5 class="card-title fw-bold">Semarang Textile Factory</h5>
-                  <p class="card-text text-muted small mb-3">Capacity: 200 kWp • CO2 Saved: 120 Tons</p>
-                  <a href="html/portofolio.php" class="stretched-link text-decoration-none fw-bold text-success">View
-                    Details &rarr;</a>
+                <div class="col-md-4">
+                  <div
+                    class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden hover-lift position-relative bg-white">
+
+                    <div class="position-relative" style="height: 240px; overflow: hidden;">
+                      <img src="<?php echo htmlspecialchars($img_path); ?>"
+                        class="card-img-top w-100 h-100 object-fit-cover transition-image"
+                        alt="<?php echo htmlspecialchars($proj['title']); ?>">
+                    </div>
+
+                    <div class="card-body p-4 d-flex flex-column">
+                      <div class="mb-2">
+                        <span class="badge <?php echo $badge_class; ?> bg-opacity-10 px-3 py-2 rounded-pill">
+                          <?php echo $cat; ?>
+                        </span>
+                      </div>
+
+                      <h5 class="card-title fw-bold text-dark mb-2">
+                        <?php echo htmlspecialchars($proj['title']); ?>
+                      </h5>
+
+                      <p class="card-text text-muted small mb-4 flex-grow-1" style="line-height: 1.6;">
+                        <strong>Capacity:</strong> <?php echo htmlspecialchars($proj['stat_capacity']); ?><br>
+                        <?php echo htmlspecialchars($proj['subtitle_goal']); ?>
+                      </p>
+
+                      <a href="html/project_detail.php?slug=<?php echo $proj['slug']; ?>"
+                        class="stretched-link text-decoration-none fw-bold text-success d-flex align-items-center">
+                        View Details
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                          class="ms-2">
+                          <path d="M5 12h14" />
+                          <path d="m12 5 7 7-7 7" />
+                        </svg>
+                      </a>
+                    </div>
+                  </div>
                 </div>
+
+              <?php endforeach; ?>
+            <?php else: ?>
+              <div class="col-12 text-center">
+                <p class="text-muted">Belum ada proyek yang ditampilkan.</p>
               </div>
-            </div>
+            <?php endif; ?>
           </div>
 
           <div class="text-center mt-4 d-md-none">
-            <a href="html/portofolio.php" class="btn btn-outline-success rounded-pill px-4 w-100">View All Projects</a>
+            <a href="html/portofolio.php" class="btn btn-outline-success rounded-pill px-4 w-100 fw-bold">View All
+              Projects</a>
           </div>
+
         </div>
       </section>
 
@@ -374,15 +466,16 @@
 
                   <div class="flip-card-front bg-white border rounded-4 overflow-hidden shadow-sm p-0">
                     <div class="service-img-wrapper position-relative" style="height: 220px; width: 100%;">
-                      <img src="img/image 7.png" class="img-fluid w-100 h-100 object-fit-cover" alt="Residential">
+                      <img src="<?php echo fixPath($lp['serv_1_image']); ?>"
+                        class="img-fluid w-100 h-100 object-fit-cover" alt="Residential">
                       <div class="overlay-gradient position-absolute bottom-0 w-100"
                         style="height: 50%; background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);"></div>
                       <div class="position-absolute bottom-0 start-0 p-3 text-white z-2">
-                        <h4 class="fw-bold mb-0">Residential Installation</h4>
+                        <h4 class="fw-bold mb-0"><?php echo htmlspecialchars($lp['serv_1_title']); ?></h4>
                       </div>
                     </div>
                     <div class="p-4 text-center">
-                      <p class="text-muted mb-3">Perfect for homeowners looking to save money.</p>
+                      <p class="text-muted mb-3"><?php echo htmlspecialchars($lp['serv_1_desc']); ?></p>
                       <button type="button" class="btn btn-outline-success rounded-pill px-4 btn-trigger-flip">
                         More
                       </button>
@@ -391,16 +484,16 @@
 
                   <div
                     class="flip-card-back bg-success text-white rounded-4 p-4 d-flex flex-column align-items-center justify-content-center">
-                    <h4 class="fw-bold mb-3">For Your Home</h4>
+                    <h4 class="fw-bold mb-3"><?php echo htmlspecialchars($lp['serv_1_back_title']); ?></h4>
                     <p class="mb-4 text-center">
-                      Increase your property value and embrace sustainable living with our residential solar packages.
-                      We handle everything from roof assessment to grid connection.
+                      <?php echo htmlspecialchars($lp['serv_1_back_desc']); ?>
                     </p>
-                    <a href="html/katalog.php" class="btn btn-light fw-bold rounded-pill px-4 mb-3">
-                      Go to Catalog
+                    <a href="<?php echo htmlspecialchars($lp['serv_1_btn_url']); ?>"
+                      class="btn btn-light fw-bold rounded-pill px-4 mb-3">
+                      <?php echo htmlspecialchars($lp['serv_1_btn_text']); ?>
                     </a>
                     <button type="button" class="btn btn-outline-light btn-sm rounded-pill px-3 btn-trigger-flip">
-                      &larr; Back
+                      <i class="fa-solid fa-arrows-rotate fa-spin-pulse mr-3"></i> Back
                     </button>
                   </div>
 
@@ -414,15 +507,16 @@
 
                   <div class="flip-card-front bg-white border rounded-4 overflow-hidden shadow-sm p-0">
                     <div class="service-img-wrapper position-relative" style="height: 220px; width: 100%;">
-                      <img src="img/image 8.png" class="img-fluid w-100 h-100 object-fit-cover" alt="Commercial">
+                      <img src="<?php echo fixPath($lp['serv_2_image']); ?>"
+                        class="img-fluid w-100 h-100 object-fit-cover" alt="Commercial">
                       <div class="overlay-gradient position-absolute bottom-0 w-100"
                         style="height: 50%; background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);"></div>
                       <div class="position-absolute bottom-0 start-0 p-3 text-white z-2">
-                        <h4 class="fw-bold mb-0">Commercial Projects</h4>
+                        <h4 class="fw-bold mb-0"><?php echo htmlspecialchars($lp['serv_2_title']); ?></h4>
                       </div>
                     </div>
                     <div class="p-4 text-center">
-                      <p class="text-muted mb-3">Scale up your business sustainability.</p>
+                      <p class="text-muted mb-3"><?php echo htmlspecialchars($lp['serv_2_desc']); ?></p>
                       <button type="button" class="btn btn-outline-success rounded-pill px-4 btn-trigger-flip">
                         More
                       </button>
@@ -431,16 +525,16 @@
 
                   <div
                     class="flip-card-back bg-success text-white rounded-4 p-4 d-flex flex-column align-items-center justify-content-center">
-                    <h4 class="fw-bold mb-3">For Business</h4>
+                    <h4 class="fw-bold mb-3"><?php echo htmlspecialchars($lp['serv_2_back_title']); ?></h4>
                     <p class="mb-4 text-center">
-                      Reduce operational costs significantly. Our commercial solutions are scalable and designed to
-                      maximize ROI for factories, offices, and retail spaces.
+                      <?php echo htmlspecialchars($lp['serv_2_back_desc']); ?>
                     </p>
-                    <a href="html/portofolio.php" class="btn btn-light fw-bold rounded-pill px-4 mb-3">
-                      View Portfolio
+                    <a href="<?php echo htmlspecialchars($lp['serv_2_btn_url']); ?>"
+                      class="btn btn-light fw-bold rounded-pill px-4 mb-3">
+                      <?php echo htmlspecialchars($lp['serv_2_btn_text']); ?>
                     </a>
                     <button type="button" class="btn btn-outline-light btn-sm rounded-pill px-3 btn-trigger-flip">
-                      &larr; Back
+                      <i class="fa-solid fa-arrows-rotate fa-spin-pulse mr-3"></i> Back
                     </button>
                   </div>
 
@@ -454,15 +548,16 @@
 
                   <div class="flip-card-front bg-white border rounded-4 overflow-hidden shadow-sm p-0">
                     <div class="service-img-wrapper position-relative" style="height: 220px; width: 100%;">
-                      <img src="img/image 9.png" class="img-fluid w-100 h-100 object-fit-cover" alt="Maintenance">
+                      <img src="<?php echo fixPath($lp['serv_3_image']); ?>"
+                        class="img-fluid w-100 h-100 object-fit-cover" alt="Maintenance">
                       <div class="overlay-gradient position-absolute bottom-0 w-100"
                         style="height: 50%; background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);"></div>
                       <div class="position-absolute bottom-0 start-0 p-3 text-white z-2">
-                        <h4 class="fw-bold mb-0">Maintenance & Support</h4>
+                        <h4 class="fw-bold mb-0"><?php echo htmlspecialchars($lp['serv_3_title']); ?></h4>
                       </div>
                     </div>
                     <div class="p-4 text-center">
-                      <p class="text-muted mb-3">Ensure peak efficiency for decades.</p>
+                      <p class="text-muted mb-3"><?php echo htmlspecialchars($lp['serv_3_desc']); ?></p>
                       <button type="button" class="btn btn-outline-success rounded-pill px-4 btn-trigger-flip">
                         More
                       </button>
@@ -471,16 +566,16 @@
 
                   <div
                     class="flip-card-back bg-success text-white rounded-4 p-4 d-flex flex-column align-items-center justify-content-center">
-                    <h4 class="fw-bold mb-3">Long-term Support</h4>
+                    <h4 class="fw-bold mb-3"><?php echo htmlspecialchars($lp['serv_3_back_title']); ?></h4>
                     <p class="mb-4 text-center">
-                      We provide regular check-ups, cleaning services, and system monitoring to ensure your solar
-                      investment keeps performing at 100%.
+                      <?php echo htmlspecialchars($lp['serv_3_back_desc']); ?>
                     </p>
-                    <a href="html/contact-us.php" class="btn btn-light fw-bold rounded-pill px-4 mb-3">
-                      Contact Support
+                    <a href="<?php echo htmlspecialchars($lp['serv_3_btn_url']); ?>"
+                      class="btn btn-light fw-bold rounded-pill px-4 mb-3">
+                      <?php echo htmlspecialchars($lp['serv_3_btn_text']); ?>
                     </a>
                     <button type="button" class="btn btn-outline-light btn-sm rounded-pill px-3 btn-trigger-flip">
-                      &larr; Back
+                      <i class="fa-solid fa-arrows-rotate fa-spin-pulse mr-3"></i> Back
                     </button>
                   </div>
 
@@ -513,7 +608,7 @@
               <h2 class="fw-bold display-5 mb-3">
                 Ready to Switch to Solar?
               </h2>
-              <p class="fs-5 mb-4">
+              <p class="fs-5 mb-5">
                 Get a free quote and consultation today. Start your journey
                 towards energy freedom.
               </p>
@@ -526,46 +621,7 @@
       </section>
     </main>
 
-    <div class="footer">
-      <div class="footer-content">
-        <div class="footer-info">
-          <div class="footer-logo-text">
-            <img class="green-ray-logo-12" src=".\img\GreenRay_Logo 1-1.png" />
-            <div class="footer-desc">
-              Powering a cleaner, brighter future for Indonesia. We are your
-              trusted partner in sustainable energy solutions, built on
-              transparency and long-term value.
-            </div>
-          </div>
-        </div>
-        <div class="copyright">© 2025 GreenRay. All rights reserved.</div>
-      </div>
-      <div class="footer-menu">
-        <div class="menu-container-footer">
-          <div class="title-footer">Quick Links</div>
-          <div class="dec-container-footer">
-            <div class="list-footer"><a href=".\html\home.html">Home</a></div>
-            <div class="list-footer">
-              <a href=".\html\portofolio.html">Our Portfolio</a>
-            </div>
-            <div class="list-footer">
-              <a href=".\html\calc.html">Saving Calculator</a>
-            </div>
-          </div>
-        </div>
-        <div class="menu-container-footer">
-          <div class="title-footer">Get In Touch</div>
-          <div class="dec-container-footer">
-            <div class="list-footer">
-              <a href=".\html\contact-us.html">Quick Consultation via WhatsApp</a>
-            </div>
-            <div class="list-footer">
-              <a href=".\html\contact-us.html">Send a Formal Inquiry Email</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <?php include 'html/includes/footer.php'; ?>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

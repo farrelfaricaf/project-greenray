@@ -327,44 +327,8 @@ if (!is_array($tech_specs)) {
         </div>
 
     </div>
-    <div class="footer">
-        <div class="footer-content">
-            <div class="footer-info">
-                <div class="footer-logo-text">
-                    <img class="green-ray-logo-12" src="..\img\GreenRay_Logo 1-1.png" />
-                    <div class="footer-desc">
-                        Powering a cleaner, brighter future for Indonesia. We are your
-                        trusted partner in sustainable energy solutions, built on
-                        transparency and long-term value.
-                    </div>
-                </div>
-            </div>
-            <div class="copyright">
-                © 2025 GreenRay. All rights reserved.
-            </div>
-        </div>
-        <div class="footer-menu">
-            <div class="menu-container-footer">
-                <div class="title-footer">Quick Links</div>
-                <div class="dec-container-footer">
-                    <div class="list-footer"><a href="home.php">Home</a></div>
-                    <div class="list-footer"><a href="portofolio.php">Our Portfolio</a></div>
-                    <div class="list-footer"><a href="calc.php">Saving Calculator</a></div>
-                </div>
-            </div>
-            <div class="menu-container-footer">
-                <div class="title-footer">Get In Touch</div>
-                <div class="dec-container-footer">
-                    <div class="list-footer">
-                        <a href="contact-us.php">Quick Consultation via WhatsApp</a>
-                    </div>
-                    <div class="list-footer">
-                        <a href="contact-us.php">Send a Formal Inquiry Email</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    
+    <?php include 'includes/footer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>

@@ -29,11 +29,13 @@ $page = basename($_SERVER['PHP_SELF']);
                     <div class="sb-nav-link-icon"><i class="fas fa-handshake"></i></div>
                     Klien
                 </a>
-                <a class="nav-link <?php echo ($page == 'reviews.php' || $page == 'reviews_add.php' || $page == 'reviews_edit.php') ? 'active' : ''; ?>" href="reviews.php">
+                <a class="nav-link <?php echo ($page == 'reviews.php' || $page == 'reviews_add.php' || $page == 'reviews_edit.php') ? 'active' : ''; ?>"
+                    href="reviews.php">
                     <div class="sb-nav-link-icon"><i class="fas fa-star"></i></div>
                     Reviews
                 </a>
-                <a class="nav-link <?php echo ($page == 'faqs.php' || $page == 'faqs_add.php' || $page == 'faqs_edit.php') ? 'active' : ''; ?>" href="faqs.php">
+                <a class="nav-link <?php echo ($page == 'faqs.php' || $page == 'faqs_add.php' || $page == 'faqs_edit.php') ? 'active' : ''; ?>"
+                    href="faqs.php">
                     <div class="sb-nav-link-icon"><i class="fas fa-question-circle"></i></div>
                     FAQ
                 </a>
@@ -49,9 +51,15 @@ $page = basename($_SERVER['PHP_SELF']);
                     <div class="sb-nav-link-icon"><i class="fas fa-envelope"></i></div>
                     Pesan Kontak
                 </a>
+                <a class="nav-link <?php echo ($page == 'tags.php') ? 'active' : ''; ?>"
+                    href="tags.php">
+                    <div class="sb-nav-link-icon"><i class="fa-solid fa-hashtag"></i></div>
+                    Tags
+                </a>
 
                 <div class="sb-sidenav-menu-heading">Pengaturan Sistem</div>
-                <a class="nav-link <?php echo ($page == 'users.php' || $page == 'user_edit.php' || $page == 'user_reset_password.php') ? 'active' : ''; ?>" href="users.php">
+                <a class="nav-link <?php echo ($page == 'users.php' || $page == 'user_edit.php' || $page == 'user_reset_password.php') ? 'active' : ''; ?>"
+                    href="users.php">
                     <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                     Users
                 </a>
@@ -59,6 +67,35 @@ $page = basename($_SERVER['PHP_SELF']);
                     <div class="sb-nav-link-icon"><i class="fas fa-user-shield"></i></div>
                     Administrator
                 </a>
+
+                <?php
+                $is_content_active = ($page == 'landing_edit.php' || $page == 'footer_edit.php' || $page == 'home_edit.php' || $page == 'portfolio_page_edit.php' || $page == 'katalog_page_edit.php' || $page == 'contact_page_edit.php');
+                ?>
+                <a class="nav-link <?php echo $is_content_active ? '' : 'collapsed'; ?>" href="#"
+                    data-bs-toggle="collapse" data-bs-target="#collapseSettingKonten"
+                    aria-expanded="<?php echo $is_content_active ? 'true' : 'false'; ?>"
+                    aria-controls="collapseSettingKonten">
+                    <div class="sb-nav-link-icon"><i class="fas fa-cogs"></i></div>
+                    Setting Konten
+                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                </a>
+                <div class="collapse <?php echo $is_content_active ? 'show' : ''; ?>" id="collapseSettingKonten"
+                    aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                    <nav class="sb-sidenav-menu-nested nav">
+                        <a class="nav-link <?php echo ($page == 'landing_edit.php') ? 'active' : ''; ?>"
+                            href="landing_edit.php"><i class="fa-solid fa-house-chimney me-2"></i>Landing Page</a>
+                        <a class="nav-link <?php echo ($page == 'home_edit.php') ? 'active' : ''; ?>"
+                            href="home_edit.php"><i class="fa-solid fa-house-chimney me-2"></i>Edit Home Page</a>
+                        <a class="nav-link <?php echo ($page == 'portfolio_page_edit.php') ? 'active' : ''; ?>"
+                            href="portfolio_page_edit.php"><i class="fa-regular fa-circle-check me-2"></i>Edit Portfolio Page</a>
+                        <a class="nav-link <?php echo ($page == 'katalog_page_edit.php') ? 'active' : ''; ?>"
+                            href="katalog_page_edit.php"><i class="fa-solid fa-solar-panel me-2"></i>Edit Page Katalog</a>
+                        <a class="nav-link <?php echo ($page == 'contact_page_edit.php') ? 'active' : ''; ?>"
+                            href="contact_page_edit.php"><i class="fa-regular fa-address-book me-2"></i>Edit Contact Us</a>
+                        <a class="nav-link <?php echo ($page == 'footer_edit.php') ? 'active' : ''; ?>"
+                            href="footer_edit.php"><i class="fa-regular fa-pen-to-square me-2"></i>Footer</a>
+                    </nav>
+                </div>
 
                 <?php
                 $is_calc_active = ($page == 'locations.php' || $page == 'locations_add.php' || $page == 'locations_edit.php' || $page == 'tariffs.php' || $page == 'tariffs_add.php' || $page == 'tariffs_edit.php');

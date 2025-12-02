@@ -2,22 +2,37 @@
 session_start();
 include '../koneksi.php';
 
-// 2. Ambil Data PRODUK (Limit 4)
+$home_data = [];
+$res_home = $koneksi->query("SELECT * FROM page_home WHERE id = 1");
+if ($res_home && $res_home->num_rows > 0) {
+    $home_data = $res_home->fetch_assoc();
+}
+
+// SET LIMIT DARI DATABASE (Default 6 jika kosong)
+$limit_prod = $home_data['home_product_limit'] ?? 6;
+$limit_proj = $home_data['home_project_limit'] ?? 6;
+
+// 2. Ambil Data PRODUK (Gunakan variabel limit)
 $products = [];
-$res_prod = $koneksi->query("SELECT * FROM products ORDER BY id ASC LIMIT 4");
+$res_prod = $koneksi->query("SELECT * FROM products ORDER BY id ASC LIMIT $limit_prod");
 if ($res_prod) {
     while ($row = $res_prod->fetch_assoc()) {
         $products[] = $row;
     }
 }
 
-// 3. Ambil Data PROYEK/PORTFOLIO (Limit 3)
+// 3. Ambil Data PROYEK (Gunakan variabel limit)
 $projects = [];
-$res_proj = $koneksi->query("SELECT * FROM projects ORDER BY id ASC LIMIT 3");
+$res_proj = $koneksi->query("SELECT * FROM projects ORDER BY id ASC LIMIT $limit_proj");
 if ($res_proj) {
     while ($row = $res_proj->fetch_assoc()) {
         $projects[] = $row;
     }
+}
+// Fungsi helper path (hapus ../)
+function fixPath($path)
+{
+    return !empty($path) ? str_replace('../', '', $path) : 'img/placeholder.png';
 }
 
 // 4. Ambil Data REVIEWS (Limit 6)
@@ -311,6 +326,21 @@ if ($res_faq) {
         .hero-navbar {
             padding: 0 100px;
         }
+
+        .hero-header-img {
+            width: 100%;
+            /* Lebar menyesuaikan container */
+            height: auto;
+            /* Tinggi otomatis proporsional */
+            max-height: 350px;
+            /* BATAS MAKSIMAL TINGGI */
+            object-fit: cover;
+            /* Potong rapi jika rasio beda */
+            object-position: center;
+            /* Fokus tengah */
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 
@@ -319,40 +349,34 @@ if ($res_faq) {
         <div class="frame-136">
             <div class="frame-138">
                 <?php include 'includes/header.php'; ?>
-                <img class="head-img" src="..\img\home-img.png" />
+                <img class="head-img w-100 rounded-3 shadow hero-header-img"
+                    src="../<?php echo fixPath($home_data['hero_image']); ?>" />
             </div>
 
             <div class="abou-us-container">
-                <img class="img-container" src="..\img\home-img-container1.png" />
+                <img class="img-container" src="../<?php echo fixPath($home_data['about_1_image']); ?>" />
                 <div class="dec-about-us">
-                    <div class="heading-container">Who We Are? More Than Just Solar Panels.</div>
+                    <div class="heading-container"><?php echo htmlspecialchars($home_data['about_1_title']); ?></div>
                     <div class="dec-container">
-                        We are a dedicated team of experts committed to transforming how the region uses energy. Since
-                        2015, we have successfully completed 400 projects, ranging from private homes to large
-                        commercial complexes. Our mission is simple: to provide efficient, affordable, and sustainable
-                        solar energy solutions.
+                        <?php echo nl2br(htmlspecialchars($home_data['about_1_desc'])); ?>
                     </div>
                 </div>
             </div>
             <div class="abou-us-container">
                 <div class="dec-about-us">
-                    <div class="heading-container">Why We Exist? Powering the Future, Together.</div>
+                    <div class="heading-container"><?php echo htmlspecialchars($home_data['about_2_title']); ?></div>
                     <div class="dec-container">
-                        We believe every roof has the potential to be a source of clean energy. GreenRay doesn't just
-                        install panels—we create energy independence for every client. We combine cutting-edge
-                        technology with personalized customer service.
+                        <?php echo nl2br(htmlspecialchars($home_data['about_2_desc'])); ?>
                     </div>
                 </div>
-                <img class="img-container" src="..\img\home-img-container2.png" />
+                <img class="img-container" src="../<?php echo fixPath($home_data['about_2_image']); ?>" />
             </div>
 
             <div class="catalog-container">
                 <div class="heading-container-2">
-                    <div class="heading-container2">Find the Perfect Solar Solution for Your Needs</div>
-                    <div class="dec-container2">
-                        Whether you’re a homeowner looking to cut utility costs or a business seeking energy
-                        independence, we have a tailored package to fit your budget and capacity requirements.
-                    </div>
+                    <div class="heading-container2"><?php echo htmlspecialchars($home_data['catalog_title']); ?></div>
+                    <div class="dec-container2 lead text-secondary">
+                        <?php echo htmlspecialchars($home_data['catalog_desc']); ?></div>
                 </div>
 
                 <div class="card-container">
@@ -405,7 +429,14 @@ if ($res_faq) {
             </div>
 
             <div class="portfolio-container portfolio-section">
-                <div class="heading-container2">Our Portfolio</div>
+                <div class="heading-container-2 mb-5">
+                    <div class="heading-container2">
+                        <?php echo htmlspecialchars($home_data['portfolio_title'] ?? 'Our Portfolio'); ?>
+                    </div>
+                    <div class="dec-container2 lead text-secondary">
+                        <?php echo htmlspecialchars($home_data['portfolio_desc'] ?? ''); ?>
+                    </div>
+                </div>
 
                 <div class="container">
                     <div class="row g-4 justify-content-center">
@@ -467,9 +498,9 @@ if ($res_faq) {
 
             <div class="reviews-bigcontain">
                 <div class="heading-container-2">
-                    <div class="heading-container2">Real Results, Trusted by Our Customers</div>
-                    <div class="dec-container2">Hear firsthand how homeowners are saving money, enhancing their homes,
-                        and gaining energy independence.</div>
+                    <div class="heading-container2"><?php echo htmlspecialchars($home_data['review_title']); ?></div>
+                    <div class="dec-container2 lead text-secondary">
+                        <?php echo htmlspecialchars($home_data['review_desc']); ?></div>
                 </div>
                 <div class="review-container">
                     <?php if (!empty($reviews)): ?>
@@ -512,11 +543,9 @@ if ($res_faq) {
 
             <div class="faq-container">
                 <div class="title-contain">
-                    <div class="title-faq">Frequently Asked Questions</div>
+                    <div class="title-faq"><?php echo htmlspecialchars($home_data['faq_title']); ?></div>
                     <div class="desc-contain">
-                        We understand that investing in solar power brings up many questions. Get answers to your
-                        most
-                        common concerns here.
+                        <?php echo htmlspecialchars($home_data['faq_desc']); ?>
                     </div>
                 </div>
                 <div class="question-contain">
@@ -549,37 +578,7 @@ if ($res_faq) {
                 </div>
             </div>
 
-            <div class="footer">
-                <div class="footer-content">
-                    <div class="footer-info">
-                        <div class="footer-logo-text">
-                            <img class="green-ray-logo-12" src="..\img\GreenRay_Logo 1-1.png" />
-                            <div class="footer-desc">
-                                Powering a cleaner, brighter future for Indonesia. We are your trusted partner in
-                                sustainable energy solutions.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="copyright">© 2025 GreenRay. All rights reserved.</div>
-                </div>
-                <div class="footer-menu">
-                    <div class="menu-container-footer">
-                        <div class="title-footer">Quick Links</div>
-                        <div class="dec-container-footer">
-                            <div class="list-footer"><a href="home.php">Home</a></div>
-                            <div class="list-footer"><a href="portofolio.php">Portfolio</a></div>
-                            <div class="list-footer"><a href="calc.php">Saving Calculator</a></div>
-                        </div>
-                    </div>
-                    <div class="menu-container-footer">
-                        <div class="title-footer">Get In Touch</div>
-                        <div class="dec-container-footer">
-                            <div class="list-footer"><a href="contact-us.php">Quick Consultation via WhatsApp</a></div>
-                            <div class="list-footer"><a href="contact-us.php">Send a Formal Inquiry Email</a></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <?php include 'includes/footer.php'; ?>
         </div>
     </div>
 

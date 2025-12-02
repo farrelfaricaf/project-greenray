@@ -10,7 +10,27 @@ if (!$product_id) {
     exit;
 }
 
-// AMBIL DATA LAMA
+// Ambil semua segment utk opsi dropdown
+$segments = [];
+$resSeg = $koneksi->query("SELECT id, name, slug FROM product_segments ORDER BY name ASC");
+if ($resSeg) {
+    while ($row = $resSeg->fetch_assoc()) {
+        $segments[] = $row;
+    }
+}
+
+// Ambil segment yg sudah dimiliki produk
+$current_segment_ids = [];
+$resCurr = $koneksi->query(
+    "SELECT segment_id FROM product_segment_map WHERE product_id = " . (int) $product_id
+);
+if ($resCurr) {
+    while ($row = $resCurr->fetch_assoc()) {
+        $current_segment_ids[] = (int) $row['segment_id'];
+    }
+}
+
+// AMBIL DATA LAMA PRODUK
 $stmt = $koneksi->prepare("SELECT * FROM products WHERE id = ?");
 $stmt->bind_param("i", $product_id);
 $stmt->execute();
@@ -27,6 +47,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $slug = $_POST['slug'];
     $subtitle = $_POST['subtitle'];
     $description = $_POST['description'];
+
+    // LOGIKA MULTI TAG
+    $raw_segments = $_POST['segment_ids'] ?? [];
+    $segment_ids = [];
+
+    if (!is_array($raw_segments)) {
+        $raw_segments = [$raw_segments];
+    }
+
+    foreach ($raw_segments as $raw) {
+        $raw = trim($raw);
+        if ($raw === '')
+            continue;
+
+        if (ctype_digit($raw)) {
+            $segment_ids[] = (int) $raw;
+        } else {
+            $segment_name = $raw;
+            $segment_slug = strtolower(preg_replace('/[^a-z0-9]+/i', '-', $segment_name));
+
+            $stmtSeg = $koneksi->prepare(
+                "INSERT INTO product_segments (slug, name) VALUES (?, ?)"
+            );
+            $stmtSeg->bind_param("ss", $segment_slug, $segment_name);
+            if ($stmtSeg->execute()) {
+                $segment_ids[] = $stmtSeg->insert_id;
+            }
+        }
+    }
+
+    $primary_segment_id = !empty($segment_ids) ? $segment_ids[0] : null;
 
     // 1. Handle Main Image Update
     $image_path_db = $_POST['old_image']; // Default gambar lama
@@ -55,29 +106,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $specs_array = [];
     if (isset($_POST['spec_title'])) {
         $target_icon_dir = "../uploads/icons/";
-        if (!file_exists($target_icon_dir))
+        if (!file_exists($target_icon_dir)) {
             mkdir($target_icon_dir, 0777, true);
+        }
 
         for ($i = 0; $i < count($_POST['spec_title']); $i++) {
             $title = $_POST['spec_title'][$i];
             $sub = $_POST['spec_subtitle'][$i];
             $type = $_POST['spec_icon_type'][$i];
 
-            // Logic Icon: Default ambil dari hidden old_value
+            // Default ambil dari hidden old_value
             $icon_value = $_POST['spec_old_value'][$i];
 
             if ($type == 'class') {
-                // Kalau pilih class, ambil dari input text
                 $icon_value = $_POST['spec_icon_class'][$i];
             } else {
-                // Kalau pilih image
-                if (isset($_FILES['spec_icon_file']['name'][$i]) && $_FILES['spec_icon_file']['error'][$i] == 0) {
-                    // Ada upload baru
+                if (
+                    isset($_FILES['spec_icon_file']['name'][$i]) &&
+                    $_FILES['spec_icon_file']['error'][$i] == 0
+                ) {
+
                     $icon_name = uniqid() . '-icon-' . basename($_FILES['spec_icon_file']['name'][$i]);
                     move_uploaded_file($_FILES['spec_icon_file']['tmp_name'][$i], $target_icon_dir . $icon_name);
                     $icon_value = "uploads/icons/" . $icon_name;
                 }
-                // Jika tidak ada upload baru, $icon_value tetap pakai yang lama (dari spec_old_value)
             }
 
             if (!empty($title)) {
@@ -93,25 +145,52 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $specifications_json = json_encode($specs_array);
 
     // Update DB
-    $stmt = $koneksi->prepare("UPDATE products SET name=?, slug=?, subtitle=?, image_url=?, description=?, key_features_json=?, specifications_json=? WHERE id=?");
-    $stmt->bind_param("sssssssi", $name, $slug, $subtitle, $image_path_db, $description, $key_features_json, $specifications_json, $product_id);
+    $stmt = $koneksi->prepare(
+        "UPDATE products
+         SET name=?, slug=?, subtitle=?, image_url=?, description=?,
+             key_features_json=?, specifications_json=?, segment_id=?
+         WHERE id=?"
+    );
+    $stmt->bind_param(
+        "sssssssii",
+        $name,
+        $slug,
+        $subtitle,
+        $image_path_db,
+        $description,
+        $key_features_json,
+        $specifications_json,
+        $primary_segment_id,
+        $product_id
+    );
 
     if ($stmt->execute()) {
+        // Reset mapping lama
+        $koneksi->query(
+            "DELETE FROM product_segment_map WHERE product_id = " . (int) $product_id
+        );
+
+        if (!empty($segment_ids)) {
+            $stmtMap = $koneksi->prepare(
+                "INSERT INTO product_segment_map (product_id, segment_id) VALUES (?, ?)"
+            );
+            foreach ($segment_ids as $sid) {
+                $stmtMap->bind_param("ii", $product_id, $sid);
+                $stmtMap->execute();
+            }
+        }
+
         $alert_message = '<div class="alert alert-success">Produk berhasil diupdate!</div>';
-        // Refresh data
-        $stmt = $koneksi->prepare("SELECT * FROM products WHERE id = ?");
-        $stmt->bind_param("i", $product_id);
-        $stmt->execute();
-        $product = $stmt->get_result()->fetch_assoc();
     } else {
         $alert_message = '<div class="alert alert-danger">Error: ' . $stmt->error . '</div>';
     }
 }
 
-// Decode JSON untuk ditampilkan di form
+// Decode JSON untuk form
 $features_data = json_decode($product['key_features_json'], true) ?? [];
 $specs_data = json_decode($product['specifications_json'], true) ?? [];
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -122,6 +201,7 @@ $specs_data = json_decode($product['specifications_json'], true) ?? [];
     <title>Edit Produk - GreenRay Admin</title>
     <link rel="icon" type="image/png" href="..\img\favicon.png" sizes="180px180">
     <link href="css/styles.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     <style>
         .dynamic-row {
@@ -184,12 +264,27 @@ $specs_data = json_decode($product['specifications_json'], true) ?? [];
                                     <img src="../<?php echo $product['image_url']; ?>" width="100" class="mb-2 border">
                                     <input type="hidden" name="old_image" value="<?php echo $product['image_url']; ?>">
                                     <input type="file" name="image_file" class="form-control">
-                                    <small class="text-muted">Biarkan kosong jika tidak ingin mengganti gambar.</small>
+                                    <small class="text-muted">Biarkan kosong jika tidak ingin mengganti
+                                        gambar.</small>
                                 </div>
                                 <div class="mb-3">
                                     <label>Deskripsi</label>
                                     <textarea name="description" class="form-control"
                                         rows="3"><?php echo htmlspecialchars($product['description']); ?></textarea>
+                                </div>
+
+                                <?php $current_segment_ids = $current_segment_ids ?? []; ?>
+
+                                <div class="mb-3">
+                                    <label for="segment_ids" class="form-label">Segment / Tag Produk</label>
+                                    <select name="segment_ids[]" id="segment_ids" class="form-select segment-select"
+                                        multiple="multiple">
+                                        <?php foreach ($segments as $seg): ?>
+                                            <option value="<?php echo $seg['id']; ?>" <?php echo in_array($seg['id'], $current_segment_ids) ? 'selected' : ''; ?>>
+                                                <?php echo htmlspecialchars($seg['name']); ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -197,7 +292,8 @@ $specs_data = json_decode($product['specifications_json'], true) ?? [];
                         <div class="card mb-4">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <span>Key Features</span>
-                                <button type="button" class="btn btn-sm btn-success" onclick="addFeature()">+ Tambah
+                                <button type="button" class="btn btn-sm btn-success" onclick="addFeature()">+
+                                    Tambah
                                     Fitur</button>
                             </div>
                             <div class="card-body" id="features_container">
@@ -225,7 +321,8 @@ $specs_data = json_decode($product['specifications_json'], true) ?? [];
                         <div class="card mb-4">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <span>Specifications</span>
-                                <button type="button" class="btn btn-sm btn-success" onclick="addSpec()">+ Tambah
+                                <button type="button" class="btn btn-sm btn-success" onclick="addSpec()">+
+                                    Tambah
                                     Spesifikasi</button>
                             </div>
                             <div class="card-body" id="specs_container">
@@ -274,7 +371,8 @@ $specs_data = json_decode($product['specifications_json'], true) ?? [];
                                                 <label class="small">Tipe Icon</label>
                                                 <select name="spec_icon_type[]" class="form-select"
                                                     onchange="toggleIconInput(this)">
-                                                    <option value="class" <?php echo $isClass ? 'selected' : ''; ?>>Icon
+                                                    <option value="class" <?php echo $isClass ? 'selected' : ''; ?>>
+                                                        Icon
                                                         Class (Web)</option>
                                                     <option value="image" <?php echo !$isClass ? 'selected' : ''; ?>>Upload
                                                         Gambar</option>
@@ -372,7 +470,28 @@ $specs_data = json_decode($product['specifications_json'], true) ?? [];
             }
         }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(function () {
+            $('.segment-select').select2({
+                tags: true,
+                placeholder: 'Pilih atau buat segment',
+                allowClear: true,
+                width: '100%',
+                language: {
+                    noResults: function () {
+                        return "Tidak ada segment. Ketik untuk membuat.";
+                    }
+                },
+                createTag: function (params) {
+                    const term = $.trim(params.term);
+                    if (term === '') return null;
+                    return { id: term, text: term, newTag: true };
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

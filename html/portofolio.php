@@ -5,6 +5,26 @@ session_start();
 // 1. Hubungkan ke database
 include '../koneksi.php';
 
+$page_data = [];
+$res_page = $koneksi->query("SELECT * FROM page_portfolio WHERE id = 1");
+if ($res_page && $res_page->num_rows > 0) {
+    $page_data = $res_page->fetch_assoc();
+} else {
+    // Default jika DB kosong
+    $page_data = [
+        'header_title' => 'Our Projects',
+        'header_desc' => 'Welcome to our portfolio gallery.',
+        'header_image' => 'img/cover-header.png',
+        'projects_title' => 'Solar Panel Installation Projects'
+    ];
+}
+
+// Fungsi Helper Gambar
+function fixPath($path)
+{
+    return !empty($path) ? str_replace('../', '', $path) : 'img/placeholder.png';
+}
+
 // 2. Cek status login untuk header
 $is_logged_in = isset($_SESSION['user_id']);
 $user_name = '';
@@ -42,8 +62,10 @@ if ($result_projects) {
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Portfolio - GreenRay</title>
-
+    <title>Portfolio</title>
+    <link rel="stylesheet" href="..\css\portofolio.css" />
+    <link rel="stylesheet" href="..\css\globals.css">
+    <link rel="stylesheet" href="..\css\styleguide.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
 
@@ -52,12 +74,73 @@ if ($result_projects) {
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
         rel="stylesheet">
     <link rel="icon" type="image/png" href="..\img\favicon.png" sizes="180px180">
-    <link rel="stylesheet" href="..\css\portofolio.css" />
 
     <style>
+        :root {
+            /* Colors */
+            --putih: #ffffff;
+            --hitam: #000000;
+            --hijau: #136000;
+            --hijau-gelap: #072300;
+
+            /* Fonts */
+            /* Effects */
+            --efek-shadow-tipis-box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.26),
+                0px 5px 5px 0px rgba(0, 0, 0, 0.23), 0px 11px 7px 0px rgba(0, 0, 0, 0.13),
+                0px 20px 8px 0px rgba(0, 0, 0, 0.04), 0px 31px 9px 0px rgba(0, 0, 0, 0);
+        }
+
+        .btn-cta-solar {
+            background: var(--hijau) !important;
+            border-radius: 0.756875rem;
+            padding: 0.756875rem 1.51375rem;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            align-self: stretch;
+            border: none;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            text-decoration: none;
+            color: var(--putih);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .btn-cta-solar:hover {
+            background-color: #0f4d00;
+            color: white;
+        }
+
         .profile-dropdown {
             position: relative;
             display: inline-block;
+        }
+
+        .portfolio-header-wrapper {
+            width: 100%;
+            max-width: 1280px;
+            /* Batas lebar maksimal container gambar */
+            margin: 0 auto 40px auto;
+            /* Tengah horizontal & jarak bawah */
+            text-align: center;
+            /* Agar gambar di tengah jika lebih kecil */
+        }
+
+        .portfolio-header-img {
+            width: 100%;
+            /* Lebar menyesuaikan container */
+            height: auto;
+            /* Tinggi otomatis proporsional */
+            max-height: 350px;
+            /* BATAS MAKSIMAL TINGGI */
+            object-fit: cover;
+            /* Potong rapi jika rasio beda */
+            object-position: center;
+            /* Fokus tengah */
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
         .profile-picture-header {
@@ -115,18 +198,17 @@ if ($result_projects) {
 
         <div class="container my-5 portfolio-content">
             <div class="row mb-5">
-                <div class="col-12 text-center">
-                    <img class="img-head w-100 rounded-3 shadow" src="..\img\cover-header.png"
-                        alt="Portfolio Header Image" />
+                <div class="portfolio-header-wrapper">
+                    <img class="img-head w-100 rounded-3 shadow portfolio-header-img"
+                        src="../<?php echo fixPath($page_data['header_image']); ?>" alt="Portfolio Header" />
                 </div>
             </div>
 
             <div class="row justify-content-center mb-5">
                 <div class="col-lg-10 text-center my-4">
-                    <h2 class="display-6 fw-bold">Our Commercial and Industrial Projects</h2>
-                    <p class="lead">
-                        Greenray has been trusted to carry out more than 150 solar power
-                        plant (PLTS) projects in Indonesia.
+                    <h2 class="display-6 fw-bold"><?php echo htmlspecialchars($page_data['header_title']); ?></h2>
+                    <p class="lead text-secondary">
+                        <?php echo nl2br(htmlspecialchars($page_data['header_desc'])); ?>
                     </p>
                 </div>
 
@@ -156,7 +238,9 @@ if ($result_projects) {
 
             <div class="row">
                 <div class="col-12 text-center my-5">
-                    <h2 class="display-6 fw-bold">Solar Panel Installation Project</h2>
+                    <h2 class="display-6 fw-bold">
+                        <?php echo htmlspecialchars($page_data['projects_title'] ?? 'Solar Panel Installation Projects'); ?>
+                    </h2>
                 </div>
 
                 <?php if (empty($projects)): ?>
@@ -183,9 +267,9 @@ if ($result_projects) {
                             </ul>
 
                             <a href="project_detail.php?slug=<?php echo htmlspecialchars($project['slug']); ?>"
-                                class="btn btn-cta-solar">
+                                class="btn btn btn-cta-solar">
                                 <span>View Details</span>
-                                <span class="icon-arrow"></span>
+                                <i class="fa-solid fa-arrow-right-from-bracket"></i>
                             </a>
                         </div>
                     <?php endforeach; ?>
@@ -193,44 +277,8 @@ if ($result_projects) {
 
             </div>
         </div>
-        <div class="footer">
-            <div class="footer-content">
-                <div class="footer-info">
-                    <div class="footer-logo-text">
-                        <img class="green-ray-logo-12" src="..\img\GreenRay_Logo 1-1.png" />
-                        <div class="footer-desc">
-                            Powering a cleaner, brighter future for Indonesia. We are your
-                            trusted partner in sustainable energy solutions, built on
-                            transparency and long-term value.
-                        </div>
-                    </div>
-                </div>
-                <div class="copyright">
-                    © 2025 GreenRay. All rights reserved.
-                </div>
-            </div>
-            <div class="footer-menu">
-                <div class="menu-container-footer">
-                    <div class="title-footer">Quick Links</div>
-                    <div class="dec-container-footer">
-                        <div class="list-footer"><a href="home.php">Home</a></div>
-                        <div class="list-footer"><a href="portofolio.php">Our Portfolio</a></div>
-                        <div class="list-footer"><a href="calc.php">Saving Calculator</a></div>
-                    </div>
-                </div>
-                <div class="menu-container-footer">
-                    <div class="title-footer">Get In Touch</div>
-                    <div class="dec-container-footer">
-                        <div class="list-footer">
-                            <a href="contact-us.php">Quick Consultation via WhatsApp</a>
-                        </div>
-                        <div class="list-footer">
-                            <a href="contact-us.php">Send a Formal Inquiry Email</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
+        <?php include 'includes/footer.php'; ?>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"

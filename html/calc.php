@@ -853,44 +853,7 @@ if ($is_logged_in) {
             </div>
         </div>
 
-        <div class="footer">
-            <div class="footer-content">
-                <div class="footer-info">
-                    <div class="footer-logo-text">
-                        <img class="green-ray-logo-12" src="../img/GreenRay_Logo 1-1.png" />
-                        <div class="footer-desc">
-                            Powering a cleaner, brighter future for Indonesia. We are your
-                            trusted partner in sustainable energy solutions, built on
-                            transparency and long-term value.
-                        </div>
-                    </div>
-                </div>
-                <div class="copyright">
-                    © 2025 GreenRay. All rights reserved.
-                </div>
-            </div>
-            <div class="footer-menu">
-                <div class="menu-container-footer">
-                    <div class="title-footer">Quick Links</div>
-                    <div class="dec-container-footer">
-                        <div class="list-footer"><a href="home.php">Home</a></div>
-                        <div class="list-footer"><a href="../html/portofolio.html">Our Portfolio</a></div>
-                        <div class="list-footer"><a href="../html/calc.html">Saving Calculator</a></div>
-                    </div>
-                </div>
-                <div class="menu-container-footer">
-                    <div class="title-footer">Get In Touch</div>
-                    <div class="dec-container-footer">
-                        <div class="list-footer">
-                            <a href="../html/contact-us.html">Quick Consultation via WhatsApp</a>
-                        </div>
-                        <div class="list-footer">
-                            <a href="../html/contact-us.html">Send a Formal Inquiry Email</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <?php include 'includes/footer.php'; ?>
     </div>
 
     <script>

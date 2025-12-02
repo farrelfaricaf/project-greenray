@@ -1,316 +1,343 @@
 /* ============================================================================== */
 /* 1. GLOBAL RESET & FONT */
 /* ============================================================================== */
-html, body {
-    /* Reset dasar */
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-    min-height: 100vh;
-    /* Font family utama */
-    font-family: 'Plus Jakarta Sans', sans-serif !important; 
+html,
+body {
+  /* Reset dasar */
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  min-height: 100vh;
+  /* Font family utama */
+  font-family: "Plus Jakarta Sans", sans-serif !important;
 }
 .main-container,
 .main-container * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 .main-container {
-    background: #ffffff;
-    min-height: 100vh;
-    position: relative;
+  background: #ffffff;
+  min-height: 100vh;
+  position: relative;
 }
 
 .portfolio-content {
-    max-width: 80rem; 
-    margin: 0 auto; 
-    padding-top: 1rem; 
-    padding-bottom: 1rem; 
+  max-width: 80rem;
+  margin: 0 auto;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
 /* Penyesuaian jarak antar baris Bootstrap */
 .portfolio-content .row {
-    margin-bottom: 2rem !important; 
+  margin-bottom: 2rem !important;
 }
 
 .portfolio-content .col-lg-6 {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .portfolio-content .btn-cta-solar {
-    margin-top: auto; 
+  margin-top: auto;
+}
+
+.btn-cta-solar {
+  background: var(--hijau) !important;
+  border-radius: 0.756875rem;
+  padding: 0.756875rem 1.51375rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  align-self: stretch;
+  border: none;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  text-decoration: none;
+  color: var(--putih);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.btn-cta-solar:hover {
+  background-color: #0f4d00;
+  color: white;
 }
 
 .portfolio-content .project-details {
-    flex-grow: 1;
+  flex-grow: 1;
 }
 
 .portfolio-content > .row:nth-child(3) {
-    margin-top: 4rem !important;
+  margin-top: 4rem !important;
 }
 
 /* --- Logos Client - MARQUEE --- */
 .client-marquee-container {
-    width: 100%;
-    overflow: hidden; 
-    white-space: nowrap; 
-    position: relative;
-    border-top: 1px solid #eee;
-    border-bottom: 1px solid #eee;
-    padding: 20px 0; 
-    box-sizing: border-box;
-    display: flex; 
-    align-items: center;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  padding: 20px 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
 }
 
 .client-marquee {
-    display: inline-block; 
-    white-space: nowrap;
-    animation: marquee-scroll 40s linear infinite; 
+  display: inline-block;
+  white-space: nowrap;
+  animation: marquee-scroll 40s linear infinite;
 }
 
 .client-marquee:hover {
-    animation-play-state: paused; 
+  animation-play-state: paused;
 }
 
 .marquee-content {
-    display: inline-flex; 
-    align-items: center;
-    gap: 60px; 
-    padding: 0 30px; 
+  display: inline-flex;
+  align-items: center;
+  gap: 60px;
+  padding: 0 30px;
 }
 
 .client-logo {
-    max-height: 60px; 
-    max-width: 180px; 
-    object-fit: contain;
-    flex-shrink: 0; 
-    filter: grayscale(100%); 
-    opacity: 0.7; 
-    transition: filter 0.3s ease, opacity 0.3s ease;
+  max-height: 60px;
+  max-width: 180px;
+  object-fit: contain;
+  flex-shrink: 0;
+  filter: grayscale(100%);
+  opacity: 0.7;
+  transition: filter 0.3s ease, opacity 0.3s ease;
 }
 
 .client-logo:hover {
-    filter: grayscale(0%); 
-    opacity: 1; 
+  filter: grayscale(0%);
+  opacity: 1;
 }
 
 /* Keyframes untuk animasi gulir */
 @keyframes marquee-scroll {
-    0% { transform: translateX(0%); } 
-    100% { transform: translateX(-50%); } 
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
-
 
 /* --- Project List --- */
 .project-details {
-    list-style: disc;
-    padding-left: 25px;
-    font-size: 1.1rem;
-    line-height: 1.8;
+  list-style: disc;
+  padding-left: 25px;
+  font-size: 1.1rem;
+  line-height: 1.8;
 }
 
 .project-details b {
-    font-weight: 700;
+  font-weight: 700;
 }
 
 .project-img {
-    height: 350px; 
-    object-fit: cover;
+  height: 350px;
+  object-fit: cover;
 }
-
 
 /* ============================================================================== */
 /* 4. RESPONSIVE STYLING */
 /* ============================================================================== */
 
 @media (max-width: 992px) {
-    /* Header Responsive */
-    .header-wrapper {
-        padding: 0rem 1.5rem;
-        gap: 2rem;
-    }
-    .hero {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    .green-ray-logo-1 {
-        width: 10rem;
-        height: auto;
-    }
-    .header-menu {
-        order: 3; 
-        width: 100%;
-        justify-content: space-around;
-        gap: 0.5rem;
-    }
-    .header-actions {
-        margin-top: 1rem;
-    }
+  /* Header Responsive */
+  .header-wrapper {
+    padding: 0rem 1.5rem;
+    gap: 2rem;
+  }
+  .hero {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .green-ray-logo-1 {
+    width: 10rem;
+    height: auto;
+  }
+  .header-menu {
+    order: 3;
+    width: 100%;
+    justify-content: space-around;
+    gap: 0.5rem;
+  }
+  .header-actions {
+    margin-top: 1rem;
+  }
 
-    /* Portfolio Content Responsive */
-    .client-logo {
-        max-height: 40px; 
-        max-width: 120px;
-        margin: 0 10px; 
-    }
-    .marquee-content {
-        gap: 30px; 
-    }
-    .project-img {
-        height: 250px; 
-    }
+  /* Portfolio Content Responsive */
+  .client-logo {
+    max-height: 40px;
+    max-width: 120px;
+    margin: 0 10px;
+  }
+  .marquee-content {
+    gap: 30px;
+  }
+  .project-img {
+    height: 250px;
+  }
 
-    /* Footer Responsive */
-    .footer {
-        flex-direction: column;
-        align-items: center;
-        padding: 3.125rem 1.5rem 5rem 1.5rem;
-        gap: 3rem;
-    }
-    .footer-info, .footer-menu {
-        align-self: flex-start;
-        width: 100%;
-    }
-    .footer-menu {
-        flex-direction: column; 
-        gap: 3rem;
-    }
-    .footer-logo-text {
-        width: 100%; 
-    }
-    .footer-desc {
-        width: 100%; 
-        max-width: none;
-    }
-    .copyright {
-        text-align: center;
-        width: 100%;
-    }
+  /* Footer Responsive */
+  .footer {
+    flex-direction: column;
+    align-items: center;
+    padding: 3.125rem 1.5rem 5rem 1.5rem;
+    gap: 3rem;
+  }
+  .footer-info,
+  .footer-menu {
+    align-self: flex-start;
+    width: 100%;
+  }
+  .footer-menu {
+    flex-direction: column;
+    gap: 3rem;
+  }
+  .footer-logo-text {
+    width: 100%;
+  }
+  .footer-desc {
+    width: 100%;
+    max-width: none;
+  }
+  .copyright {
+    text-align: center;
+    width: 100%;
+  }
 }
-
 
 /* ============================================================================== */
 /* 5. FOOTER STYLING */
 /* ============================================================================== */
 .footer {
-    background: #ffffff;
-    border-style: solid;
-    border-color: #000000;
-    border-width: 0.03125rem 0rem 0rem 0rem;
-    padding: 3.125rem 3.75rem 5rem 3.75rem;
-    display: flex;
-    flex-direction: row;
-    gap: 6.0625rem;
-    align-items: flex-start;
-    justify-content: space-evenly;
-    align-self: stretch;
-    flex-shrink: 0;
-    position: relative;
-    margin-top: 5rem;
+  background: #ffffff;
+  border-style: solid;
+  border-color: #000000;
+  border-width: 0.03125rem 0rem 0rem 0rem;
+  padding: 3.125rem 3.75rem 5rem 3.75rem;
+  display: flex;
+  flex-direction: row;
+  gap: 6.0625rem;
+  align-items: flex-start;
+  justify-content: space-evenly;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+  margin-top: 5rem;
 }
 .footer-info {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    align-items: flex-start;
-    justify-content: flex-start;
-    align-self: stretch;
-    flex-shrink: 0;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
 }
-.footer-content { /* Class ini digunakan untuk membungkus footer-info dan copyright di HTML */
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem; /* Tambahkan gap agar ada jarak antara info dan copyright */
-    align-items: flex-start;
-    justify-content: flex-start;
-    flex-shrink: 0;
-    position: relative;
+.footer-content {
+  /* Class ini digunakan untuk membungkus footer-info dan copyright di HTML */
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem; /* Tambahkan gap agar ada jarak antara info dan copyright */
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
 }
 .footer-logo-text {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    align-items: flex-start;
-    justify-content: flex-start;
-    align-self: stretch;
-    flex-shrink: 0;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
 }
 .green-ray-logo-12 {
-    flex-shrink: 0;
-    width: 14.6675rem;
-    height: 3.121875rem;
-    position: relative;
-    object-fit: cover;
-    aspect-ratio: 234.68/49.95;
+  flex-shrink: 0;
+  width: 14.6675rem;
+  height: 3.121875rem;
+  position: relative;
+  object-fit: cover;
+  aspect-ratio: 234.68/49.95;
 }
 .footer-desc {
-    color: #000000;
-    text-align: justify;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 1.125rem;
-    font-weight: 400;
-    position: relative;
-    width: 18.25rem;
+  color: #000000;
+  text-align: justify;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.125rem;
+  font-weight: 400;
+  position: relative;
+  width: 18.25rem;
 }
 .copyright {
-    color: #000000;
-    text-align: left;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 0.875rem;
-    font-weight: 400;
-    position: relative;
-    align-self: stretch;
+  color: #000000;
+  text-align: left;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 400;
+  position: relative;
+  align-self: stretch;
 }
 .footer-menu {
-    display: flex;
-    flex-direction: row;
-    gap: 10rem;
-    align-items: flex-start;
-    justify-content: flex-start;
-    align-self: stretch;
-    flex-shrink: 0;
-    position: relative;
+  display: flex;
+  flex-direction: row;
+  gap: 10rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
 }
 .menu-container-footer {
-    display: flex;
-    flex-direction: column;
-    gap: 3.125rem;
-    align-items: flex-start;
-    justify-content: flex-start;
-    flex-shrink: 0;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 3.125rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
 }
 .title-footer {
-    color: #000000;
-    text-align: left;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 1.7rem;
-    font-weight: 500;
-    position: relative;
+  color: #000000;
+  text-align: left;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.7rem;
+  font-weight: 500;
+  position: relative;
 }
 .dec-container-footer {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    align-items: flex-start;
-    justify-content: center;
-    align-self: stretch;
-    flex-shrink: 0;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  align-items: flex-start;
+  justify-content: center;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
 }
 .list-footer {
-    color: #000000;
-    text-align: center;
-    font-size: 1.125rem;
-    position: relative;
-    cursor: pointer;
+  color: #000000;
+  text-align: center;
+  font-size: 1.125rem;
+  position: relative;
+  cursor: pointer;
 }
 .list-footer a {
-    text-decoration: none;
-    color: black;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-weight: 400;
+  text-decoration: none;
+  color: black;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 400;
 }

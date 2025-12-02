@@ -1,11 +1,81 @@
 <?php
-// WAJIB ADA DI BARIS PALING ATAS
 session_start();
-
-// Hubungkan ke database
 include '../koneksi.php';
 
-// Cek status login
+// 1. Ambil semua segment untuk filter di atas
+// Ambil semua segment untuk filter (hanya yang dipakai produk)
+$segments = [];
+$resSeg = $koneksi->query("
+    SELECT s.slug, s.name, MIN(s.id) AS id
+    FROM product_segments s
+    JOIN product_segment_map m ON s.id = m.segment_id
+    GROUP BY s.slug, s.name
+    ORDER BY s.name ASC
+");
+if ($resSeg) {
+    while ($row = $resSeg->fetch_assoc()) {
+        $segments[] = $row;
+    }
+}
+
+// 2. Baca filter dari URL
+$active_segment = $_GET['segment'] ?? 'all';
+
+// 3. Ambil produk + tag (multi-tag) dengan JOIN + GROUP_CONCAT
+$products = [];
+
+$sql = "
+  SELECT
+    p.*,
+    GROUP_CONCAT(DISTINCT s.name ORDER BY s.name SEPARATOR ',') AS segment_names,
+    GROUP_CONCAT(DISTINCT s.slug ORDER BY s.name SEPARATOR ',') AS segment_slugs
+  FROM products p
+  LEFT JOIN product_segment_map m ON p.id = m.product_id
+  LEFT JOIN product_segments     s ON m.segment_id = s.id
+";
+
+$params = [];
+$types = '';
+
+if ($active_segment !== 'all') {
+    $sql .= " WHERE s.slug = ? ";
+    $types = 's';
+    $params[] = $active_segment;
+}
+
+$sql .= " GROUP BY p.id ORDER BY p.id ASC";
+
+$stmt = $koneksi->prepare($sql);
+if (!empty($params)) {
+    $stmt->bind_param($types, ...$params);
+}
+$stmt->execute();
+$result = $stmt->get_result();
+
+while ($row = $result->fetch_assoc()) {
+    $products[] = $row;
+}
+
+// 4. Ambil konten header halaman katalog (judul, deskripsi, cover)
+$page_data = [];
+$res_page = $koneksi->query("SELECT * FROM page_katalog WHERE id = 1");
+if ($res_page && $res_page->num_rows > 0) {
+    $page_data = $res_page->fetch_assoc();
+} else {
+    $page_data = [
+        'header_title' => 'Our Products',
+        'header_desc' => 'Explore our range of high-quality solar products.',
+        'header_image' => 'img/cover-header.png'
+    ];
+}
+
+// 5. Helper gambar
+function fixPath($path)
+{
+    return !empty($path) ? str_replace('../', '', $path) : 'img/placeholder.png';
+}
+
+// 6. Cek status login (kalau memang dipakai di navbar)
 $is_logged_in = isset($_SESSION['user_id']);
 $user_name = '';
 $profile_pic = '../img/default-profile.png';
@@ -14,17 +84,8 @@ if ($is_logged_in) {
     $user_name = $_SESSION['user_name'] ?? 'User';
     $profile_pic = $_SESSION['user_profile_pic'] ?? '../img/default-profile.png';
 }
-
-// Ambil Data Produk dari Database
-$products = [];
-$sql = "SELECT * FROM products ORDER BY id ASC";
-$result = $koneksi->query($sql);
-if ($result) {
-    while ($row = $result->fetch_assoc()) {
-        $products[] = $row;
-    }
-}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -122,6 +183,137 @@ if ($result) {
             margin-bottom: 5px;
             font-size: 0.95rem;
         }
+
+        .catalog-header-img {
+            width: 100%;
+            /* Lebar menyesuaikan container */
+            height: auto;
+            /* Tinggi otomatis proporsional */
+            max-height: 350px;
+            /* BATAS MAKSIMAL TINGGI */
+            object-fit: cover;
+            /* Potong rapi jika rasio beda */
+            object-position: center;
+            /* Fokus tengah */
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .catalog-header-wrapper {
+            width: 100%;
+            max-width: 1280px;
+            /* Batas lebar maksimal container gambar */
+            margin: 0 auto 40px auto;
+            /* Tengah horizontal & jarak bawah */
+            text-align: center;
+            /* Agar gambar di tengah jika lebih kecil */
+        }
+
+        /* ========================= */
+        /* Filter bar katalog        */
+        /* ========================= */
+
+        .catalog-filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 0.75rem 0 1.5rem 0;
+        }
+
+        .filter-label {
+            color: var(--hitam);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Tombol pill filter */
+        .filter-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.4rem 1.1rem;
+            border-radius: 999px;
+            border: 0.125rem solid var(--hitam);
+            background: var(--putih);
+            color: var(--hitam);
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition:
+                background-color 0.2s ease,
+                color 0.2s ease,
+                box-shadow 0.2s ease,
+                border-color 0.2s ease,
+                transform 0.15s ease;
+        }
+
+        .filter-pill:hover {
+            background-color: #f3f3f3;
+            transform: translateY(-1px);
+        }
+
+        /* State aktif: selaras dengan tombol hijau card */
+        .filter-pill.is-active {
+            background-color: var(--hijau);
+            border-color: var(--hijau);
+            color: var(--putih);
+            box-shadow: 0rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.26),
+                0rem 0.3125rem 0.3125rem rgba(0, 0, 0, 0.23),
+                0rem 0.6875rem 0.4375rem rgba(0, 0, 0, 0.13);
+        }
+
+        /* ========================= */
+        /* Responsif filter bar      */
+        /* ========================= */
+
+        @media (max-width: 768px) {
+            .catalog-filter-bar {
+                gap: 0.5rem;
+                margin-bottom: 1.25rem;
+            }
+
+            .filter-label {
+                width: 100%;
+                text-align: center;
+                margin-bottom: 0.25rem;
+            }
+
+            .filter-pill {
+                font-size: 0.85rem;
+                padding: 0.35rem 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .catalog-filter-bar {
+                padding: 0 0.5rem;
+            }
+
+            .filter-pill {
+                flex: 1 1 auto;
+                /* Boleh ngelebar sedikit di layar kecil */
+                text-align: center;
+            }
+        }
+
+        .product-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+        }
+
+        .tag-pill {
+            display: inline-block;
+            padding: 0.12rem 0.6rem;
+            border-radius: 999px;
+            background: #e6f3ff;
+            color: #1b3b6f;
+            font-size: 0.78rem;
+            font-weight: 500;
+        }
     </style>
 </head>
 
@@ -132,15 +324,39 @@ if ($result) {
             <?php include 'includes/header.php'; ?>
         </div>
 
+        <div class="row mt-5 hero-wrapper">
+            <div class="catalog-header-wrapper">
+                <img class="img-head w-100 rounded-3 shadow catalog-header-img"
+                    src="../<?php echo fixPath($page_data['header_image']); ?>" alt="Catalog Header" />
+            </div>
+        </div>
 
         <div class="big-container">
-            <div class="title-heading">
-                <div class="text-heading">
-                    <span>
-                        <span class="text-heading-span">Our </span>
-                        <span class="text-heading-span2">Products</span>
-                    </span>
+            <div class="row justify-content-center text-center mb-4">
+                <div class="col-lg-8">
+                    <h2 class="display-5 fw-bold mb-3"><?php echo htmlspecialchars($page_data['header_title']); ?></h2>
+                    <p class="lead text-secondary">
+                        <?php echo nl2br(htmlspecialchars($page_data['header_desc'])); ?>
+                    </p>
                 </div>
+            </div>
+
+            <div class="catalog-filter-bar">
+                <span class="filter-label">Filter:</span>
+
+                <!-- All -->
+                <a href="katalog.php?segment=all"
+                    class="btn btn-outline-dark <?php echo ($active_segment === 'all') ? 'active' : ''; ?>">
+                    All
+                </a>
+
+                <!-- Segment dari DB -->
+                <?php foreach ($segments as $seg): ?>
+                    <a href="katalog.php?segment=<?php echo urlencode($seg['slug']); ?>"
+                        class="btn btn-outline-dark <?php echo ($active_segment === $seg['slug']) ? 'active' : ''; ?>">
+                        <?php echo htmlspecialchars($seg['name']); ?>
+                    </a>
+                <?php endforeach; ?>
             </div>
 
             <div class="card-container">
@@ -169,6 +385,17 @@ if ($result) {
                                         <?php echo htmlspecialchars($product['subtitle']); ?>
                                     </span>
                                 </h5>
+
+                                <?php if (!empty($product['segment_names'])): ?>
+                                    <div class="product-tags mt-2">
+                                        <?php foreach (explode(',', $product['segment_names']) as $tagName): ?>
+                                            <span class="tag-pill">
+                                                <?php echo htmlspecialchars(trim($tagName)); ?>
+                                            </span>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php endif; ?>
+
                                 <ul class="custom-bullet-list">
                                     <?php if (!empty($display_features)): ?>
                                         <?php foreach ($display_features as $feat): ?>
@@ -193,42 +420,7 @@ if ($result) {
         </div>
 
 
-        <div class="footer">
-            <div class="frame-51">
-                <div class="frame-42">
-                    <img class="green-ray-logo-12" src="../img/GreenRay_Logo 1-1.png" />
-                    <div class="dec-footer">
-                        Powering a cleaner, brighter future for Indonesia. We are your
-                        trusted partner in sustainable energy solutions, built on
-                        transparency and long-term value.
-                    </div>
-                </div>
-                <div class="copyright">
-                    © 2025 GreenRay. All rights reserved.
-                </div>
-            </div>
-            <div class="menu-footer">
-                <div class="menu-container-footer">
-                    <div class="title-footer">Quick Links</div>
-                    <div class="dec-container-footer">
-                        <div class="list-footer"><a href="home.php">Home</a></div>
-                        <div class="list-footer"><a href="portofolio.php">Our Portfolio</a></div>
-                        <div class="list-footer"><a href="calc.php">Saving Calculator</a></div>
-                    </div>
-                </div>
-                <div class="menu-container-footer">
-                    <div class="title-footer">Get In Touch</div>
-                    <div class="dec-container-footer">
-                        <div class="list-footer">
-                            <a href="contact-us.php">Quick Consultation via WhatsApp</a>
-                        </div>
-                        <div class="list-footer">
-                            <a href="contact-us.php">Send a Formal Inquiry Email</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <?php include 'includes/footer.php'; ?>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

@@ -1,45 +1,46 @@
 /* ============================================================================== */
 /* 1. GLOBAL RESET & WRAPPER */
 /* ============================================================================== */
-html, body {
-    margin: 0;
-    padding: 0;
+html,
+body {
+  margin: 0;
+  padding: 0;
 }
 .beranda,
 .beranda * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 .beranda {
-    background: #ffffff;
-    /* Tinggi dapat disesuaikan atau dihapus jika menggunakan flow normal */
-    height: auto; 
-    min-height: 100vh;
-    position: relative;
-    overflow-x: hidden;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+  background: #ffffff;
+  /* Tinggi dapat disesuaikan atau dihapus jika menggunakan flow normal */
+  height: auto;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  font-family: "Plus Jakarta Sans", sans-serif;
 }
 .frame-136 {
-    /* Wrapper utama untuk semua konten di bawah header */
-    display: flex;
-    flex-direction: column;
-    gap: 12rem;
-    align-items: center;
-    justify-content: flex-start;
-    /* Atur agar lebar mengikuti konten dan berada di tengah */
-    max-width: 90.0625rem;
-    width: 100%;
-    margin: 3.125rem auto 0 auto; 
-    position: relative;
+  /* Wrapper utama untuk semua konten di bawah header */
+  display: flex;
+  flex-direction: column;
+  gap: 8rem;
+  align-items: center;
+  justify-content: flex-start;
+  /* Atur agar lebar mengikuti konten dan berada di tengah */
+  max-width: 90.0625rem;
+  width: 100%;
+  margin: 3.125rem auto 0 auto;
+  position: relative;
 }
 .frame-138 {
-    display: flex;
-    flex-direction: column;
-    gap: 5rem;
-    align-items: center;
-    justify-content: flex-start;
-    align-self: stretch;
-    flex-shrink: 0;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 5rem;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
 }
 
 /* ============================================================================== */
@@ -48,78 +49,246 @@ html, body {
 
 /* Kontainer Utama Header */
 .head-img {
-    align-self: stretch;
-    flex-shrink: 0;
-    height: 20.625rem;
-    position: relative;
-    object-fit: cover;
+  width: 100%;
+  max-width: 1280px;
+  /* Batas lebar maksimal container gambar */
+  margin: 0 auto 40px auto;
+  /* Tengah horizontal & jarak bawah */
+  text-align: center;
+  /* Agar gambar di tengah jika lebih kecil */
 }
 
+@media (max-width: 1360px) {
+  .frame-136 {
+    gap: 8rem;
+    margin: 2rem auto 0 auto;
+  }
 
+  .frame-138 {
+    padding: 0rem 2.5rem;
+    gap: 3rem;
+  }
+
+  /* About Us Section */
+  .abou-us-container {
+    width: 100%;
+    gap: 4rem;
+  }
+
+  .heading-container {
+    font-size: 2.3rem;
+  }
+
+  .dec-container {
+    font-size: 1.1rem;
+  }
+
+  /* Catalog Section */
+  .catalog-container {
+    width: 100%;
+    gap: 2.5rem;
+  }
+
+  .heading-container-2 {
+    width: 100%;
+    align-items: center;
+    text-align: center;
+  }
+
+  .heading-container2 {
+    font-size: 2.2rem;
+  }
+
+  .dec-container2 {
+    font-size: 1.1rem;
+  }
+
+  .card-container {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .catalog-card {
+    width: 45%;
+    max-width: 20rem;
+    padding: 0.9rem;
+  }
+
+  .image-catalog {
+    height: 8rem;
+  }
+
+  .card-title {
+    font-size: 1.05rem;
+  }
+
+  /* CTA Button */
+  .cta-home {
+    min-width: 11rem;
+    min-height: 3.2rem;
+  }
+
+  .cta-home a {
+    padding: 1rem 2.5rem;
+    font-size: 1rem;
+  }
+
+  /* Portfolio Section */
+  .portfolio-container {
+    width: 100%;
+  }
+
+  .portf-container {
+    gap: 2.5rem;
+  }
+
+  .img-container2 {
+    height: 14rem;
+  }
+
+  .title-dec-span {
+    font-size: 1.35rem;
+  }
+
+  .title-dec-span2 {
+    font-size: 1.1rem;
+  }
+
+  .desc-prtfolio {
+    font-size: 0.95rem;
+  }
+
+  /* Reviews Section */
+  .review-container {
+    justify-content: center;
+  }
+
+  .container-review {
+    width: 45%;
+    min-width: 16rem;
+    padding: 2.5rem;
+  }
+
+  .dec-review {
+    font-size: 0.95rem;
+  }
+
+  .name-review {
+    font-size: 1.2rem;
+  }
+
+  /* FAQ Section */
+  .faq-container {
+    padding: 0rem 3rem;
+    gap: 4rem;
+  }
+
+  .title-contain {
+    min-width: 350px;
+  }
+
+  .title-faq {
+    font-size: 2.8rem;
+  }
+
+  .desc-contain {
+    font-size: 1.2rem;
+  }
+
+  .question-contain {
+    width: 35rem;
+  }
+
+  .text-faq-card {
+    font-size: 1rem;
+  }
+
+  /* Footer */
+  .footer {
+    gap: 4rem;
+    padding: 2.5rem 2.5rem 3.5rem 2.5rem;
+  }
+
+  .footer-menu {
+    gap: 7rem;
+  }
+
+  .footer-desc {
+    width: 100%;
+    font-size: 1rem;
+  }
+
+  .title-footer {
+    font-size: 1.5rem;
+  }
+
+  .list-footer {
+    font-size: 1rem;
+  }
+}
 /* ============================================================================== */
 /* 3. ABOUT US SECTION */
 /* ============================================================================== */
 
 .abou-us-container {
-    display: flex;
-    flex-direction: row;
-    gap: 6.25rem;
-    align-items: center;
-    justify-content: flex-start;
-    flex-shrink: 0;
-    width: 77.5rem;
-    position: relative;
+  display: flex;
+  flex-direction: row;
+  gap: 6.25rem;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 77.5rem;
+  position: relative;
 }
 .img-container {
-    border-radius: 0.9375rem;
-    align-self: stretch;
-    flex: 1;
-    position: relative;
-    object-fit: cover;
-    
-    transform: scale(1);
-    box-shadow: none;
-    
-    transition: border-radius 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 0.9375rem;
+  align-self: stretch;
+  flex: 1;
+  position: relative;
+  object-fit: cover;
+
+  transform: scale(1);
+  box-shadow: none;
+
+  transition: border-radius 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 .img-container:hover {
-    transform: scale(1.05);
-    border-radius: 0.9425rem;
-    box-shadow: 
-        0rem 0.063125rem 0.18875rem 0rem rgba(0, 0, 0, 0.26),
-        0rem 0.314375rem 0.314375rem 0rem rgba(0, 0, 0, 0.23),
-        0rem 0.69125rem 0.44rem 0rem rgba(0, 0, 0, 0.13),
-        0rem 1.256875rem 0.5025rem 0rem rgba(0, 0, 0, 0.04),
-        0rem 1.9475rem 0.565625rem 0rem rgba(0, 0, 0, 0);
+  transform: scale(1.05);
+  border-radius: 0.9425rem;
+  box-shadow: 0rem 0.063125rem 0.18875rem 0rem rgba(0, 0, 0, 0.26),
+    0rem 0.314375rem 0.314375rem 0rem rgba(0, 0, 0, 0.23),
+    0rem 0.69125rem 0.44rem 0rem rgba(0, 0, 0, 0.13),
+    0rem 1.256875rem 0.5025rem 0rem rgba(0, 0, 0, 0.04),
+    0rem 1.9475rem 0.565625rem 0rem rgba(0, 0, 0, 0);
 }
 .dec-about-us {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    align-items: center;
-    justify-content: center;
-    align-self: stretch;
-    flex: 1;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  flex: 1;
+  position: relative;
 }
 .heading-container {
-    color: #000000;
-    text-align: left;
-    font-family: "Plus Jakarta Sans", sans-serif;
-    font-size: 2.5rem;
-    font-weight: 600;
-    position: relative;
-    align-self: stretch;
+  color: #000000;
+  text-align: left;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 2.5rem;
+  font-weight: 600;
+  position: relative;
+  align-self: stretch;
 }
 .dec-container {
-    color: #000000;
-    text-align: justify;
-    font-family: "Plus Jakarta Sans", sans-serif;
-    font-size: 1.2rem;
-    font-weight: 300;
-    position: relative;
-    align-self: stretch;
-    line-height: 1.2;
+  color: #000000;
+  text-align: justify;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.2rem;
+  font-weight: 300;
+  position: relative;
+  align-self: stretch;
+  line-height: 1.2;
 }
 
 /* ============================================================================== */
@@ -127,707 +296,1181 @@ html, body {
 /* ============================================================================== */
 
 .catalog-container {
-    display: flex;
-    flex-direction: column;
-    gap: 3.125rem;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    width: 77.5rem;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 3.125rem;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 77.5rem;
+  position: relative;
 }
 .heading-container-2 {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    align-items: flex-start;
-    justify-content: flex-start;
-    flex-shrink: 0;
-    width: 61.375rem;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 61.375rem;
+  position: relative;
 }
 .heading-container2 {
-    color: #000000;
-    text-align: center;
-    font-family: "Plus Jakarta Sans", sans-serif;
-    font-size: 2.5rem;
-    font-weight: 700;
-    position: relative;
-    align-self: stretch;
+  color: #000000;
+  text-align: center;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  position: relative;
+  align-self: stretch;
 }
 .dec-container2 {
-    color: #000000;
-    text-align: center;
-    font-family: "Plus Jakarta Sans", sans-serif;
-    font-size: 1.3rem;
-    font-weight: 300;
-    position: relative;
-    align-self: stretch;
+  color: #000000;
+  text-align: center;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.3rem;
+  font-weight: 300;
+  position: relative;
+  align-self: stretch;
 }
 .card-container {
-    display: flex;
-    flex-direction: row;
-    align-items: stretch; /* Mengganti center ke stretch untuk tinggi card yang sama */
-    justify-content: space-between;
-    align-self: stretch;
-    flex-shrink: 0;
-    position: relative;
-    gap: 1.5rem; /* Menambahkan gap yang wajar */
+  display: flex;
+  flex-direction: row;
+  align-items: stretch; /* Mengganti center ke stretch untuk tinggi card yang sama */
+  justify-content: space-between;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+  gap: 1.5rem; /* Menambahkan gap yang wajar */
 }
 
 /* --- Card Item Styling Kustom (Diambil dari katalog.css) --- */
 .catalog-card {
-    background: var(--putih);
-    border-radius: 0.756875rem !important;
-    border-style: solid;
-    border-color: var(--hitam);
-    /* Border tebal (3px) */
-    border-width: 0.1875rem; 
-    padding: 1.009375rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.009375rem;
-    align-items: center;
-    justify-content: space-between;
-    position: relative;
-    overflow: hidden;
-    
-    flex: 1; /* Penting untuk flex row agar 4 card sejajar */
-    width: 25%; /* Memastikan pembagian ruang yang adil */
-    box-shadow: none; 
-    transform: translateY(0); 
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  background: var(--putih);
+  border-radius: 0.756875rem !important;
+  border-style: solid;
+  border-color: var(--hitam);
+  /* Border tebal (3px) */
+  border-width: 0.1875rem;
+  padding: 1.009375rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.009375rem;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+
+  flex: 1; /* Penting untuk flex row agar 4 card sejajar */
+  width: 25%; /* Memastikan pembagian ruang yang adil */
+  box-shadow: none;
+  transform: translateY(0);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
 .catalog-card:hover {
-    box-shadow:
-        0rem 0.0625rem 0.1875rem 0rem rgba(0, 0, 0, 0.26),
-        0rem 0.3125rem 0.3125rem 0rem rgba(0, 0, 0, 0.23),
-        0rem 0.6875rem 0.4375rem 0rem rgba(0, 0, 0, 0.13),
-        0rem 1.25rem 0.5rem 0rem rgba(0, 0, 0, 0.04),
-        0rem 1.9375rem 0.5625rem 0rem rgba(0, 0, 0, 0);
-    transform: translateY(-5px);
+  box-shadow: 0rem 0.0625rem 0.1875rem 0rem rgba(0, 0, 0, 0.26),
+    0rem 0.3125rem 0.3125rem 0rem rgba(0, 0, 0, 0.23),
+    0rem 0.6875rem 0.4375rem 0rem rgba(0, 0, 0, 0.13),
+    0rem 1.25rem 0.5rem 0rem rgba(0, 0, 0, 0.04),
+    0rem 1.9375rem 0.5625rem 0rem rgba(0, 0, 0, 0);
+  transform: translateY(-5px);
 }
 
 .image-catalog {
-    align-self: stretch;
-    border-radius: 15px;
-    flex-shrink: 0;
-    height: 8.75rem;
-    position: relative;
-    object-fit: contain; /* Menggunakan contain agar gambar tidak terpotong */
+  align-self: stretch;
+  border-radius: 15px;
+  flex-shrink: 0;
+  height: 8.75rem;
+  position: relative;
+  object-fit: contain; /* Menggunakan contain agar gambar tidak terpotong */
 }
 
 /* Penyesuaian Bootstrap Card Structure */
 .catalog-card.card .card-body {
-    padding: 0 !important;
-    display: flex;
-    flex-direction: column;
-    gap: 1.009375rem;
-    align-items: flex-start;
-    justify-content: flex-start;
-    align-self: stretch;
-    flex-grow: 1; 
+  padding: 0 !important;
+  display: flex;
+  flex-direction: column;
+  gap: 1.009375rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-grow: 1;
 }
 .catalog-card.card .card-title {
-    color: var(--hitam);
-    text-align: center;
-    font-size: 1.15rem;
-    font-weight: 600;
-    position: relative;
-    align-self: stretch;
-    margin-bottom: 0 !important;
+  color: var(--hitam);
+  text-align: center;
+  font-size: 1.15rem;
+  font-weight: 600;
+  position: relative;
+  align-self: stretch;
+  margin-bottom: 0 !important;
 }
 .catalog-card.card .list-group {
-    list-style-type: disc;
-    padding-left: 20px;
-    margin-bottom: 0 !important;
-    border-top: none !important;
-    color: var(--hitam);
-    font-size: 1rem;
-    font-weight: 400;
+  list-style-type: disc;
+  padding-left: 20px;
+  margin-bottom: 0 !important;
+  border-top: none !important;
+  color: var(--hitam);
+  font-size: 1rem;
+  font-weight: 400;
 }
 .catalog-card.card .list-group-item {
-    border: none;
-    padding: 0;
-    background-color: transparent;
-    line-height: 1.5;
-    text-align: left;
+  border: none;
+  padding: 0;
+  background-color: transparent;
+  line-height: 1.5;
+  text-align: left;
 }
 .catalog-card .cta-card {
-    background: var(--hijau);
-    border-radius: 0.756875rem;
-    padding: 1rem 1.51375rem;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    align-self: stretch;
-    flex-shrink: 0;
-    position: relative;
-    cursor: pointer;
-    text-decoration: none;
+  background: var(--hijau);
+  border-radius: 0.756875rem;
+  padding: 1rem 1.51375rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+  cursor: pointer;
+  text-decoration: none;
 }
 .catalog-card .cta-card .view-details {
-    color: #ffffff;
-    font-size: 0.9082030653953552rem;
-    font-weight: 500;
+  color: #ffffff;
+  font-size: 0.9082030653953552rem;
+  font-weight: 500;
 }
 
-
 .cta-home {
-    background: var(--hijau);
-    border-radius: 0.75rem;
-    /* Gunakan min-width dan min-height untuk menjaga ukuran minimum */
-    min-width: 12rem; 
-    min-height: 3.5rem;
-    padding: 0; /* Hapus padding di sini, biarkan <a> yang mengatur */
-    display: flex;
-    flex-direction: row;
-    gap: 0.625rem;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    position: relative; /* Penting untuk posisi <a> */
-    box-shadow: var(
-        --efek-shadow-tipis-box-shadow,
-        0rem 0.0625rem 0.1875rem 0rem rgba(0, 0, 0, 0.26),
-        0rem 0.3125rem 0.3125rem 0rem rgba(0, 0, 0, 0.23),
-        0rem 0.6875rem 0.4375rem 0rem rgba(0, 0, 0, 0.13),
-        0rem 1.25rem 0.5rem 0rem rgba(0, 0, 0, 0.04),
-        0rem 1.9375rem 0.5625rem 0rem rgba(0, 0, 0, 0)
-    );
-    cursor: pointer;
-    
-    pointer-events: auto;
+  background: var(--hijau);
+  border-radius: 0.75rem;
+  /* Gunakan min-width dan min-height untuk menjaga ukuran minimum */
+  min-width: 12rem;
+  min-height: 3.5rem;
+  padding: 0; /* Hapus padding di sini, biarkan <a> yang mengatur */
+  display: flex;
+  flex-direction: row;
+  gap: 0.625rem;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative; /* Penting untuk posisi <a> */
+  box-shadow: var(
+    --efek-shadow-tipis-box-shadow,
+    0rem 0.0625rem 0.1875rem 0rem rgba(0, 0, 0, 0.26),
+    0rem 0.3125rem 0.3125rem 0rem rgba(0, 0, 0, 0.23),
+    0rem 0.6875rem 0.4375rem 0rem rgba(0, 0, 0, 0.13),
+    0rem 1.25rem 0.5rem 0rem rgba(0, 0, 0, 0.04),
+    0rem 1.9375rem 0.5625rem 0rem rgba(0, 0, 0, 0)
+  );
+  cursor: pointer;
+
+  pointer-events: auto;
 }
 
 /* PERBAIKAN: Target tag <a> di dalam .cta-home */
 .cta-home a {
-    text-decoration: none;
-    color: var(--putih);
-    
-    /* Atur <a> agar mengisi seluruh ruang .cta-home, sambil membawa styling padding */
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* Pindahkan padding asli .cta-home ke <a> */
-    padding: 1.25rem 3rem; 
+  text-decoration: none;
+  color: var(--putih);
+
+  /* Atur <a> agar mengisi seluruh ruang .cta-home, sambil membawa styling padding */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* Pindahkan padding asli .cta-home ke <a> */
+  padding: 1.25rem 3rem;
 }
 
 /* Perbaikan 3: Pastikan teks view-more tidak terpengaruh oleh posisi absolut <a> */
 .view-more {
-    color: var(--putih);
-    text-align: center;
-    font-family: "Plus Jakarta Sans", sans-serif;
-    font-size: 1.1rem;
-    font-weight: 500;
-    position: relative;
-    cursor: pointer;
-    z-index: 2; /* Taruh di atas elemen <a> */
+  color: var(--putih);
+  text-align: center;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 500;
+  position: relative;
+  cursor: pointer;
+  z-index: 2; /* Taruh di atas elemen <a> */
 }
-
 
 /* ============================================================================== */
 /* 5. PORTFOLIO SECTION */
 /* ============================================================================== */
 
 .portfolio-container {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    width: 77.5rem;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 77.5rem;
+  position: relative;
 }
 .portf-container {
-    display: flex;
-    flex-direction: row;
-    gap: 3.125rem;
-    align-items: flex-start;
-    justify-content: flex-start;
-    align-self: stretch;
-    flex-shrink: 0;
-    /* Hapus height tetap untuk fleksibilitas: height: 30.375rem; */
-    height: auto;
-    position: relative;
+  display: flex;
+  flex-direction: row;
+  gap: 3.125rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  /* Hapus height tetap untuk fleksibilitas: height: 30.375rem; */
+  height: auto;
+  position: relative;
 }
 .card-portf {
-    display: flex;
-    flex-direction: column;
-    gap: 1.875rem;
-    align-items: flex-end;
-    justify-content: flex-start;
-    align-self: stretch;
-    flex: 1;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.875rem;
+  align-items: flex-end;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex: 1;
+  position: relative;
 }
 .img-container2 {
-    border-radius: 0.9375rem;
-    align-self: stretch;
-    flex-shrink: 0;
-    height: 15.625rem;
-    position: relative;
-    object-fit: cover;
+  border-radius: 0.9375rem;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 15.625rem;
+  position: relative;
+  object-fit: cover;
 }
 .dec-portf {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    align-items: flex-start;
-    justify-content: flex-start;
-    align-self: stretch;
-    flex: 1;
-    position: relative;
-    padding: 0 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex: 1;
+  position: relative;
+  padding: 0 1em;
 }
 .title-dec {
-    color: #000000;
-    text-align: left; /* Diubah dari center ke left agar lebih sesuai dengan dec-portf */
-    position: relative;
-    align-self: stretch;
+  color: #000000;
+  text-align: left; /* Diubah dari center ke left agar lebih sesuai dengan dec-portf */
+  position: relative;
+  align-self: stretch;
 }
 .title-dec-span {
-    font-family: "Plus Jakarta Sans", sans-serif;
-    font-size: 22px;
-    font-weight: 600;
-    line-height: 1.2;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.2;
 }
 .title-dec-span2 {
-    font-family: "Plus Jakarta Sans", sans-serif;
-    font-size: 18px;
-    font-weight: 500;
-    line-height: 1.2;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.2;
 }
 .desc-prtfolio {
-    color: #000000;
-    text-align: justify;
-    font-family: "Plus Jakarta Sans", sans-serif;
-    font-size: 1rem;
-    font-weight: 400;
-    position: relative;
-    align-self: stretch;
-    flex: 1;
+  color: #000000;
+  text-align: justify;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  position: relative;
+  align-self: stretch;
+  flex: 1;
 }
 .desc-prtfolio-span2 {
-    list-style-type: circle;
-    padding-left: 1em;
-    font-family: "Plus Jakarta Sans", sans-serif;
-    line-height: 1.5;
+  list-style-type: circle;
+  padding-left: 1em;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  line-height: 1.5;
 }
 .desc-prtfolio-span2 li span {
-    font-family: "Plus Jakarta Sans", sans-serif;
-    font-weight: 700;
-    line-height: 1.5;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 700;
+  line-height: 1.5;
 }
-
 
 /* ============================================================================== */
 /* 6. REVIEWS SECTION */
 /* ============================================================================== */
 
 .reviews-bigcontain {
-    display: flex;
-    flex-direction: column;
-    gap: 3.125rem;
-    align-items: center;
-    justify-content: center;
-    align-self: stretch;
-    flex-shrink: 0;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 3.125rem;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
 }
 .review-container {
-    display: flex;
-    flex-direction: row;
-    gap: 3.125rem;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    align-content: center;
-    align-self: stretch;
-    flex-shrink: 0;
-    /* Hapus height tetap agar fleksibel: height: 61.504375rem; */
-    height: auto;
-    position: relative;
+  display: flex;
+  flex-direction: row;
+  gap: 3.125rem;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-content: center;
+  align-self: stretch;
+  flex-shrink: 0;
+  /* Hapus height tetap agar fleksibel: height: 61.504375rem; */
+  height: auto;
+  position: relative;
 }
 .container-review {
-    background: var(--putih, #ffffff);
-    border-radius: 0.9375rem;
-    border-style: solid;
-    border-color: #000000;
-    padding: 3.125rem;
-    display: flex;
-    flex-direction: row;
-    align-self: stretch;
-    gap: 0.625rem;
-    align-items: center;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-    align-content: center;
-    flex-shrink: 0;
-    width: 25rem; /* Atur lebar agar 3 kolom per baris (sekitar 380px) */
-    position: relative;
-    overflow: hidden;
+  background: var(--putih, #ffffff);
+  border-radius: 0.9375rem;
+  border-style: solid;
+  border-color: #000000;
+  padding: 3.125rem;
+  display: flex;
+  flex-direction: row;
+  align-self: stretch;
+  gap: 0.625rem;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  align-content: center;
+  flex-shrink: 0;
+  width: 25rem; /* Atur lebar agar 3 kolom per baris (sekitar 380px) */
+  position: relative;
+  overflow: hidden;
 
-    border-width: 0.1875rem;
-    box-shadow: none;
-    transform: scale(1);
+  border-width: 0.1875rem;
+  box-shadow: none;
+  transform: scale(1);
 
-    transition: border-width 0.8s ease, box-shadow 0.8s ease, transform 0.8s ease;
+  transition: border-width 0.8s ease, box-shadow 0.8s ease, transform 0.8s ease;
 }
 
 .container-review:hover {
-    border-width: 0.125rem;
-    box-shadow: var(
-        --efek-shadow-tipis-box-shadow,
-        0rem 0.0625rem 0.1875rem 0rem rgba(0, 0, 0, 0.26),
-        0rem 0.3125rem 0.3125rem 0rem rgba(0, 0, 0, 0.23),
-        0rem 0.6875rem 0.4375rem 0rem rgba(0, 0, 0, 0.13),
-        0rem 1.25rem 0.5rem 0rem rgba(0, 0, 0, 0.04),
-        0rem 1.9375rem 0.5625rem 0rem rgba(0, 0, 0, 0)
-    );
-    transform: scale(1.02);
-    cursor: pointer;
+  border-width: 0.125rem;
+  box-shadow: var(
+    --efek-shadow-tipis-box-shadow,
+    0rem 0.0625rem 0.1875rem 0rem rgba(0, 0, 0, 0.26),
+    0rem 0.3125rem 0.3125rem 0rem rgba(0, 0, 0, 0.23),
+    0rem 0.6875rem 0.4375rem 0rem rgba(0, 0, 0, 0.13),
+    0rem 1.25rem 0.5rem 0rem rgba(0, 0, 0, 0.04),
+    0rem 1.9375rem 0.5625rem 0rem rgba(0, 0, 0, 0)
+  );
+  transform: scale(1.02);
+  cursor: pointer;
 }
 .sec-container {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    width: 100%; /* Memastikan konten review memenuhi lebar card */
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 100%; /* Memastikan konten review memenuhi lebar card */
+  position: relative;
 }
 /* Styling umum untuk ikon review (menghindari duplikasi) */
-.icon-review, .icon-review2, .icon-review3, .icon-review4, .icon-review5, .icon-review6 {
-    flex-shrink: 0;
-    width: 6.25rem;
-    height: 6.25rem;
-    border-radius: 10rem;
-    position: relative;
-    object-fit: cover;
+.icon-review,
+.icon-review2,
+.icon-review3,
+.icon-review4,
+.icon-review5,
+.icon-review6 {
+  flex-shrink: 0;
+  width: 6.25rem;
+  height: 6.25rem;
+  border-radius: 10rem;
+  position: relative;
+  object-fit: cover;
 }
 .rating-review {
-    display: flex;
-    flex-direction: column;
-    gap: 1.875rem;
-    align-items: center;
-    justify-content: flex-start;
-    align-self: stretch;
-    flex-shrink: 0;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.875rem;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
 }
 /* Styling umum untuk rating (menghindari duplikasi) */
-.rating-contain, .rating-contain2, .rating-contain3, .rating-contain4, .rating-contain5, .rating-contain6 {
-    display: flex;
-    flex-direction: row;
-    gap: 0.23125rem;
-    align-items: center;
-    justify-content: center;
-    align-self: stretch;
-    flex-shrink: 0;
-    height: auto;
-    position: relative;
-    overflow: visible;
+.rating-contain,
+.rating-contain2,
+.rating-contain3,
+.rating-contain4,
+.rating-contain5,
+.rating-contain6 {
+  display: flex;
+  flex-direction: row;
+  gap: 0.23125rem;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: auto;
+  position: relative;
+  overflow: visible;
 }
 .thr-container {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    align-items: center;
-    justify-content: flex-start;
-    align-self: stretch;
-    flex-shrink: 0;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
 }
 .dec-review {
-    color: #000000;
-    text-align: center;
-    font-family: "Plus Jakarta Sans", sans-serif;
-    font-size: 1rem;
-    font-weight: 400;
-    position: relative;
-    align-self: stretch;
-    line-height: 1.2;
+  color: #000000;
+  text-align: center;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  position: relative;
+  align-self: stretch;
+  line-height: 1.2;
 }
 .name-review {
-    color: #000000;
-    text-align: center;
-    font-family: "Plus Jakarta Sans", sans-serif;
-    font-size: 1.375rem;
-    font-weight: 500;
-    position: relative;
-    align-self: stretch;
+  color: #000000;
+  text-align: center;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.375rem;
+  font-weight: 500;
+  position: relative;
+  align-self: stretch;
 }
-
 
 /* ============================================================================== */
 /* 7. FAQ SECTION */
 /* ============================================================================== */
 
 .faq-container {
-    padding: 0rem 5.6rem;
-    display: flex;
-    flex-direction: row;
-    gap: 6rem;
-    align-items: center; /* Diubah ke flex-start agar judul tetap di atas */
-    justify-content: flex-start;
-    align-self: stretch;
-    flex-shrink: 0;
-    position: relative;
+  padding: 0rem 5.6rem;
+  display: flex;
+  flex-direction: row;
+  gap: 6rem;
+  align-items: center; /* Diubah ke flex-start agar judul tetap di atas */
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
 }
 .title-contain {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    min-width: 500px;
-    align-self: stretch;
-    align-items: flex-start; /* Diubah ke flex-start */
-    justify-content: center; /* Diubah ke flex-start */
-    flex: 1;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  min-width: 500px;
+  align-self: stretch;
+  align-items: flex-start; /* Diubah ke flex-start */
+  justify-content: center; /* Diubah ke flex-start */
+  flex: 1;
+  position: relative;
 }
 .title-faq {
-    color: #000000;
-    text-align: left;
-    font-family: "Plus Jakarta Sans", sans-serif; /* Menggunakan font utama */
-    font-size: 3.2rem; /* Disesuaikan agar tidak terlalu besar */
-    font-weight: 700; /* Disesuaikan agar lebih menonjol */
-    position: relative;
-    align-self: stretch;
+  color: #000000;
+  text-align: left;
+  font-family: "Plus Jakarta Sans", sans-serif; /* Menggunakan font utama */
+  font-size: 3.2rem; /* Disesuaikan agar tidak terlalu besar */
+  font-weight: 700; /* Disesuaikan agar lebih menonjol */
+  position: relative;
+  align-self: stretch;
 }
 .desc-contain {
-    color: #000000;
-    text-align: justify;
-    font-family: "Plus Jakarta Sans", sans-serif; /* Menggunakan font utama */
-    font-size: 1.375rem;
-    font-weight: 400;
-    position: relative;
-    align-self: stretch;
-    height: auto; /* Hapus height tetap */
+  color: #000000;
+  text-align: justify;
+  font-family: "Plus Jakarta Sans", sans-serif; /* Menggunakan font utama */
+  font-size: 1.375rem;
+  font-weight: 400;
+  position: relative;
+  align-self: stretch;
+  height: auto; /* Hapus height tetap */
 }
 .question-contain {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    align-items: flex-start;
-    justify-content: flex-start;
-    flex-shrink: 0;
-    width: 40rem; /* Diperlebar agar lebih proporsional */
-    position: relative;
-    flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 40rem; /* Diperlebar agar lebih proporsional */
+  position: relative;
+  flex-grow: 1;
 }
 .faq-item {
-    border-radius: 0.9375rem;
-    border-style: solid;
-    border-color: #a0a0a0ff;
-    border-width: 0.125rem;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    overflow: hidden; 
-    align-self: stretch;
-    cursor: pointer;
+  border-radius: 0.9375rem;
+  border-style: solid;
+  border-color: #a0a0a0ff;
+  border-width: 0.125rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  align-self: stretch;
+  cursor: pointer;
 }
 .dropdown-faq {
-    background: var(--putih, #ffffff);
-    padding: 1.25rem 1.875rem;
-    display: flex;
-    flex-direction: row;
-    gap: 1.25rem;
-    align-items: center;
-    justify-content: space-between;
-    align-self: stretch;
-    flex-shrink: 0;
-    position: relative;
-    border-bottom: 0rem solid #000000; 
-    transition: border-bottom 0.3s ease;
+  background: var(--putih, #ffffff);
+  padding: 1.25rem 1.875rem;
+  display: flex;
+  flex-direction: row;
+  gap: 1.25rem;
+  align-items: center;
+  justify-content: space-between;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+  border-bottom: 0rem solid #000000;
+  transition: border-bottom 0.3s ease;
 }
 .faq-item.active .dropdown-faq {
-    border-bottom: 0.0625rem solid #000000; 
+  border-bottom: 0.0625rem solid #000000;
 }
 .faq-answer-content {
-    background: var(--putih, #ffffff);
-    padding: 0 1.875rem; 
-    
-    max-height: 0; 
-    overflow: hidden;
-    transition: max-height 0.8s ease-out, padding 0.8s ease-out; 
+  background: var(--putih, #ffffff);
+  padding: 0 1.875rem;
+
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.8s ease-out, padding 0.8s ease-out;
 }
 .faq-answer-text {
-    color: var(--hitam, #000000);
-    text-align: justify;
-    font-family: "Plus Jakarta Sans", sans-serif; /* Menggunakan font utama */
-    font-size: 1.125rem;
-    font-weight: 400;
-    padding: 0;
+  color: var(--hitam, #000000);
+  text-align: justify;
+  font-family: "Plus Jakarta Sans", sans-serif; /* Menggunakan font utama */
+  font-size: 1.125rem;
+  font-weight: 400;
+  padding: 0;
 }
 
 .faq-item.active .faq-answer-content {
-    max-height: 500px;
-    padding: 1.25rem 1.875rem 1.25rem 1.875rem;
+  max-height: 500px;
+  padding: 1.25rem 1.875rem 1.25rem 1.875rem;
 }
 .text-faq-card {
-    color: var(--hitam, #000000);
-    text-align: justified;
-    font-family: "Plus Jakarta Sans", sans-serif;
-    font-size: 1.125rem;
-    font-weight: 500;
-    position: relative;
-    flex: 1;
+  color: var(--hitam, #000000);
+  text-align: justified;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.125rem;
+  font-weight: 500;
+  position: relative;
+  flex: 1;
 }
 .ep--arrow-down-bold {
-    display: inline-block;
-    width: 13px;
-    height: 25px;
-    --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Cpath fill='%23000' d='M104.704 338.752a64 64 0 0 1 90.496 0l316.8 316.8l316.8-316.8a64 64 0 0 1 90.496 90.496L557.248 791.296a64 64 0 0 1-90.496 0L104.704 429.248a64 64 0 0 1 0-90.496'/%3E%3C/svg%3E");
-    background-color: currentColor;
-    -webkit-mask-image: var(--svg);
-    mask-image: var(--svg);
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    -webkit-mask-size: 100% 100%;
-    mask-size: 100% 100%;
+  display: inline-block;
+  width: 13px;
+  height: 25px;
+  --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Cpath fill='%23000' d='M104.704 338.752a64 64 0 0 1 90.496 0l316.8 316.8l316.8-316.8a64 64 0 0 1 90.496 90.496L557.248 791.296a64 64 0 0 1-90.496 0L104.704 429.248a64 64 0 0 1 0-90.496'/%3E%3C/svg%3E");
+  background-color: currentColor;
+  -webkit-mask-image: var(--svg);
+  mask-image: var(--svg);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
 }
 .arrow-icon {
-    transition: transform 0.5s ease;
-    transform: rotate(0deg);
+  transition: transform 0.5s ease;
+  transform: rotate(0deg);
 }
 .faq-item.active .arrow-icon {
-    transform: rotate(180deg);
+  transform: rotate(180deg);
 }
-
 
 /* ============================================================================== */
 /* 8. FOOTER STYLING */
 /* ============================================================================== */
 
 .footer {
-    background: #ffffff;
-    border-style: solid;
-    border-color: #000000;
-    border-width: 0.03125rem 0rem 0rem 0rem;
-    padding: 3.125rem 3.75rem 5rem 3.75rem;
-    display: flex;
-    flex-direction: row;
-    gap: 6.0625rem;
-    align-items: flex-start;
-    justify-content: space-evenly;
-    align-self: stretch;
-    flex-shrink: 0;
-    position: relative;
-    margin-top: 5rem;
+  background: #ffffff;
+  border-style: solid;
+  border-color: #000000;
+  border-width: 0.03125rem 0rem 0rem 0rem;
+  padding: 3.125rem 3.75rem 5rem 3.75rem;
+  display: flex;
+  flex-direction: row;
+  gap: 6.0625rem;
+  align-items: flex-start;
+  justify-content: space-evenly;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+  margin-top: 5rem;
 }
 .footer-info {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    align-items: flex-start;
-    justify-content: flex-start;
-    align-self: stretch;
-    flex-shrink: 0;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
 }
-.footer-content { /* Class ini digunakan untuk membungkus footer-info dan copyright di HTML */
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem; /* Tambahkan gap agar ada jarak antara info dan copyright */
-    align-items: flex-start;
-    justify-content: flex-start;
-    flex-shrink: 0;
-    position: relative;
+.footer-content {
+  /* Class ini digunakan untuk membungkus footer-info dan copyright di HTML */
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem; /* Tambahkan gap agar ada jarak antara info dan copyright */
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
 }
 .footer-logo-text {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    align-items: flex-start;
-    justify-content: flex-start;
-    align-self: stretch;
-    flex-shrink: 0;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
 }
 .green-ray-logo-12 {
-    flex-shrink: 0;
-    width: 14.6675rem;
-    height: 3.121875rem;
-    position: relative;
-    object-fit: cover;
-    aspect-ratio: 234.68/49.95;
+  flex-shrink: 0;
+  width: 14.6675rem;
+  height: 3.121875rem;
+  position: relative;
+  object-fit: cover;
+  aspect-ratio: 234.68/49.95;
 }
 .footer-desc {
-    color: #000000;
-    text-align: justify;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 1.125rem;
-    font-weight: 400;
-    position: relative;
-    width: 18.25rem;
+  color: #000000;
+  text-align: justify;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.125rem;
+  font-weight: 400;
+  position: relative;
+  width: 18.25rem;
 }
 .copyright {
-    color: #000000;
-    text-align: left;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 0.875rem;
-    font-weight: 400;
-    position: relative;
-    align-self: stretch;
+  color: #000000;
+  text-align: left;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 400;
+  position: relative;
+  align-self: stretch;
 }
 .footer-menu {
-    display: flex;
-    flex-direction: row;
-    gap: 10rem;
-    align-items: flex-start;
-    justify-content: flex-start;
-    align-self: stretch;
-    flex-shrink: 0;
-    position: relative;
+  display: flex;
+  flex-direction: row;
+  gap: 10rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
 }
 .menu-container-footer {
-    display: flex;
-    flex-direction: column;
-    gap: 3.125rem;
-    align-items: flex-start;
-    justify-content: flex-start;
-    flex-shrink: 0;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 3.125rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
 }
 .title-footer {
-    color: #000000;
-    text-align: left;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 1.7rem;
-    font-weight: 500;
-    position: relative;
+  color: #000000;
+  text-align: left;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.7rem;
+  font-weight: 500;
+  position: relative;
 }
 .dec-container-footer {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    align-items: flex-start;
-    justify-content: center;
-    align-self: stretch;
-    flex-shrink: 0;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  align-items: flex-start;
+  justify-content: center;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
 }
 .list-footer {
-    color: #000000;
-    text-align: center;
-    font-size: 1.125rem;
-    position: relative;
-    cursor: pointer;
+  color: #000000;
+  text-align: center;
+  font-size: 1.125rem;
+  position: relative;
+  cursor: pointer;
 }
 .list-footer a {
-    text-decoration: none;
-    color: black;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-weight: 400;
+  text-decoration: none;
+  color: black;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 400;
+}
+
+/* ========================= */
+/* 1) Tablet: <= 1024px      */
+/* ========================= */
+@media (max-width: 1024px) {
+  .frame-136 {
+    gap: 6rem;
+    margin: 2rem auto 0 auto;
+    padding: 0 2rem;
+  }
+
+  .frame-138 {
+    gap: 3rem;
+    padding: 0 2rem;
+  }
+
+  /* ABOUT US */
+  .abou-us-container {
+    width: 100%;
+    flex-direction: column;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .heading-container {
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  .dec-container {
+    font-size: 1.05rem;
+    text-align: justify;
+  }
+
+  /* CATALOG SECTION */
+  .catalog-container {
+    width: 100%;
+    gap: 2.5rem;
+  }
+
+  .heading-container-2 {
+    width: 100%;
+    align-items: center;
+    text-align: center;
+  }
+
+  .heading-container2 {
+    font-size: 2.1rem;
+  }
+
+  .dec-container2 {
+    font-size: 1.1rem;
+  }
+
+  .card-container {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .catalog-card {
+    width: 48%;
+    max-width: 22rem;
+  }
+
+  /* PORTFOLIO SECTION */
+  .portfolio-container {
+    width: 100%;
+  }
+
+  .portf-container {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .card-portf {
+    width: 100%;
+  }
+
+  /* REVIEWS SECTION */
+  .review-container {
+    justify-content: center;
+  }
+
+  .container-review {
+    width: 48%;
+    min-width: 18rem;
+    padding: 2rem;
+  }
+
+  /* FAQ SECTION */
+  .faq-container {
+    padding: 0 2.5rem;
+    gap: 3rem;
+    flex-direction: column;
+  }
+
+  .title-contain {
+    min-width: auto;
+    width: 100%;
+  }
+
+  .question-contain {
+    width: 100%;
+  }
+
+  /* FOOTER */
+  .footer {
+    gap: 3rem;
+    padding: 2.5rem 2rem 3rem 2rem;
+  }
+
+  .footer-menu {
+    gap: 4rem;
+  }
+}
+
+/* ========================= */
+/* 2) Mobile: <= 768px       */
+/* ========================= */
+@media (max-width: 768px) {
+  .frame-136 {
+    gap: 4rem;
+    margin-top: 1.5rem;
+    padding: 0 1.5rem;
+  }
+
+  .frame-138 {
+    gap: 2.5rem;
+    padding: 0 1.5rem;
+  }
+
+  .head-img {
+    margin-bottom: 2rem;
+  }
+
+  /* ABOUT US */
+  .abou-us-container {
+    gap: 2rem;
+  }
+
+  .heading-container {
+    font-size: 1.8rem;
+  }
+
+  .dec-container {
+    font-size: 1rem;
+  }
+
+  /* CATALOG */
+  .catalog-container {
+    gap: 2rem;
+  }
+
+  .heading-container2 {
+    font-size: 1.8rem;
+  }
+
+  .dec-container2 {
+    font-size: 1rem;
+  }
+
+  .card-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .catalog-card {
+    width: 100%;
+    max-width: 22rem;
+  }
+
+  .image-catalog {
+    height: 7.5rem;
+  }
+
+  /* CTA BUTTON HOME */
+  .cta-home {
+    min-width: 10rem;
+    min-height: 3rem;
+  }
+
+  /* PORTFOLIO */
+  .img-container2 {
+    height: 12rem;
+  }
+
+  .title-dec-span {
+    font-size: 1.1rem;
+  }
+
+  .title-dec-span2 {
+    font-size: 1rem;
+  }
+
+  /* REVIEWS */
+  .container-review {
+    width: 100%;
+    padding: 1.75rem;
+  }
+
+  .dec-review {
+    font-size: 0.95rem;
+  }
+
+  .name-review {
+    font-size: 1.1rem;
+  }
+
+  /* FAQ */
+  .faq-container {
+    padding: 0 1.5rem;
+  }
+
+  .title-faq {
+    font-size: 2.2rem;
+  }
+
+  .desc-contain {
+    font-size: 1.05rem;
+  }
+
+  .faq-answer-text {
+    font-size: 1rem;
+  }
+
+  /* FOOTER */
+  .footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2rem;
+    padding: 2rem 1.5rem 2.5rem 1.5rem;
+  }
+
+  .footer-content {
+    width: 100%;
+  }
+
+  .footer-menu {
+    flex-direction: column;
+    gap: 2rem;
+    width: 100%;
+  }
+
+  .footer-desc {
+    width: 100%;
+  }
+}
+
+/* ========================= */
+/* 3) Small mobile: <= 480px */
+/* ========================= */
+@media (max-width: 480px) {
+  html,
+  body {
+    font-size: 14px;
+  }
+
+  .frame-136 {
+    padding: 0 1rem;
+  }
+
+  .frame-138 {
+    padding: 0 1rem;
+  }
+
+  .heading-container,
+  .heading-container2,
+  .title-faq {
+    font-size: 1.6rem;
+  }
+
+  .dec-container,
+  .dec-container2,
+  .desc-contain,
+  .faq-answer-text,
+  .desc-prtfolio,
+  .dec-review {
+    font-size: 0.95rem;
+  }
+
+  .container-review {
+    padding: 1.5rem;
+  }
+
+  .faq-container {
+    padding: 0 1rem;
+  }
+
+  .footer {
+    padding: 1.75rem 1rem 2rem 1rem;
+  }
+}
+
+/* ============================================================================== */
+/* RESPONSIVE: 1240px dan di bawah (Desktop Medium)                              */
+/* ============================================================================== */
+
+@media (max-width: 1240px) {
+  /* Wrapper umum */
+  .frame-136 {
+    gap: 7rem;
+    margin: 2rem auto 0 auto;
+    padding: 0 2rem;
+  }
+
+  .frame-138 {
+    gap: 3rem;
+    padding: 0 2rem;
+  }
+
+  .head-img {
+    max-width: 1000px;
+    margin-bottom: 2.5rem;
+  }
+
+  /* ABOUT US */
+  .abou-us-container {
+    width: 100%;
+    gap: 3.5rem;
+  }
+
+  .heading-container {
+    font-size: 2.1rem;
+  }
+
+  .dec-container {
+    font-size: 1.05rem;
+  }
+
+  /* CATALOG SECTION */
+  .catalog-container {
+    width: 100%;
+    gap: 2.5rem;
+  }
+
+  .heading-container-2 {
+    width: 100%;
+    align-items: center;
+    text-align: center;
+  }
+
+  .heading-container2 {
+    font-size: 2rem;
+  }
+
+  .dec-container2 {
+    font-size: 1.05rem;
+  }
+
+  .card-container {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.25rem;
+  }
+
+  .catalog-card {
+    width: 48%;
+    max-width: 19rem;
+    padding: 0.9rem;
+  }
+
+  .image-catalog {
+    height: 7.8rem;
+  }
+
+  /* CTA home */
+  .cta-home {
+    min-width: 10.5rem;
+    min-height: 3.1rem;
+  }
+
+  .cta-home a {
+    padding: 0.9rem 2.2rem;
+    font-size: 0.98rem;
+  }
+
+  /* PORTFOLIO SECTION */
+  .portfolio-container {
+    width: 100%;
+  }
+
+  .portf-container {
+    gap: 2.5rem;
+  }
+
+  .img-container2 {
+    height: 13.5rem;
+  }
+
+  .title-dec-span {
+    font-size: 1.25rem;
+  }
+
+  .title-dec-span2 {
+    font-size: 1.05rem;
+  }
+
+  .desc-prtfolio {
+    font-size: 0.95rem;
+  }
+
+  /* REVIEWS SECTION */
+  .review-container {
+    justify-content: center;
+  }
+
+  .container-review {
+    width: 48%;
+    min-width: 17rem;
+    padding: 2.25rem;
+  }
+
+  .dec-review {
+    font-size: 0.95rem;
+  }
+
+  .name-review {
+    font-size: 1.15rem;
+  }
+
+  /* FAQ SECTION */
+  .faq-container {
+    padding: 0 3rem;
+    gap: 3.5rem;
+  }
+
+  .title-contain {
+    min-width: 320px;
+  }
+
+  .title-faq {
+    font-size: 2.5rem;
+  }
+
+  .desc-contain {
+    font-size: 1.1rem;
+  }
+
+  .question-contain {
+    width: 33rem;
+  }
+
+  .text-faq-card {
+    font-size: 1rem;
+  }
+
+  /* FOOTER */
+  .footer {
+    padding: 2.5rem 2.5rem 3.25rem 2.5rem;
+    gap: 4rem;
+  }
+
+  .footer-menu {
+    gap: 6rem;
+  }
+
+  .footer-desc {
+    width: 100%;
+    font-size: 1rem;
+  }
+
+  .title-footer {
+    font-size: 1.5rem;
+  }
+
+  .list-footer {
+    font-size: 1rem;
+  }
 }

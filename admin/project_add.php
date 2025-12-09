@@ -4,9 +4,9 @@ include '../koneksi.php';
 
 $alert_message = "";
 
-// ======================================================
-// FUNGSI HELPER BARU
-// ======================================================
+
+
+
 /**
  * Mengubah teks dengan format baris baru menjadi daftar HTML.
  * @param string $plain_text Teks dari textarea (cth: "Poin 1\nPoin 2")
@@ -14,25 +14,25 @@ $alert_message = "";
  */
 function convertNewlinesToHtmlList($plain_text)
 {
-    // 1. Ganti semua jenis newline (Windows \r\n, Mac \r) menjadi \n
+    
     $normalized_text = str_replace(["\r\n", "\r"], "\n", $plain_text);
 
-    // 2. Pecah teks berdasarkan \n
+    
     $lines = explode("\n", $normalized_text);
 
-    // 3. Hapus baris kosong dan spasi
+    
     $lines = array_filter(array_map('trim', $lines));
 
     if (empty($lines)) {
         return '';
     }
 
-    // 4. Bungkus dengan <li>
+    
     $li_items = array_map(function ($line) {
-        return '<li class="mb-2">' . htmlspecialchars($line) . '</li>'; // mb-2 untuk spasi
+        return '<li class="mb-2">' . htmlspecialchars($line) . '</li>'; 
     }, $lines);
 
-    // 5. Gabungkan <li> saja
+    
     return implode('', $li_items);
 }
 
@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $hero_image_path_db = "";
 
     if (isset($_FILES['hero_image_file']) && $_FILES['hero_image_file']['error'] == 0) {
-        // ... (Logika upload file kamu tetap sama) ...
+        
         $target_dir = "../uploads/projects/";
         $file_name = uniqid() . '-' . basename($_FILES["hero_image_file"]["name"]);
         $target_file = $target_dir . $file_name;
@@ -77,13 +77,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $overview_details = $_POST['overview_details'];
     $overview_generation = $_POST['overview_generation'];
 
-    // ======================================================
-    // PERUBAHAN DI SINI: Konversi teks biasa ke HTML
-    // ======================================================
+    
+    
+    
     $challenges_html = convertNewlinesToHtmlList($_POST['challenges_html']);
     $solutions_html = convertNewlinesToHtmlList($_POST['solutions_html']);
     $impact_html = convertNewlinesToHtmlList($_POST['impact_html']);
-    // ======================================================
+    
 
     $tech_specs_json = $_POST['tech_specs_json'];
 
@@ -114,7 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $overview_generation,
             $challenges_html,
             $solutions_html,
-            $impact_html, // Variabel yang sudah dikonversi
+            $impact_html, 
             $tech_specs_json
         );
 
@@ -298,7 +298,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <script>
         document.addEventListener('DOMContentLoaded', function () {
 
-            // --- Script Slugify (dari sebelumnya) ---
+            
             const titleInput = document.getElementById('title');
             const slugInput = document.getElementById('slug');
             if (titleInput && slugInput) {
@@ -315,13 +315,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 });
             }
 
-            // --- Script untuk Dynamic Tech Specs (BARU) ---
+            
             const container = document.getElementById('tech-specs-container');
             const addBtn = document.getElementById('add-spec-btn');
             const hiddenInput = document.getElementById('tech_specs_json');
             const form = document.getElementById('project-form');
 
-            // Fungsi untuk membuat baris input baru
+            
             function createSpecRow(label = '', value = '') {
                 const row = document.createElement('div');
                 row.className = 'row gx-2 mb-2 dynamic-spec-row';
@@ -340,7 +340,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                 `;
 
-                // Tambahkan event listener untuk tombol hapus
+                
                 row.querySelector('.remove-spec-btn').addEventListener('click', function () {
                     row.remove();
                 });
@@ -348,14 +348,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 container.appendChild(row);
             }
 
-            // Event listener untuk tombol "Tambah Spesifikasi"
+            
             if (addBtn) {
                 addBtn.addEventListener('click', function () {
-                    createSpecRow(); // Tambah baris kosong
+                    createSpecRow(); 
                 });
             }
 
-            // Event listener untuk form submit
+            
             if (form) {
                 form.addEventListener('submit', function (e) {
                     const specs = [];
@@ -365,7 +365,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         const label = row.querySelector('.spec-label').value.trim();
                         const value = row.querySelector('.spec-value').value.trim();
 
-                        if (label && value) { // Hanya simpan jika keduanya diisi
+                        if (label && value) { 
                             specs.push({
                                 label: label,
                                 value: value
@@ -373,7 +373,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         }
                     });
 
-                    // Ubah array objek menjadi string JSON dan masukkan ke input tersembunyi
+                    
                     hiddenInput.value = JSON.stringify(specs);
                 });
             }

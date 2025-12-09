@@ -1,8 +1,8 @@
 <?php
-// WAJIB ADA DI BARIS PALING ATAS
+
 session_start();
 
-// 1. Hubungkan ke database
+
 include '../koneksi.php';
 
 $page_data = [];
@@ -10,7 +10,7 @@ $res_page = $koneksi->query("SELECT * FROM page_portfolio WHERE id = 1");
 if ($res_page && $res_page->num_rows > 0) {
     $page_data = $res_page->fetch_assoc();
 } else {
-    // Default jika DB kosong
+    
     $page_data = [
         'header_title' => 'Our Projects',
         'header_desc' => 'Welcome to our portfolio gallery.',
@@ -19,23 +19,23 @@ if ($res_page && $res_page->num_rows > 0) {
     ];
 }
 
-// Fungsi Helper Gambar
+
 function fixPath($path)
 {
     return !empty($path) ? str_replace('../', '', $path) : 'img/placeholder.png';
 }
 
-// 2. Cek status login untuk header
+
 $is_logged_in = isset($_SESSION['user_id']);
 $user_name = '';
-$profile_pic = '../img/default-profile.png'; // Path default
+$profile_pic = '../img/default-profile.png'; 
 
 if ($is_logged_in) {
     $user_name = $_SESSION['user_name'] ?? 'User';
     $profile_pic = $_SESSION['user_profile_pic'] ?? '../img/default-profile.png';
 }
 
-// 3. Ambil data Klien untuk Marquee
+
 $clients = [];
 $result_clients = $koneksi->query("SELECT * FROM clients");
 if ($result_clients) {
@@ -44,7 +44,7 @@ if ($result_clients) {
     }
 }
 
-// 4. Ambil data Proyek untuk Card
+
 $projects = [];
 $sql_projects = "SELECT id, title, subtitle_goal, category, stat_capacity, hero_image_url, overview_details, slug 
                  FROM projects 
@@ -77,14 +77,14 @@ if ($result_projects) {
 
     <style>
         :root {
-            /* Colors */
+           
             --putih: #ffffff;
             --hitam: #000000;
             --hijau: #136000;
             --hijau-gelap: #072300;
 
-            /* Fonts */
-            /* Effects */
+           
+           
             --efek-shadow-tipis-box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.26),
                 0px 5px 5px 0px rgba(0, 0, 0, 0.23), 0px 11px 7px 0px rgba(0, 0, 0, 0.13),
                 0px 20px 8px 0px rgba(0, 0, 0, 0.04), 0px 31px 9px 0px rgba(0, 0, 0, 0);
@@ -121,24 +121,24 @@ if ($result_projects) {
         .portfolio-header-wrapper {
             width: 100%;
             max-width: 1280px;
-            /* Batas lebar maksimal container gambar */
+           
             margin: 0 auto 40px auto;
-            /* Tengah horizontal & jarak bawah */
+           
             text-align: center;
-            /* Agar gambar di tengah jika lebih kecil */
+           
         }
 
         .portfolio-header-img {
             width: 100%;
-            /* Lebar menyesuaikan container */
+           
             height: auto;
-            /* Tinggi otomatis proporsional */
+           
             max-height: 350px;
-            /* BATAS MAKSIMAL TINGGI */
+           
             object-fit: cover;
-            /* Potong rapi jika rasio beda */
+           
             object-position: center;
-            /* Fokus tengah */
+           
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
@@ -286,19 +286,19 @@ if ($result_projects) {
         crossorigin="anonymous"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Logika Marquee (tetap sama)
+            
             const marquee = document.getElementById('client-marquee');
             if (marquee) {
                 const marqueeContent = marquee.querySelector('.marquee-content');
-                // Cek jika marqueeContent ADA dan punya anak (data dari PHP)
+                
                 if (marqueeContent && marqueeContent.children.length > 0) {
-                    // Tidak perlu duplikasi lagi karena PHP sudah melakukannya
+                    
                 }
             }
 
-            // ============================================
-            // JAVASCRIPT UNTUK PROFILE DROPDOWN (BARU)
-            // ============================================
+            
+            
+            
         });
     </script>
 </body>

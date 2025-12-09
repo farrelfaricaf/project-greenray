@@ -1,14 +1,10 @@
-/* ============================================================================== */
-/* 1. GLOBAL RESET & FONT */
-/* ============================================================================== */
 html,
 body {
-  /* Reset dasar */
   margin: 0;
   padding: 0;
   overflow-x: hidden;
   min-height: 100vh;
-  /* Font family utama */
+
   font-family: "Plus Jakarta Sans", sans-serif !important;
 }
 .main-container,
@@ -28,7 +24,6 @@ body {
   padding-bottom: 1rem;
 }
 
-/* Penyesuaian jarak antar baris Bootstrap */
 .portfolio-content .row {
   margin-bottom: 2rem !important;
 }
@@ -73,7 +68,6 @@ body {
   margin-top: 4rem !important;
 }
 
-/* --- Logos Client - MARQUEE --- */
 .client-marquee-container {
   width: 100%;
   overflow: hidden;
@@ -119,7 +113,6 @@ body {
   opacity: 1;
 }
 
-/* Keyframes untuk animasi gulir */
 @keyframes marquee-scroll {
   0% {
     transform: translateX(0%);
@@ -129,7 +122,6 @@ body {
   }
 }
 
-/* --- Project List --- */
 .project-details {
   list-style: disc;
   padding-left: 25px;
@@ -146,12 +138,7 @@ body {
   object-fit: cover;
 }
 
-/* ============================================================================== */
-/* 4. RESPONSIVE STYLING */
-/* ============================================================================== */
-
 @media (max-width: 992px) {
-  /* Header Responsive */
   .header-wrapper {
     padding: 0rem 1.5rem;
     gap: 2rem;
@@ -174,7 +161,6 @@ body {
     margin-top: 1rem;
   }
 
-  /* Portfolio Content Responsive */
   .client-logo {
     max-height: 40px;
     max-width: 120px;
@@ -187,7 +173,6 @@ body {
     height: 250px;
   }
 
-  /* Footer Responsive */
   .footer {
     flex-direction: column;
     align-items: center;
@@ -216,9 +201,6 @@ body {
   }
 }
 
-/* ============================================================================== */
-/* 5. FOOTER STYLING */
-/* ============================================================================== */
 .footer {
   background: #ffffff;
   border-style: solid;
@@ -246,10 +228,9 @@ body {
   position: relative;
 }
 .footer-content {
-  /* Class ini digunakan untuk membungkus footer-info dan copyright di HTML */
   display: flex;
   flex-direction: column;
-  gap: 1.25rem; /* Tambahkan gap agar ada jarak antara info dan copyright */
+  gap: 1.25rem;
   align-items: flex-start;
   justify-content: flex-start;
   flex-shrink: 0;

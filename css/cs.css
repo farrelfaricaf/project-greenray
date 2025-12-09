@@ -1,173 +1,181 @@
-/* GLOBAL RESET & FONT */
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
   min-height: 100vh;
-  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-family: "Plus Jakarta Sans", sans-serif !important;
 }
 .main-container,
 .main-container * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
-/* ============================================================================== */
-/* HEADER STYLING (Diambil dari calc.css) */
-/* ============================================================================== */
 .main-container {
-    background: #ffffff;
-    min-height: 100vh;
-    position: relative;
+  background: #ffffff;
+  min-height: 100vh;
+  position: relative;
 }
 
 .header-wrapper {
-    padding: 0rem 6.25rem 0rem 6.25rem; 
-    display: flex;
-    flex-direction: column;
-    gap: 4.0rem; /* GAP yang ditingkatkan */
-    align-items: center;
-    justify-content: flex-start;
-    max-width: 90rem;
-    width: 100%;
-    margin: 3.125rem auto 0 auto;
-    position: relative;
-    z-index: 30;
+  padding: 0rem 6.25rem 0rem 6.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+  align-items: center;
+  justify-content: flex-start;
+  max-width: 90rem;
+  width: 100%;
+  margin: 3.125rem auto 0 auto;
+  position: relative;
+  z-index: 30;
 }
 
 .hero {
-    background: #ffffff;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    align-self: stretch;
-    flex-shrink: 0;
-    position: relative;
+  background: #ffffff;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
 }
 
 .green-ray-logo-1 {
-    flex-shrink: 0;
-    width: 12.6425rem;
-    height: 2.69125rem;
-    position: relative;
-    object-fit: cover;
-    aspect-ratio: 202.28/43.06;
+  flex-shrink: 0;
+  width: 12.6425rem;
+  height: 2.69125rem;
+  position: relative;
+  object-fit: cover;
+  aspect-ratio: 202.28/43.06;
 }
 
 .header-menu {
-    padding: 0.800625rem;
-    display: flex;
-    flex-direction: row;
-    gap: 2.5rem; 
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    position: relative;
+  padding: 0.800625rem;
+  display: flex;
+  flex-direction: row;
+  gap: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
 }
 
 .header-actions {
-    display: flex;
-    flex-direction: row;
-    gap: 1.5rem; 
-    align-items: center;
-    justify-content: flex-start;
-    flex-shrink: 0;
-    position: relative;
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
 }
 
-/* Menu Links */
-.non-active, .active-head {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 1.125rem;
-    font-weight: 500;
-    position: relative;
-    cursor: pointer;
+.non-active,
+.active-head {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.125rem;
+  font-weight: 500;
+  position: relative;
+  cursor: pointer;
 }
-.active-head { font-weight: 700; }
-.non-active:hover { font-weight: 700; }
-.active-head a, .non-active a { text-decoration: none; color: black; }
+.active-head {
+  font-weight: 700;
+}
+.non-active:hover {
+  font-weight: 700;
+}
+.active-head a,
+.non-active a {
+  text-decoration: none;
+  color: black;
+}
 
-
-/* Tombol Login */
 .login-btn {
-    background: #136000;
-    border-radius: 9999px; 
-    padding: 0.91375rem 1.218125rem 0.91375rem 1.218125rem;
-    display: flex;
-    flex-direction: row;
-    gap: 0.50125rem;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-    text-decoration: none;
+  background: #136000;
+  border-radius: 9999px;
+  padding: 0.91375rem 1.218125rem 0.91375rem 1.218125rem;
+  display: flex;
+  flex-direction: row;
+  gap: 0.50125rem;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  text-decoration: none;
 }
-.login-btn:hover { transform: scale(1.03); }
-.login-text { color: #ffffff; font-weight: 600; font-size: 0.9rem; font-family: 'Plus Jakarta Sans', sans-serif;}
+.login-btn:hover {
+  transform: scale(1.03);
+}
+.login-text {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
 
-/* Tombol Contact Us */
 .contact-us-btn {
-    background: #ffffff;
-    border-radius: 9999px; 
-    border: 0.07875rem solid #000000;
-    padding: 0.91375rem 1.218125rem 0.91375rem 1.218125rem;
-    display: flex;
-    flex-direction: row;
-    gap: 0.589375rem;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-    text-decoration: none; 
+  background: #ffffff;
+  border-radius: 9999px;
+  border: 0.07875rem solid #000000;
+  padding: 0.91375rem 1.218125rem 0.91375rem 1.218125rem;
+  display: flex;
+  flex-direction: row;
+  gap: 0.589375rem;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  text-decoration: none;
 }
-.contact-us-btn:hover { transform: scale(1.03); }
-.contact-us-text { color: #000000; font-weight: 600; font-size: 0.9rem; }
+.contact-us-btn:hover {
+  transform: scale(1.03);
+}
+.contact-us-text {
+  color: #000000;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
 
-
-/* Ikon Helper */
-.akar-icons--door{ 
-    display: inline-block;
-    width: 18px;
-    height: 18px;
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'%3E%3Cpath d='M5 2h11a3 3 0 0 1 3 3v14a1 1 0 0 1-1 1h-3'/%3E%3Cpath d='m5 2l7.588 1.518A3 3 0 0 1 15 6.459V20.78a1 1 0 0 1-1.196.98l-7.196-1.438A2 2 0 0 1 5 18.36zm7 10v2'/%3E%3C/g%3E%3C/svg%3E");
+.akar-icons--door {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'%3E%3Cpath d='M5 2h11a3 3 0 0 1 3 3v14a1 1 0 0 1-1 1h-3'/%3E%3Cpath d='m5 2l7.588 1.518A3 3 0 0 1 15 6.459V20.78a1 1 0 0 1-1.196.98l-7.196-1.438A2 2 0 0 1 5 18.36zm7 10v2'/%3E%3C/g%3E%3C/svg%3E");
 }
 
 .mynaui--arrow-right {
-    display: inline-block;
-    width: 18px;
-    height: 18px;
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%23000' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4.5 12h15m0 0l-5.625-6m5.625 6l-5.625 6'/%3E%3C/svg%3E");
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%23000' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4.5 12h15m0 0l-5.625-6m5.625 6l-5.625 6'/%3E%3C/svg%3E");
 }
 
-
-/* ============================================================================== */
-/* CONTENT & FORM STYLING */
-/* ============================================================================== */
-
 .container {
-    padding-top: 5rem !important;
-    padding-bottom: 44px !important;
-    
-    max-width: 90rem; 
-    margin-left: auto;
-    margin-right: auto;
+  padding-top: 5rem !important;
+  padding-bottom: 44px !important;
+
+  max-width: 90rem;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .contact-row {
-    display: flex; 
-    justify-content: space-evenly !important; 
-    margin-left: 0;
-    margin-right: 0;
-    gap: 2rem; 
+  display: flex;
+  justify-content: space-evenly !important;
+  margin-left: 0;
+  margin-right: 0;
+  gap: 2rem;
 }
 
 .contact-form-title {
   color: #136000;
-  font-size: 3rem; 
+  font-size: 3rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
 }
@@ -180,9 +188,9 @@ html, body {
 }
 
 .form-label {
-    font-weight: 600;
-    font-size: 1rem;
-    color: #000;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #000;
 }
 
 .form-control {
@@ -200,13 +208,13 @@ html, body {
 }
 
 .form-control:valid {
-    border-color: #146b00 !important;
-    background-image: none !important;
+  border-color: #146b00 !important;
+  background-image: none !important;
 }
 
 .form-control:invalid {
-    border-color: #dc3545 !important;
-    background-image: none !important;
+  border-color: #dc3545 !important;
+  background-image: none !important;
 }
 
 .btn-success {
@@ -223,30 +231,39 @@ html, body {
   background-color: #0e5000;
 }
 
-.contact-wa-btn, .contact-email-btn {
-    background-color: #43a047;
-    border: none;
-    color: white;
-    font-weight: 600;
-    border-radius: 9999px; 
-    padding: 15px 30px;
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
+.contact-wa-btn,
+.contact-email-btn {
+  background-color: #43a047;
+  border: none;
+  color: white;
+  font-weight: 600;
+  border-radius: 9999px;
+  padding: 15px 30px;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
 }
 
 .contact-email-btn {
-    background-color: #136000;
+  background-color: #136000;
 }
 
-.contact-wa-btn:hover { background-color: #2e7d32; }
-.contact-email-btn:hover { background-color: #0e5000; }
+.contact-wa-btn:hover {
+  background-color: #2e7d32;
+}
+.contact-email-btn:hover {
+  background-color: #0e5000;
+}
 
-.contact-separator { font-size: 1.5rem; font-weight: 500; color: #444; }
+.contact-separator {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #444;
+}
 .mdi--whatsapp {
   display: inline-block;
   width: 2rem;
@@ -264,128 +281,124 @@ html, body {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23fff' d='M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2zm-2 0l-8 5l-8-5zm0 12H4V8l8 5l8-5z'/%3E%3C/svg%3E");
 }
 
-
-/* ============================================================================== */
-/* FOOTER STYLING (Diambil dari calc.css) */
-/* ============================================================================== */
 .footer {
-    background: #ffffff;
-    border-style: solid;
-    border-color: #000000;
-    border-width: 0.03125rem 0rem 0rem 0rem;
-    padding: 3.125rem 3.75rem 5rem 3.75rem;
-    display: flex;
-    flex-direction: row;
-    gap: 6.0625rem;
-    align-items: flex-start;
-    justify-content: space-evenly;
-    align-self: stretch;
-    flex-shrink: 0;
-    position: relative;
-    margin-top: 5rem;
+  background: #ffffff;
+  border-style: solid;
+  border-color: #000000;
+  border-width: 0.03125rem 0rem 0rem 0rem;
+  padding: 3.125rem 3.75rem 5rem 3.75rem;
+  display: flex;
+  flex-direction: row;
+  gap: 6.0625rem;
+  align-items: flex-start;
+  justify-content: space-evenly;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+  margin-top: 5rem;
 }
 .footer-info {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    align-items: flex-start;
-    justify-content: flex-start;
-    align-self: stretch;
-    flex-shrink: 0;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
 }
-.footer-content { 
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem; 
-    align-items: flex-start;
-    justify-content: flex-start;
-    flex-shrink: 0;
-    position: relative;
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
 }
 .footer-logo-text {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    align-items: flex-start;
-    justify-content: flex-start;
-    align-self: stretch;
-    flex-shrink: 0;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
 }
 .green-ray-logo-12 {
-    flex-shrink: 0;
-    width: 14.6675rem;
-    height: 3.121875rem;
-    position: relative;
-    object-fit: cover;
-    aspect-ratio: 234.68/49.95;
+  flex-shrink: 0;
+  width: 14.6675rem;
+  height: 3.121875rem;
+  position: relative;
+  object-fit: cover;
+  aspect-ratio: 234.68/49.95;
 }
 .footer-desc {
-    color: #000000;
-    text-align: justify;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 1.125rem;
-    font-weight: 400;
-    position: relative;
-    width: 18.25rem;
+  color: #000000;
+  text-align: justify;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.125rem;
+  font-weight: 400;
+  position: relative;
+  width: 18.25rem;
 }
 .copyright {
-    color: #000000;
-    text-align: left;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 0.875rem;
-    font-weight: 400;
-    position: relative;
-    align-self: stretch;
+  color: #000000;
+  text-align: left;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 400;
+  position: relative;
+  align-self: stretch;
 }
 .footer-menu {
-    display: flex;
-    flex-direction: row;
-    gap: 10rem;
-    align-items: flex-start;
-    justify-content: flex-start;
-    align-self: stretch;
-    flex-shrink: 0;
-    position: relative;
+  display: flex;
+  flex-direction: row;
+  gap: 10rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
 }
 .menu-container-footer {
-    display: flex;
-    flex-direction: column;
-    gap: 3.125rem;
-    align-items: flex-start;
-    justify-content: flex-start;
-    flex-shrink: 0;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 3.125rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
 }
 .title-footer {
-    color: #000000;
-    text-align: left;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 1.7rem;
-    font-weight: 500;
-    position: relative;
+  color: #000000;
+  text-align: left;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.7rem;
+  font-weight: 500;
+  position: relative;
 }
 .dec-container-footer {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    align-items: flex-start;
-    justify-content: center;
-    align-self: stretch;
-    flex-shrink: 0;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  align-items: flex-start;
+  justify-content: center;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
 }
 .list-footer {
-    color: #000000;
-    text-align: center;
-    font-size: 1.125rem;
-    position: relative;
-    cursor: pointer;
+  color: #000000;
+  text-align: center;
+  font-size: 1.125rem;
+  position: relative;
+  cursor: pointer;
 }
 .list-footer a {
-    text-decoration: none;
-    color: black;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-weight: 400;
+  text-decoration: none;
+  color: black;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 400;
 }

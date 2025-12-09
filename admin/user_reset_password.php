@@ -14,7 +14,7 @@ if (isset($_GET['id'])) {
     $result = $stmt_select->get_result();
     if ($result->num_rows > 0) {
         $user_email = $result->fetch_assoc()['email'];
-        $new_password_plain = bin2hex(random_bytes(4)); 
+        $new_password_plain = bin2hex(random_bytes(4));
         $hashed_password = password_hash($new_password_plain, PASSWORD_BCRYPT);
         $stmt_update = $koneksi->prepare("UPDATE users SET password = ? WHERE id = ?");
         $stmt_update->bind_param("si", $hashed_password, $user_id);
@@ -36,6 +36,7 @@ if (isset($_GET['id'])) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -45,12 +46,13 @@ if (isset($_GET['id'])) {
     <link href="css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
+
 <body class="sb-nav-fixed">
     <?php include 'includes/navbar.php'; ?>
 
     <div id="layoutSidenav">
-        
-    <?php include 'includes/sidebar.php'; ?>
+
+        <?php include 'includes/sidebar.php'; ?>
 
         <div id="layoutSidenav_content">
             <main>
@@ -88,7 +90,7 @@ if (isset($_GET['id'])) {
                     </a>
                 </div>
             </main>
-            
+
             <?php include 'includes/footer.php'; ?>
         </div>
     </div>
@@ -96,4 +98,5 @@ if (isset($_GET['id'])) {
         crossorigin="anonymous"></script>
     <script src="js/scripts.js"></script>
 </body>
+
 </html>

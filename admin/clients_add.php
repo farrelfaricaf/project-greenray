@@ -1,29 +1,29 @@
 <?php
-// 1. Hubungkan ke database
+
 include '../koneksi.php';
 include 'auth_check.php';
 
-$alert_message = ""; // Variabel untuk menyimpan pesan notifikasi
+$alert_message = ""; 
 
-// 2. Logika untuk memproses form saat disubmit
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // --- AWAL LOGIKA UPLOAD FILE ---
-    $logo_path_db = ""; // Path yang akan disimpan ke DB
+    
+    $logo_path_db = ""; 
 
-    // Cek apakah file di-upload tanpa error
+    
     if (isset($_FILES['logo_file']) && $_FILES['logo_file']['error'] == 0) {
 
-        $target_dir = "../uploads/clients/"; // Folder tujuan
+        $target_dir = "../uploads/clients/"; 
         $file_name = uniqid() . '-' . basename($_FILES["logo_file"]["name"]);
         $target_file = $target_dir . $file_name;
         $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
-        // Validasi sederhana (cek apakah ini gambar)
+        
         $check = getimagesize($_FILES["logo_file"]["tmp_name"]);
         if ($check !== false) {
             if (move_uploaded_file($_FILES["logo_file"]["tmp_name"], $target_file)) {
-                $logo_path_db = "uploads/clients/" . $file_name; // Path relatif dari root
+                $logo_path_db = "uploads/clients/" . $file_name; 
             } else {
                 $alert_message = '<div class="alert alert-danger">Error: Gagal memindahkan file yang di-upload.</div>';
             }
@@ -33,19 +33,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $alert_message = '<div class="alert alert-danger">Error: Logo klien wajib di-upload.</div>';
     }
-    // --- AKHIR LOGIKA UPLOAD FILE ---
+    
 
-    // Ambil data form lainnya
+    
     $name = $_POST['name'];
 
-    // Hanya jalankan query INSERT jika alert masih kosong (upload berhasil)
+    
     if (empty($alert_message)) {
 
-        // 3. Buat query INSERT
+        
         $stmt = $koneksi->prepare("INSERT INTO clients (name, logo_url) VALUES (?, ?)");
         $stmt->bind_param("ss", $name, $logo_path_db);
 
-        // 4. Eksekusi query
+        
         if ($stmt->execute()) {
             $alert_message = '<div class="alert alert-success alert-dismissible fade show" role="alert">
                                 <strong>Sukses!</strong> Klien baru berhasil ditambahkan.

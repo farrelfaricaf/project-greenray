@@ -1,39 +1,39 @@
 <?php
-// WAJIB ADA DI BARIS PALING ATAS
+
 session_start();
 
-// 1. Hubungkan ke database
+
 include '../koneksi.php';
 
-$error_message = ""; // Variabel untuk menyimpan pesan error
+$error_message = ""; 
 
-// 2. Cek jika request-nya adalah POST
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-  // --- PERBAIKAN "SUPER-AMAN" ADA DI SINI ---
-  // Cek dulu apakah 'email' dan 'password' ADA di data POST
+  
+  
   if (isset($_POST['email']) && isset($_POST['password'])) {
 
     $email = $koneksi->real_escape_string($_POST['email']);
     $password = $_POST['password'];
 
-    // 4. Ambil data user dari DB
+    
     $sql_select = "SELECT id, first_name, email, password, profile_image_url FROM users WHERE email = '$email'";
     $result = $koneksi->query($sql_select);
 
     if ($result && $result->num_rows == 1) {
       $user = $result->fetch_assoc();
 
-      // 5. Verifikasi password
+      
       if (password_verify($password, $user['password'])) {
 
-        // 6. SUKSES! Simpan data user ke SESSION
+        
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_name'] = $user['first_name'];
         $_SESSION['user_email'] = $user['email'];
         $_SESSION['user_profile_pic'] = $user['profile_image_url'];
 
-        // Arahkan (redirect) ke halaman home
+        
         header("Location: home.php");
         exit;
 
@@ -45,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
   } else {
-    // Ini terjadi jika ada form lain yang submit ke halaman ini tanpa field yang lengkap
+    
     $error_message = "Terjadi kesalahan pada form. Silakan coba lagi.";
   }
 }

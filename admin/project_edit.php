@@ -6,7 +6,7 @@ $alert_message = "";
 $project_id = null;
 $project = [];
 
-// Fungsi helper (sudah benar dari sebelumnya)
+
 function convertNewlinesToHtmlList($plain_text)
 {
     $normalized_text = str_replace(["\r\n", "\r"], "\n", $plain_text);
@@ -31,13 +31,13 @@ function convertHtmlListToNewlines($html)
     return trim($text);
 }
 
-// Logika POST (Update data)
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $current_hero_image_path = $_POST['current_hero_image'];
     $hero_image_path_db = $current_hero_image_path;
 
     if (isset($_FILES['hero_image_file']) && $_FILES['hero_image_file']['error'] == 0 && $_FILES['hero_image_file']['size'] > 0) {
-        // ... (Logika upload file kamu sudah benar) ...
+        
         $target_dir = "../uploads/projects/";
         $file_name = uniqid() . '-' . basename($_FILES["hero_image_file"]["name"]);
         $target_file = $target_dir . $file_name;
@@ -73,7 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $solutions_html = convertNewlinesToHtmlList($_POST['solutions_html']);
     $impact_html = convertNewlinesToHtmlList($_POST['impact_html']);
 
-    // AMBIL JSON DARI HIDDEN INPUT
+    
     $tech_specs_json = $_POST['tech_specs_json'];
 
     if (empty($alert_message)) {
@@ -101,7 +101,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $challenges_html,
             $solutions_html,
             $impact_html,
-            $tech_specs_json, // Data JSON dari hidden input
+            $tech_specs_json, 
             $project_id
         );
         if ($stmt_update->execute()) {
@@ -113,7 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// Logika GET (Ambil data untuk ditampilkan)
+
 if ($_SERVER["REQUEST_METHOD"] != "POST") {
     if (isset($_GET['id'])) {
         $project_id = $_GET['id'];
@@ -133,7 +133,7 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") {
     }
 }
 
-// Ambil ulang data setelah POST
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && $project_id && empty($project)) {
     $stmt_select = $koneksi->prepare("SELECT * FROM projects WHERE id = ?");
     $stmt_select->bind_param("i", $project_id);
@@ -318,12 +318,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $project_id && empty($project)) {
     <script src="js/scripts.js"></script>
 
     <script>
-        // Masukkan data JSON dari PHP ke variabel JavaScript
+        
         const existingSpecs = <?php echo !empty($project['tech_specs_json']) ? $project['tech_specs_json'] : '[]'; ?>;
 
         document.addEventListener('DOMContentLoaded', function () {
 
-            // --- Script Slugify (dari sebelumnya) ---
+            
             const titleInput = document.getElementById('title');
             const slugInput = document.getElementById('slug');
             if (titleInput && slugInput) {
@@ -340,7 +340,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $project_id && empty($project)) {
                 });
             }
 
-            // --- Script untuk Dynamic Tech Specs (BARU) ---
+            
             const container = document.getElementById('tech-specs-container');
             const addBtn = document.getElementById('add-spec-btn');
             const hiddenInput = document.getElementById('tech_specs_json');
@@ -376,17 +376,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $project_id && empty($project)) {
                 });
             }
 
-            // --- BARU: Pre-fill data untuk Halaman Edit ---
+            
             if (existingSpecs && Array.isArray(existingSpecs)) {
                 existingSpecs.forEach(spec => {
-                    // Cek untuk memastikan formatnya benar
+                    
                     if (spec.label && spec.value) {
                         createSpecRow(spec.label, spec.value);
                     }
                 });
             }
 
-            // Event listener untuk form submit
+            
             if (form) {
                 form.addEventListener('submit', function (e) {
                     const specs = [];

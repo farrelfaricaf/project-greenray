@@ -2,7 +2,7 @@
 include "../koneksi.php";
 session_start();
 
-// 1. Cek apakah user sudah login. Jika belum, lempar ke halaman signin.
+
 if (!isset($_SESSION['user_id'])) {
   header("Location: signin.php");
   exit;
@@ -11,7 +11,7 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 $alert_message = "";
 
-// 2. Logika Update Profil (Nama & Email)
+
 if (isset($_POST["save_profile"])) {
   $first_name = $koneksi->real_escape_string($_POST["first_name"]);
   $last_name = $koneksi->real_escape_string($_POST["last_name"]);
@@ -22,7 +22,7 @@ if (isset($_POST["save_profile"])) {
   $alert_message = '<div class="alert alert-success">Profil berhasil diperbarui.</div>';
 }
 
-// 3. Logika Ganti Foto Profil
+
 if (isset($_POST["change_photo"])) {
   if (!empty($_FILES["photo"]["name"])) {
     $target_dir = "../uploads/profiles/";
@@ -52,7 +52,7 @@ if (isset($_POST["change_photo"])) {
   }
 }
 
-// 4. Logika Ganti Password
+
 if (isset($_POST["change_password"])) {
   $pass_old = $_POST['pass_old'];
   $pass_new = $_POST['pass_new'];
@@ -75,7 +75,7 @@ if (isset($_POST["change_password"])) {
   }
 }
 
-// 5. Ambil data terbaru user
+
 $user = $koneksi->query("SELECT * FROM users WHERE id = $user_id")->fetch_assoc();
 $is_logged_in = true;
 $user_name = $user['first_name'];
@@ -100,7 +100,7 @@ $profile_pic = $user['profile_image_url'];
   <link rel="icon" type="image/png" href="../img/favicon.png">
 
   <style>
-    /* CSS untuk Dropdown Profil */
+   
     .profile-dropdown {
       position: relative;
       display: inline-block;
@@ -155,7 +155,7 @@ $profile_pic = $user['profile_image_url'];
       font-weight: 700;
     }
 
-    /* Style Halaman Profil */
+   
     .profile-header {
       background: #f8f9fa;
       border: 1px solid #dee2e6;
@@ -189,13 +189,13 @@ $profile_pic = $user['profile_image_url'];
       cursor: pointer;
     }
 
-    /* Perbaikan Style Menu Kiri */
+   
     .list-group-item-action {
       padding: 1rem 1.5rem !important;
       font-weight: 500;
       margin-bottom: 8px;
       border-width: 2px !important;
-      /* Buat border jadi 2px */
+     
       border-radius: 0.375rem !important;
     }
 
@@ -211,7 +211,7 @@ $profile_pic = $user['profile_image_url'];
       z-index: 2;
     }
 
-    /* Perbaikan Style Riwayat */
+   
     tr[data-bs-toggle="collapse"] {
       cursor: pointer;
     }
@@ -235,54 +235,54 @@ $profile_pic = $user['profile_image_url'];
     .collapse-row strong {
       display: inline-block;
       min-width: 120px;
-      /* Atur lebar minimum label */
+     
     }
 
     .tab-content .card.shadow-sm {
       border: 2px solid #dee2e6 !important;
-      /* Paksa ada border 2px */
+     
     }
 
     tr.clickable button {
       transition: transform 0.35s ease;
       line-height: 1;
       width: 28px;
-      /* Pastikan ukurannya konsisten */
+     
       height: 28px;
     }
 
     tr.clickable[aria-expanded="true"] button {
       transform: rotate(45deg);
-      /* Putar 45 derajat */
+     
     }
 
-    /* 2. Transisi Fade-in + Slide untuk baris detail */
+   
     tr.collapse-row {
-      /* Memastikan transisi berjalan mulus */
+     
       transition: opacity 0.15s ease-out;
     }
 
     tr.collapse-row td {
-      /* ... (style border & padding kamu yang sudah ada) ... */
+     
 
-      /* Mulai dengan transparan */
+     
       opacity: 0;
     }
 
-    /* Saat baris terbuka penuh (class .show ditambahkan Bootstrap), buat jadi terlihat */
+   
     tr.collapse-row.show td {
       opacity: 1;
     }
 
     #nav-history .table thead th {
       font-weight: 700;
-      /* Membuat font tebal */
+     
       color: #212529;
-      /* Menggelapkan warna font (standar Bootstrap) */
+     
       text-transform: uppercase;
-      /* Opsional: Membuatnya huruf kapital */
+     
       font-size: 0.85rem;
-      /* Opsional: Sedikit mengecilkan */
+     
     }
   </style>
 </head>
@@ -302,7 +302,7 @@ $profile_pic = $user['profile_image_url'];
               <img src="../<?php echo htmlspecialchars($user['profile_image_url']); ?>" alt="Foto Profil"
                 class="profile-picture">
               <div class="upload-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                <svg xmlns="https://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                   class="bi bi-camera-fill" viewBox="0 0 16 16">
                   <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
                   <path
@@ -404,7 +404,7 @@ $profile_pic = $user['profile_image_url'];
                     </thead>
                     <tbody>
                       <?php
-                      // Ambil semua data konsultasi
+                      
                       $consult_history = $koneksi->query("SELECT * FROM consultation_requests WHERE user_id=$user_id ORDER BY created_at DESC");
                       if ($consult_history->num_rows > 0) {
                         while ($row = $consult_history->fetch_assoc()) {
@@ -461,7 +461,7 @@ $profile_pic = $user['profile_image_url'];
                             </td>
                           </tr>
                           <?php
-                        } // Akhir while loop
+                        } 
                       } else {
                         echo '<tr><td colspan="5" class="text-center p-4">Anda belum memiliki riwayat konsultasi.</td></tr>';
                       }
@@ -484,7 +484,7 @@ $profile_pic = $user['profile_image_url'];
   <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-      // Logika untuk tetap di tab yang aktif setelah refresh (khususnya setelah ganti password)
+      
       var hash = window.location.hash;
       if (hash) {
         var tab = document.querySelector('a[href="' + hash + '"]');

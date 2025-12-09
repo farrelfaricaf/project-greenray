@@ -1,17 +1,17 @@
 <?php
-// WAJIB ADA DI BARIS PALING ATAS
+
 session_start();
 
-// 1. Hubungkan ke database
+
 include '../koneksi.php';
 
 $error_message = "";
 $success_message = "";
 
-// 2. Cek jika form sudah di-submit (REQUEST_METHOD == "POST")
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-  // Validasi: Pastikan semua data ada sebelum diakses
+  
   if (isset($_POST['first_name'], $_POST['last_name'], $_POST['email'], $_POST['password'], $_POST['confirm_password'])) {
 
     $first_name = $_POST['first_name'];
@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
 
-    // 3. Validasi Sederhana
+    
     if (empty($first_name) || empty($last_name) || empty($email) || empty($password)) {
       $error_message = "Semua field wajib diisi.";
     } elseif (strlen($password) < 8) {
@@ -29,18 +29,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       $error_message = "Password dan Konfirmasi Password tidak cocok.";
     } else {
 
-      // 4. HASH PASSWORD (Sangat Penting untuk Keamanan)
+      
       $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
-      // 5. Simpan ke database (Gunakan prepared statement)
+      
       $stmt = $koneksi->prepare("INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)");
       $stmt->bind_param("ssss", $first_name, $last_name, $email, $hashed_password);
 
       if ($stmt->execute()) {
-        // *** INI ADALAH LOGIKA "PILIHAN A" ***
+        
         $success_message = "Registrasi berhasil! Silakan <a href='signin.php' class='alert-link'>login di sini</a>.";
       } else {
-        if ($koneksi->errno == 1062) { // Error email duplikat
+        if ($koneksi->errno == 1062) { 
           $error_message = "Email ini sudah terdaftar. Silakan gunakan email lain.";
         } else {
           $error_message = "Terjadi kesalahan: " . $stmt->error;

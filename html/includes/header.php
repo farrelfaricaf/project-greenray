@@ -1,5 +1,5 @@
 <?php
-// Ambil nama file saat ini
+
 $page = basename($_SERVER['PHP_SELF']);
 
 if (session_status() == PHP_SESSION_NONE) {
@@ -31,7 +31,7 @@ $profile_pic = $_SESSION['user_profile_pic'] ?? '../img/default-profile.png';
     }
 
     .master-header-wrapper {
-        /* Margin Kiri/Kanan 6.25rem */
+       
         display: flex;
         flex-direction: column;
         gap: 4.0rem;
@@ -48,17 +48,17 @@ $profile_pic = $_SESSION['user_profile_pic'] ?? '../img/default-profile.png';
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
-        /* Lebar maksimum agar tidak terlalu lebar di layar besar */
+       
         max-width: 1440px;
         width: 100%;
         margin: 0 auto;
-        /* Tengah */
+       
         box-sizing: border-box;
     }
 
     .green-ray-logo-nav {
         width: 180px;
-        /* Ukuran logo tetap */
+       
         height: auto;
         object-fit: contain;
     }
@@ -90,7 +90,7 @@ $profile_pic = $_SESSION['user_profile_pic'] ?? '../img/default-profile.png';
         align-items: center;
     }
 
-    /* Tombol Login & Contact */
+   
     .btn-nav-login,
     .btn-nav-contact {
         border-radius: 50px;
@@ -121,7 +121,7 @@ $profile_pic = $_SESSION['user_profile_pic'] ?? '../img/default-profile.png';
         transform: scale(1.05);
     }
 
-    /* Responsive: Sembunyikan menu di HP */
+   
     @media (max-width: 992px) {
         .header-menu-nav {
             display: none;
@@ -193,7 +193,7 @@ $profile_pic = $_SESSION['user_profile_pic'] ?? '../img/default-profile.png';
                 e.preventDefault();
                 profileDropdownMenu.classList.toggle('show');
             });
-            // Klik di luar untuk menutup
+            
             window.addEventListener('click', function (e) {
                 if (profileToggle && !profileToggle.contains(e.target) && !profileDropdownMenu.contains(e.target)) {
                     profileDropdownMenu.classList.remove('show');

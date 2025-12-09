@@ -2,19 +2,19 @@
 session_start();
 include '../koneksi.php';
 
-// 1. Cek Status Login (Header)
+
 $is_logged_in = isset($_SESSION['user_id']);
 $user_name = $_SESSION['user_name'] ?? 'User';
 $profile_pic = $_SESSION['user_profile_pic'] ?? '../img/default-profile.png';
 
-// 2. Cek Slug
+
 if (!isset($_GET['slug'])) {
     die("Error: Produk tidak ditemukan (Slug kosong).");
 }
 
 $slug = $_GET['slug'];
 
-// 3. Ambil Data Produk Utama
+
 $stmt = $koneksi->prepare("SELECT * FROM products WHERE slug = ?");
 $stmt->bind_param("s", $slug);
 $stmt->execute();
@@ -25,7 +25,7 @@ if (!$product) {
     die("Error: Produk tidak ditemukan di database.");
 }
 
-// 4. Ambil Gambar Galeri untuk Carousel
+
 $gallery = [];
 $stmt_gal = $koneksi->prepare("SELECT image_url FROM product_gallery_images WHERE product_id = ?");
 $stmt_gal->bind_param("i", $product['id']);
@@ -35,12 +35,12 @@ while ($row = $res_gal->fetch_assoc()) {
     $gallery[] = $row['image_url'];
 }
 
-// Jika galeri kosong, gunakan gambar utama sebagai fallback agar carousel tidak rusak
+
 if (empty($gallery) && !empty($product['image_url'])) {
     $gallery[] = $product['image_url'];
 }
 
-// 5. Decode JSON Data
+
 $features = json_decode($product['key_features_json'], true) ?? [];
 $specs = json_decode($product['specifications_json'], true) ?? [];
 
@@ -118,12 +118,12 @@ $specs = json_decode($product['specifications_json'], true) ?? [];
             font-weight: 500;
         }
 
-        /* Fix Image Size in Carousel */
+       
         .carousel-item img {
             height: 400px;
-            /* Atur tinggi sesuai keinginan */
+           
             object-fit: contain;
-            /* Agar gambar tidak gepeng */
+           
             background-color: #f5f5f5;
         }
     </style>
@@ -133,42 +133,7 @@ $specs = json_decode($product['specifications_json'], true) ?? [];
     <div class="detail-catalog">
 
         <div class="header-wrapper">
-            <div class="hero">
-                <img class="green-ray-logo-1" src="../img/GreenRay_Logo 1-1.png" />
-                <div class="header-menu">
-                    <div class="non-active"><a href="home.php">Home</a></div>
-                    <div class="non-active"><a href="portofolio.php">Portfolio</a></div>
-                    <div class="non-active"><a href="calc.php">Calculator</a></div>
-                    <div class="active-head"><a href="katalog.php">Catalog</a></div>
-                </div>
-                <div class="header-actions">
-                    <?php if ($is_logged_in): ?>
-                        <div class="profile-dropdown">
-                            <a href="#" class="profile-toggle" id="profileToggle">
-                                <img src="../<?php echo htmlspecialchars($profile_pic); ?>" alt="Profil"
-                                    class="profile-picture-header">
-                            </a>
-                            <div class="dropdown-menu-header" id="profileDropdownMenu">
-                                <div class="dropdown-item-info">Halo,
-                                    <strong><?php echo htmlspecialchars($user_name); ?></strong>!
-                                </div>
-                                <a class="dropdown-item" href="profile.php">Profil Saya</a>
-                                <a class="dropdown-item" href="contact-us.php">Bantuan / Kontak</a>
-                                <a class="dropdown-item" href="logout.php">Logout</a>
-                            </div>
-                        </div>
-                    <?php else: ?>
-                        <a class="login-btn" href="signin.php">
-                            <div class="login-text">Login</div>
-                            <span class="akar-icons--door"></span>
-                        </a>
-                        <a class="contact-us-btn" href="contact-us.php">
-                            <div class="contact-us-text">Contact Us</div>
-                            <span class="mynaui--arrow-right"></span>
-                        </a>
-                    <?php endif; ?>
-                </div>
-            </div>
+            <?php include 'includes/header.php'; ?>
         </div>
 
         <div class="big-container">
@@ -180,7 +145,7 @@ $specs = json_decode($product['specifications_json'], true) ?? [];
                         <div class="contact-us2">Back</div>
                     </a>
 
-                    <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);"
+                    <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='https://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);"
                         aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="katalog.php"
@@ -270,14 +235,14 @@ $specs = json_decode($product['specifications_json'], true) ?? [];
                     <div class="card-container">
                         <?php foreach ($specs as $spec): ?>
                             <?php
-                            // Cek apakah icon berupa Class atau Gambar
+                            
                             $iconHtml = '';
                             if (isset($spec['icon_type']) && $spec['icon_type'] == 'image') {
-                                // Jika gambar upload
+                                
                                 $iconHtml = '<img src="../' . htmlspecialchars($spec['icon_val']) . '" style="width: 48px; height: 48px; object-fit: contain; margin-right: 15px;">';
                             } else {
-                                // Jika icon class (atau format lama/manual)
-                                // Kita ambil valuenya, default fallback ke 'material-symbols--check' jika kosong
+                                
+                                
                                 $val = $spec['icon_val'] ?? ($spec['icon_class'] ?? 'material-symbols--check');
                                 $iconHtml = '<span class="' . htmlspecialchars($val) . '"></span>';
                             }
@@ -317,7 +282,7 @@ $specs = json_decode($product['specifications_json'], true) ?? [];
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
         </script>
     <script>
-        // Script Profile Dropdown
+        
         document.addEventListener('DOMContentLoaded', function () {
             const profileToggle = document.getElementById('profileToggle');
             const profileDropdownMenu = document.getElementById('profileDropdownMenu');

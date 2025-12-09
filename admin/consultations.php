@@ -1,6 +1,6 @@
 <?php
 include '../koneksi.php';
-// Kita perlu panggil auth_check.php di sini juga
+
 include 'auth_check.php';
 ?>
 <!DOCTYPE html>
@@ -66,7 +66,6 @@ include 'auth_check.php';
 
                                         while ($row = $result_consults->fetch_assoc()) {
 
-
                                             $tanggal = date('d M Y, H:i', strtotime($row['created_at']));
 
                                             $penghematan = "Rp " . number_format($row['result_monthly_savings'], 0, ',', '.');
@@ -81,18 +80,11 @@ include 'auth_check.php';
                                             echo '<td>' . htmlspecialchars($row['result_system_capacity_kwp']) . ' kWp</td>';
                                             echo '<td>' . htmlspecialchars($penghematan) . '</td>';
 
-                                            // ===================================
-                                            // PERUBAHAN DI BLOK 'echo' INI
-                                            // ===================================
                                             echo '<td>
                                                 <a href="consultations_view.php?id=' . $row['id'] . '" class="btn btn-info btn-sm">Lihat</a>
                                                 <a href="consultations_edit.php?id=' . $row['id'] . '" class="btn btn-warning btn-sm">Edit</a>
                                                 <a href="consultations_delete.php?id=' . $row['id'] . '" class="btn btn-danger btn-sm" onclick="return confirm(\'Yakin ingin menghapus data konsultasi ini?\');">Hapus</a>
                                             </td>';
-                                            // ===================================
-                                            // AKHIR PERUBAHAN
-                                            // ===================================
-                                    
                                             echo '</tr>';
                                         }
                                     } else {
@@ -105,7 +97,7 @@ include 'auth_check.php';
                     </div>
                 </div>
             </main>
-            
+
             <?php include 'includes/footer.php'; ?>
         </div>
     </div>

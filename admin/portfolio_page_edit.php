@@ -4,17 +4,17 @@ include 'auth_check.php';
 
 $alert_message = "";
 
-// AMBIL DATA SAAT INI
+
 $stmt = $koneksi->query("SELECT * FROM page_portfolio WHERE id = 1");
 $data = $stmt->fetch_assoc();
 
-// JIKA TOMBOL SIMPAN DITEKAN
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $header_title = $_POST['header_title'];
     $header_desc = $_POST['header_desc'];
-    $projects_title = $_POST['projects_title']; // <-- DATA BARU
+    $projects_title = $_POST['projects_title']; 
 
-    // Fungsi Upload & Kompresi
+    
     function uploadAndCompress($fileInputName, $targetDir, $currentImage)
     {
         if (!isset($_FILES[$fileInputName]) || $_FILES[$fileInputName]['error'] != 0)
@@ -39,10 +39,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         return $currentImage;
     }
 
-    // Proses Upload Gambar Header
+    
     $header_image = uploadAndCompress('header_image', '../uploads/portfolio/', $data['header_image']);
 
-    // Update Database (Tambahkan projects_title)
+    
     $stmt_upd = $koneksi->prepare("UPDATE page_portfolio SET header_title=?, header_desc=?, header_image=?, projects_title=? WHERE id=1");
     $stmt_upd->bind_param("ssss", $header_title, $header_desc, $header_image, $projects_title);
 
@@ -67,7 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link href="css/styles.css" rel="stylesheet">
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js"></script>
     <style>
-        /* Style Minimalis (Sama dengan Home Edit) */
+       
         .card {
             border: none;
             border-radius: 12px;
@@ -89,7 +89,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         .header-banner {
             border-left: 5px solid #0d6efd;
-            /* Warna Biru */
+           
         }
 
         .img-preview {

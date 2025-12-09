@@ -17,7 +17,7 @@ function genOTP($len = 6)
     return $o;
 }
 
-/* SEND EMAIL */
+
 if (isset($_POST['send_email'])) {
     $email = trim($_POST['email']);
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -41,24 +41,24 @@ if (isset($_POST['send_email'])) {
                 $_SESSION['fp_email'] = $email;
                 $_SESSION['fp_user_id'] = $uid;
                 $_SESSION['fp_otp_hash'] = password_hash($otp, PASSWORD_DEFAULT);
-                $_SESSION['fp_otp_exp'] = $now + 600; // 10 menit
+                $_SESSION['fp_otp_exp'] = $now + 600; 
                 $_SESSION['fp_last_sent'] = $now;
-                // $_SESSION['fp_debug_otp']=$otp; // (Kita tidak butuh ini lagi jika email berfungsi)
+                
                 $_SESSION['fp_step'] = 'otp';
                 $step = "otp";
 
-                // === PERUBAHAN DI SINI ===
-                // Mengirim email menggunakan fungsi PHPMailer yang baru
+                
+                
                 $subject = "Kode OTP Reset Password GreenRay";
                 $html_body = "Halo, <br><br>Ini adalah kode OTP Anda: <b>$otp</b><br>Kode ini akan kedaluwarsa dalam 10 menit. Jangan berikan kode ini kepada siapa pun.";
                 $alt_body = "Ini adalah kode OTP Anda: $otp. Kode akan kedaluwarsa dalam 10 menit.";
                 $sent = sendEmail($email, $subject, $html_body, $alt_body);
-                // =========================
+                
 
                 if ($sent) {
                     $success = "OTP dikirim ke email.";
                 } else {
-                    // Fallback untuk tes lokal jika GAGAL kirim email
+                    
                     $success = "(Local) Email gagal. Kode OTP: $otp";
                 }
             }
@@ -67,7 +67,7 @@ if (isset($_POST['send_email'])) {
     }
 }
 
-/* VERIFY OTP */
+
 if (isset($_POST['verify_otp'])) {
     $input = trim($_POST['otp_full']);
     $now = time();
@@ -90,7 +90,7 @@ if (isset($_POST['verify_otp'])) {
     }
 }
 
-/* RESEND OTP */
+
 if (isset($_POST['resend_otp'])) {
     if (!isset($_SESSION['fp_email'])) {
         $error = "Sesi tidak valid.";
@@ -106,15 +106,15 @@ if (isset($_POST['resend_otp'])) {
             $_SESSION['fp_otp_hash'] = password_hash($otp, PASSWORD_DEFAULT);
             $_SESSION['fp_otp_exp'] = $now + 600;
             $_SESSION['fp_last_sent'] = $now;
-            // $_SESSION['fp_debug_otp']=$otp; // (Tidak perlu lagi)
+            
 
-            // === PERUBAHAN DI SINI ===
-            // Mengirim email menggunakan fungsi PHPMailer yang baru
+            
+            
             $subject = "Kode OTP Reset Password GreenRay (Baru)";
             $html_body = "Halo, <br><br>Ini adalah kode OTP baru Anda: <b>$otp</b><br>Kode ini akan kedaluwarsa dalam 10 menit.";
             $alt_body = "Ini adalah kode OTP baru Anda: $otp.";
             $sent = sendEmail($_SESSION['fp_email'], $subject, $html_body, $alt_body);
-            // =========================
+            
 
             $success = $sent ? "OTP baru dikirim." : "(Local) Gagal kirim. OTP: $otp";
 
@@ -124,7 +124,7 @@ if (isset($_POST['resend_otp'])) {
     }
 }
 
-/* SAVE PASSWORD */
+
 if (isset($_POST['change_pass'])) {
     $new = $_POST['new_pass'];
     $confirm = $_POST['confirm_pass'];
@@ -217,9 +217,9 @@ $show_modal = isset($_GET['done']) && isset($_SESSION['fp_done']);
             width: 44px;
             height: 44px;
             border-radius: 12px;
-            /* WARNA HIJAU */
+           
             background: linear-gradient(135deg, #198754, #20c997);
-            /* Contoh gradasi hijau */
+           
             display: flex;
             align-items: center;
             justify-content: center;
@@ -243,12 +243,12 @@ $show_modal = isset($_GET['done']) && isset($_SESSION['fp_done']);
         }
 
         .step.active {
-            /* WARNA HIJAU */
+           
             background: linear-gradient(90deg, #198754, #20c997);
-            /* Contoh gradasi hijau */
+           
         }
 
-        /* Kelas baru untuk container OTP */
+       
         .otp-container {
             display: flex;
             gap: 10px;
@@ -284,7 +284,7 @@ $show_modal = isset($_GET['done']) && isset($_SESSION['fp_done']);
             margin-top: 6px;
         }
 
-        /* WARNA HIJAU pada strength fill (valid) */
+       
         .strength-fill {
             width: 0%;
             height: 100%;
@@ -297,13 +297,13 @@ $show_modal = isset($_GET['done']) && isset($_SESSION['fp_done']);
             user-select: none;
         }
 
-        /* WARNA HIJAU pada validasi teks */
+       
         .valid {
             color: #198754;
             font-weight: 600;
         }
 
-        /* Penyesuaian untuk layar kecil (HP) */
+       
         @media (max-width: 576px) {
             .card-mat {
                 padding: 20px;
@@ -383,7 +383,7 @@ $show_modal = isset($_GET['done']) && isset($_SESSION['fp_done']);
                     </div>
                 </div>
 
-                <?php if (isset($_SESSION['fp_debug_otp'])): // Ini masih ada dari kode aslimu, saya biarkan ?>
+                <?php if (isset($_SESSION['fp_debug_otp'])):?>
                     <div class="mt-2" style="font-size:13px;color:#6b7280;">
                         Tidak menerima email? OTP Anda: <b><?= $_SESSION['fp_debug_otp'] ?></b>
                     </div>
@@ -441,9 +441,9 @@ $show_modal = isset($_GET['done']) && isset($_SESSION['fp_done']);
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // =======================
-        //   EYE ICON — FIXED ✓
-        // =======================
+        
+        
+        
         function toggleEye(id, el) {
             let input = document.getElementById(id);
             if (input.type === "password") {
@@ -455,9 +455,9 @@ $show_modal = isset($_GET['done']) && isset($_SESSION['fp_done']);
             }
         }
 
-        // =======================
-        //   OTP INPUT LOGIC ✓
-        // =======================
+        
+        
+        
         let boxes = [];
         for (let i = 1; i <= 6; i++) { boxes.push(document.getElementById("o" + i)); }
 
@@ -489,9 +489,9 @@ $show_modal = isset($_GET['done']) && isset($_SESSION['fp_done']);
             document.getElementById("otp_full").value = full;
         }
 
-        // =======================
-        //   RESEND COOLDOWN ✓
-        // =======================
+        
+        
+        
         let cooldown = <?= isset($_SESSION['fp_last_sent']) ? max(0, 60 - (time() - $_SESSION['fp_last_sent'])) : 0 ?>;
         let cdLabel = document.getElementById("cooldown_label");
         let btnResend = document.getElementById("btn_resend");
@@ -510,9 +510,9 @@ $show_modal = isset($_GET['done']) && isset($_SESSION['fp_done']);
         }
         runCD();
 
-        // =======================
-        //   STRENGTH METER ✓
-        // =======================
+        
+        
+        
         const newPass = document.getElementById("new_pass");
         const fill = document.getElementById("strengthFill");
         const rLen = document.getElementById("rule_len");

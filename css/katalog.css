@@ -1,6 +1,6 @@
-/* ============================================================================== */
-/* 1. GLOBAL & CORE STYLING */
-/* ============================================================================== */
+
+
+
 
 .beranda,
 .beranda * {
@@ -44,7 +44,7 @@
   font-weight: 600;
 }
 
-/* --- Card Grid Layout (Responsive) --- */
+
 .card-container {
   display: grid;
   gap: 2rem 1.6rem;
@@ -53,18 +53,18 @@
   align-self: stretch;
   width: 100%;
   margin: 0 auto;
-  grid-template-columns: repeat(1, 1fr); /* Default: 1 kolom */
+  grid-template-columns: repeat(1, 1fr);
 }
 
 @media (min-width: 768px) {
   .card-container {
-    grid-template-columns: repeat(2, 1fr); /* Tablet: 2 kolom */
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (min-width: 1024px) {
   .card-container {
-    grid-template-columns: repeat(4, 1fr); /* Desktop: 4 kolom */
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 
@@ -83,7 +83,7 @@
   }
 }
 
-/* Mobile: full width tanpa kebesaran */
+
 @media (max-width: 768px) {
   .catalog-header-wrapper {
     padding: 0 10px;
@@ -96,7 +96,7 @@
   }
 }
 
-/* Small mobile: lebih pendek lagi */
+
 @media (max-width: 480px) {
   .catalog-header-wrapper {
     padding: 0 8px;
@@ -108,7 +108,7 @@
   }
 }
 
-/* --- Card Item Styling Kustom (Menggantikan Gaya Bootstrap Default) --- */
+
 .card-solar {
   width: 100% !important;
   height: 100% !important;
@@ -117,7 +117,7 @@
   border-radius: 0.756875rem !important;
   border-style: solid;
   border-color: var(--hitam);
-  /* PERUBAHAN: Border diubah menjadi 0.1875rem (3px) agar lebih tebal */
+ 
   border-width: 0.1875rem;
   padding: 1.009375rem;
   display: flex;
@@ -128,23 +128,23 @@
   position: relative;
   overflow: hidden;
 
-  /* HILANGKAN SHADOW PADA KONDISI NORMAL */
+ 
   box-shadow: none;
 
-  /* Set transform ke nilai awal (agar transisi bekerja) */
+ 
   transform: translateY(0);
 
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
 .card-solar:hover {
-  /* Tambahkan efek scale dan shadow saat di-hover */
+ 
   box-shadow: 0rem 0.0625rem 0.1875rem 0rem rgba(0, 0, 0, 0.26),
     0rem 0.3125rem 0.3125rem 0rem rgba(0, 0, 0, 0.23),
     0rem 0.6875rem 0.4375rem 0rem rgba(0, 0, 0, 0.13),
     0rem 1.25rem 0.5rem 0rem rgba(0, 0, 0, 0.04),
     0rem 1.9375rem 0.5625rem 0rem rgba(0, 0, 0, 0);
-  transform: translateY(-5px); /* Efek melayang */
+  transform: translateY(-5px);
 }
 
 .card-solar .card-img-top {
@@ -227,9 +227,9 @@
   background-size: 100% 100%;
 }
 
-/* ============================================================================== */
-/* 4. FOOTER STYLING */
-/* ============================================================================== */
+
+
+
 
 .footer {
   background: var(--putih);

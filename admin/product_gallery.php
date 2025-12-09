@@ -8,7 +8,7 @@ if (!$product_id) {
     exit;
 }
 
-// Ambil info produk untuk judul
+
 $stmt_prod = $koneksi->prepare("SELECT name FROM products WHERE id = ?");
 $stmt_prod->bind_param("i", $product_id);
 $stmt_prod->execute();
@@ -20,7 +20,7 @@ if (!$product) {
 
 $alert_message = "";
 
-// --- LOGIKA UPLOAD GAMBAR ---
+
 if (isset($_POST['upload_images'])) {
     $target_dir = "../uploads/products/gallery/";
     if (!file_exists($target_dir)) {
@@ -54,11 +54,11 @@ if (isset($_POST['upload_images'])) {
     }
 }
 
-// --- LOGIKA HAPUS GAMBAR ---
+
 if (isset($_GET['delete_img'])) {
     $img_id = $_GET['delete_img'];
 
-    // Ambil path dulu untuk hapus file
+    
     $stmt_get = $koneksi->prepare("SELECT image_url FROM product_gallery_images WHERE id = ? AND product_id = ?");
     $stmt_get->bind_param("ii", $img_id, $product_id);
     $stmt_get->execute();
@@ -77,7 +77,7 @@ if (isset($_GET['delete_img'])) {
     }
 }
 
-// --- AMBIL SEMUA GAMBAR GALERI ---
+
 $gallery_images = [];
 $stmt_gal = $koneksi->prepare("SELECT * FROM product_gallery_images WHERE product_id = ? ORDER BY id DESC");
 $stmt_gal->bind_param("i", $product_id);

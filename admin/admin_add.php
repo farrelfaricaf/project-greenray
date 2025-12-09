@@ -4,7 +4,7 @@ include 'auth_check.php';
 
 $alert_message = "";
 
-// Cek jika ada parameter role dari URL
+
 $selected_role = isset($_GET['role']) ? $_GET['role'] : 'user';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -14,16 +14,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password_plain = $_POST['password'];
     $role = $_POST['role'];
 
-    // Validasi Email
+    
     $cek_email = $koneksi->query("SELECT id FROM users WHERE email = '$email'");
     if ($cek_email->num_rows > 0) {
         $alert_message = '<div class="alert alert-danger">Error: Email sudah terdaftar.</div>';
     } else {
-        // Hash Password
+        
         $password_hash = password_hash($password_plain, PASSWORD_DEFAULT);
 
-        // Query INSERT (SESUAI STRUKTUR DB KAMU)
-        // Kolom: first_name, last_name, email, password, role
+        
+        
         $stmt = $koneksi->prepare("INSERT INTO users (first_name, last_name, email, password, role) VALUES (?, ?, ?, ?, ?)");
         $stmt->bind_param("sssss", $first_name, $last_name, $email, $password_hash, $role);
 

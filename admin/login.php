@@ -1,23 +1,23 @@
 <?php
 session_start();
-include '../koneksi.php'; // Hubungkan ke database
+include '../koneksi.php'; 
 
 $error_message = "";
 
-// 1. Cek: Jika SUDAH login, lempar ke dashboard
+
 if (isset($_SESSION['admin_id']) && $_SESSION['admin_role'] === 'admin') {
-    header('Location: index.php'); // Arahkan ke dashboard
+    header('Location: index.php'); 
     exit;
 }
 
-// 2. Cek: Jika user mengirim form login
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['email']) && isset($_POST['password'])) {
 
         $email = $koneksi->real_escape_string($_POST['email']);
         $password = $_POST['password'];
 
-        // 3. Query untuk mencari user dengan email DAN role admin
+        
         $sql = "SELECT id, password, first_name FROM users WHERE email = ? AND role = 'admin' LIMIT 1";
 
         if ($stmt = $koneksi->prepare($sql)) {
@@ -28,15 +28,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($result->num_rows == 1) {
                 $admin = $result->fetch_assoc();
 
-                // 4. Verifikasi password
+                
                 if (password_verify($password, $admin['password'])) {
 
-                    // 5. SUKSES! Buat sesi admin
+                    
                     $_SESSION['admin_id'] = $admin['id'];
                     $_SESSION['admin_name'] = $admin['first_name'];
-                    $_SESSION['admin_role'] = 'admin'; // Tandai sebagai admin
+                    $_SESSION['admin_role'] = 'admin'; 
 
-                    header('Location: index.php'); // Lempar ke dashboard
+                    header('Location: index.php'); 
                     exit;
                 } else {
                     $error_message = "Email atau password salah.";
@@ -79,7 +79,7 @@ $koneksi->close();
             min-height: 100vh;
             margin: 0;
             padding: 20px;
-            /* Padding untuk jarak di layar kecil */
+           
         }
 
         .card {
@@ -89,7 +89,7 @@ $koneksi->close();
             width: 100%;
             max-width: 400px;
             padding: 25px;
-            /* Kita tidak perlu margin-top di sini karena body sudah flex */
+           
         }
 
         .card-header {

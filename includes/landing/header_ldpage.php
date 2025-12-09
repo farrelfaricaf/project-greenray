@@ -8,7 +8,7 @@ if (session_status() == PHP_SESSION_NONE) {
 
 $is_logged_in = isset($_SESSION['user_id']);
 $user_name = $_SESSION['user_name'] ?? 'User';
-$profile_pic = $_SESSION['user_profile_pic'] ?? '../img/default-profile.png';
+$profile_pic = $_SESSION['user_profile_pic'] ?? 'img/default-profile.png';
 ?>
 
 <head>
@@ -149,18 +149,18 @@ $profile_pic = $_SESSION['user_profile_pic'] ?? '../img/default-profile.png';
             <?php if ($is_logged_in): ?>
                 <div class="profile-dropdown">
                     <a href="#" class="profile-toggle" id="profileToggle">
-                        <img src="../<?php echo htmlspecialchars($profile_pic); ?>" alt="Profil"
+                        <img src="<?php echo fixPath($profile_pic); ?>" alt="Profil"
                             class="profile-picture-header"
                             style="width:45px; height:45px; border-radius:50%; object-fit:cover; border:2px solid #136000;">
                     </a>
                     <div class="dropdown-menu-header" id="profileDropdownMenu">
                         <div class="dropdown-item-info">Halo, <strong><?php echo htmlspecialchars($user_name); ?></strong>!
                         </div>
-                        <a class="dropdown-item" href="profile.php"><span class="fa-regular fa-user me-2"></span> Profil
+                        <a class="dropdown-item" href="../projectgreenray/html/profile.php"><span class="fa-regular fa-user me-2"></span> Profil
                             Saya</a>
-                        <a class="dropdown-item" href="contact-us.php"><i class="fa-solid fa-address-card me-2"></i> Bantuan
+                        <a class="dropdown-item" href="../projectgreenray/html/contact-us.php"><i class="fa-solid fa-address-card me-2"></i> Bantuan
                             / Kontak</a>
-                        <a class="dropdown-item" href="logout.php"><i class="fa-solid fa-arrow-right-from-bracket me-2"></i>
+                        <a class="dropdown-item" href="../projectgreenray/html/logout.php"><i class="fa-solid fa-arrow-right-from-bracket me-2"></i>
                             Log out</a>
                     </div>
                 </div>

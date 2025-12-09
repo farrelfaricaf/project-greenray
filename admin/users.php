@@ -4,6 +4,7 @@ include 'auth_check.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -13,12 +14,13 @@ include 'auth_check.php';
     <link href="css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
+
 <body class="sb-nav-fixed">
     <?php include 'includes/navbar.php'; ?>
 
     <div id="layoutSidenav">
-        
-    <?php include 'includes/sidebar.php'; ?>
+
+        <?php include 'includes/sidebar.php'; ?>
 
         <div id="layoutSidenav_content">
             <main>
@@ -75,7 +77,7 @@ include 'auth_check.php';
                     </div>
                 </div>
             </main>
-            
+
             <?php include 'includes/footer.php'; ?>
         </div>
     </div>
@@ -86,4 +88,5 @@ include 'auth_check.php';
         crossorigin="anonymous"></script>
     <script src="js/datatables-simple-demo.js"></script>
 </body>
+
 </html>

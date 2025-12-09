@@ -1,18 +1,18 @@
 <?php
-// Pastikan koneksi database tersedia (jika dipanggil terpisah)
+
 if (!isset($koneksi)) {
-    // Coba cari koneksi di beberapa level direktori
+
     if (file_exists('../koneksi.php'))
         include_once '../koneksi.php';
     elseif (file_exists('../../koneksi.php'))
         include_once '../../koneksi.php';
 }
 
-// Ambil Data Settings
+
 $res_f = $koneksi->query("SELECT * FROM footer_settings WHERE id = 1");
 $f_data = ($res_f && $res_f->num_rows > 0) ? $res_f->fetch_assoc() : [];
 
-// Ambil Data Links
+
 $footer_links = [];
 $res_l = $koneksi->query("SELECT * FROM footer_links WHERE section='quick_links' ORDER BY id ASC");
 if ($res_l) {
@@ -21,11 +21,11 @@ if ($res_l) {
     }
 }
 
-// LOGIKA SPLIT: Pecah array menjadi potongan-potongan berisi maksimal 4 item
-// Jika ada 5 item -> Chunk 1 (4 item), Chunk 2 (1 item)
+
+
 $link_chunks = array_chunk($footer_links, 4);
 
-// Base URL Logic
+
 $base_url_footer = (basename($_SERVER['PHP_SELF']) == 'index.php') ? '' : '../';
 $img_path_footer = (basename($_SERVER['PHP_SELF']) == 'index.php') ? 'img/GreenRay_Logo 1-1.png' : '../img/GreenRay_Logo 1-1.png';
 

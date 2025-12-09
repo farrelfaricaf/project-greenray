@@ -8,11 +8,11 @@ if ($res_home && $res_home->num_rows > 0) {
     $home_data = $res_home->fetch_assoc();
 }
 
-// SET LIMIT DARI DATABASE (Default 6 jika kosong)
+
 $limit_prod = $home_data['home_product_limit'] ?? 6;
 $limit_proj = $home_data['home_project_limit'] ?? 6;
 
-// 2. Ambil Data PRODUK (Gunakan variabel limit)
+
 $products = [];
 $res_prod = $koneksi->query("SELECT * FROM products ORDER BY id ASC LIMIT $limit_prod");
 if ($res_prod) {
@@ -21,7 +21,7 @@ if ($res_prod) {
     }
 }
 
-// 3. Ambil Data PROYEK (Gunakan variabel limit)
+
 $projects = [];
 $res_proj = $koneksi->query("SELECT * FROM projects ORDER BY id ASC LIMIT $limit_proj");
 if ($res_proj) {
@@ -29,13 +29,13 @@ if ($res_proj) {
         $projects[] = $row;
     }
 }
-// Fungsi helper path (hapus ../)
+
 function fixPath($path)
 {
     return !empty($path) ? str_replace('../', '', $path) : 'img/placeholder.png';
 }
 
-// 4. Ambil Data REVIEWS (Limit 6)
+
 $reviews = [];
 $res_rev = $koneksi->query("SELECT * FROM reviews WHERE is_visible = 1 ORDER BY id ASC");
 if ($res_rev) {
@@ -44,7 +44,7 @@ if ($res_rev) {
     }
 }
 
-// 5. Ambil Data FAQ (Limit 3)
+
 $faqs = [];
 $res_faq = $koneksi->query("SELECT * FROM faqs ORDER BY id DESC");
 if ($res_faq) {
@@ -73,7 +73,6 @@ if ($res_faq) {
         rel="stylesheet">
     <link rel="icon" type="image/png" href="..\img\favicon.png" sizes="180px180">
     <style>
-        /* CSS Dropdown Profil */
         .profile-dropdown {
             position: relative;
             display: inline-block;
@@ -124,7 +123,7 @@ if ($res_faq) {
             font-weight: 500;
         }
 
-        /* --- STYLE CARD DARI KATALOG.PHP (DISAMAKAN & DIFIX LEBARNYA) --- */
+
         .card-img-top {
             height: 200px;
             object-fit: contain;
@@ -146,36 +145,36 @@ if ($res_faq) {
             font-size: 0.95rem;
         }
 
-        /* PERBAIKAN LEBAR CARD DI HOME */
+
         .catalog-container .card-container {
             display: flex;
             flex-wrap: wrap;
             gap: 24px;
-            /* Jarak antar kartu */
+
             justify-content: center;
             width: 100%;
-            /* Pastikan container mengambil lebar penuh */
+
         }
 
-        /* Style Khusus untuk Kartu agar lebarnya sama persis */
+
         .card.card-solar {
             width: 280px;
-            /* Lebar tetap (fixed width) agar seragam */
+
             min-width: 280px;
-            /* Mencegah kartu mengecil */
+
             max-width: 280px;
-            /* Mencegah kartu melebar */
+
             flex: 0 0 auto;
-            /* Mencegah flexbox mengubah ukuran kartu */
+
             display: flex;
             flex-direction: column;
             border-radius: 12px;
-            /* Sesuaikan dengan desain */
+
             border: 2px solid #e0e0e0;
             overflow: hidden;
             box-shadow: none;
 
-            /* Set transform ke nilai awal (agar transisi bekerja) */
+
             transform: translateY(0);
 
             transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
@@ -183,13 +182,13 @@ if ($res_faq) {
 
         .card-body {
             flex: 1;
-            /* Agar body mengisi sisa ruang */
+
             display: flex;
             flex-direction: column;
             padding: 1.5rem;
         }
 
-        /* Tombol View Details (Disamakan dengan Katalog) */
+
         .btn-cta-solar {
             background: var(--hijau) !important;
             border-radius: 0.756875rem;
@@ -218,22 +217,22 @@ if ($res_faq) {
             width: 1.26125rem;
             height: 1.26125rem;
             margin-left: 0.5rem;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4.5 12h15m0 0l-5.625-6m5.625 6l-5.625 6'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='https://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4.5 12h15m0 0l-5.625-6m5.625 6l-5.625 6'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-size: 100% 100%;
         }
 
-        /* Responsive: Di HP jadi 1 kolom, di Tablet 2 kolom */
+
         @media (max-width: 768px) {
             .card.card-solar {
                 width: 100%;
-                /* Di HP lebar penuh */
+
                 max-width: 100%;
             }
         }
 
         .card-solar:hover {
-            /* Tambahkan efek scale dan shadow saat di-hover */
+
             box-shadow:
                 0rem 0.0625rem 0.1875rem 0rem rgba(0, 0, 0, 0.26),
                 0rem 0.3125rem 0.3125rem 0rem rgba(0, 0, 0, 0.23),
@@ -241,41 +240,41 @@ if ($res_faq) {
                 0rem 1.25rem 0.5rem 0rem rgba(0, 0, 0, 0.04),
                 0rem 1.9375rem 0.5625rem 0rem rgba(0, 0, 0, 0);
             transform: translateY(-5px);
-            /* Efek melayang */
+
         }
 
         .portfolio-section .project-card-home {
             height: 100%;
-            /* Agar semua kartu sama tinggi */
+
             display: flex;
             flex-direction: column;
             border: none;
-            /* Hilangkan border bawaan bootstrap jika ada */
+
             background: transparent;
         }
 
         .portfolio-section .project-img {
             height: 250px;
-            /* Tinggi gambar tetap */
+
             width: 100%;
             object-fit: cover;
-            /* Gambar tidak gepeng */
+
             border-radius: 12px;
         }
 
         .portfolio-section .project-details {
             flex-grow: 1;
-            /* Isi ruang kosong agar tombol sejajar di bawah */
+
             text-align: left;
-            /* Rata kiri */
+
             padding-left: 0;
-            /* Hapus padding default UL */
+
         }
 
         .portfolio-section .btn-cta-solar {
-            /* Tombol proyek pakai style yang sama dengan produk */
+
             width: 100%;
-            /* Lebar penuh */
+
         }
 
         .review-card-wrapper {
@@ -317,7 +316,7 @@ if ($res_faq) {
 
         .star-rating {
             color: #FFD700;
-            /* Warna Emas */
+
             font-size: 2rem;
             margin-bottom: 10px;
             letter-spacing: 2px;
@@ -329,15 +328,15 @@ if ($res_faq) {
 
         .hero-header-img {
             width: 100%;
-            /* Lebar menyesuaikan container */
+
             height: auto;
-            /* Tinggi otomatis proporsional */
+
             max-height: 350px;
-            /* BATAS MAKSIMAL TINGGI */
+
             object-fit: cover;
-            /* Potong rapi jika rasio beda */
+
             object-position: center;
-            /* Fokus tengah */
+
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
@@ -376,7 +375,8 @@ if ($res_faq) {
                 <div class="heading-container-2">
                     <div class="heading-container2"><?php echo htmlspecialchars($home_data['catalog_title']); ?></div>
                     <div class="dec-container2 lead text-secondary">
-                        <?php echo htmlspecialchars($home_data['catalog_desc']); ?></div>
+                        <?php echo htmlspecialchars($home_data['catalog_desc']); ?>
+                    </div>
                 </div>
 
                 <div class="card-container">
@@ -462,7 +462,7 @@ if ($res_faq) {
                                                 <b>Details:</b>
                                                 <?php
                                                 $details = htmlspecialchars($proj['overview_details']);
-                                                // Potong teks jika terlalu panjang agar kartu tetap rapi
+
                                                 if (strlen($details) > 100) {
                                                     echo substr($details, 0, 100) . '...';
                                                 } else {
@@ -500,7 +500,8 @@ if ($res_faq) {
                 <div class="heading-container-2">
                     <div class="heading-container2"><?php echo htmlspecialchars($home_data['review_title']); ?></div>
                     <div class="dec-container2 lead text-secondary">
-                        <?php echo htmlspecialchars($home_data['review_desc']); ?></div>
+                        <?php echo htmlspecialchars($home_data['review_desc']); ?>
+                    </div>
                 </div>
                 <div class="review-container">
                     <?php if (!empty($reviews)): ?>
@@ -550,7 +551,7 @@ if ($res_faq) {
                 </div>
                 <div class="question-contain">
                     <?php
-                    // FIX 1: Ambil semua FAQ terbaru (ORDER BY id DESC) agar data baru muncul
+
                     $faqs = [];
                     $res_faq = $koneksi->query("SELECT * FROM faqs ORDER BY order_index ASC");
                     if ($res_faq) {
@@ -589,24 +590,24 @@ if ($res_faq) {
     <script>
         document.addEventListener('DOMContentLoaded', function () {
 
-            // 2. FAQ Logic (DIPERBAIKI)
+
             const faqItems = document.querySelectorAll('.faq-item');
             const faqHeaders = document.querySelectorAll('.dropdown-faq');
 
             faqHeaders.forEach(header => {
                 header.addEventListener('click', function () {
-                    // Ambil item induk dari header yang diklik
+
                     const currentItem = this.closest('.faq-item');
 
-                    // Cek apakah item ini sedang terbuka
+
                     const isOpen = currentItem.classList.contains('active');
 
-                    // LANGKAH 1: Tutup SEMUA FAQ terlebih dahulu
+
                     faqItems.forEach(item => {
                         item.classList.remove('active');
                     });
 
-                    // LANGKAH 2: Jika item yang diklik tadi posisinya tertutup, barulah kita buka
+
                     if (!isOpen) {
                         currentItem.classList.add('active');
                     }

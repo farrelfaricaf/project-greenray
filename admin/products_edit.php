@@ -10,7 +10,7 @@ if (!$product_id) {
     exit;
 }
 
-// Ambil semua segment utk opsi dropdown
+
 $segments = [];
 $resSeg = $koneksi->query("SELECT id, name, slug FROM product_segments ORDER BY name ASC");
 if ($resSeg) {
@@ -19,7 +19,7 @@ if ($resSeg) {
     }
 }
 
-// Ambil segment yg sudah dimiliki produk
+
 $current_segment_ids = [];
 $resCurr = $koneksi->query(
     "SELECT segment_id FROM product_segment_map WHERE product_id = " . (int) $product_id
@@ -30,7 +30,7 @@ if ($resCurr) {
     }
 }
 
-// AMBIL DATA LAMA PRODUK
+
 $stmt = $koneksi->prepare("SELECT * FROM products WHERE id = ?");
 $stmt->bind_param("i", $product_id);
 $stmt->execute();
@@ -41,14 +41,14 @@ if (!$product) {
     exit;
 }
 
-// --- PROSES UPDATE ---
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = $_POST['name'];
     $slug = $_POST['slug'];
     $subtitle = $_POST['subtitle'];
     $description = $_POST['description'];
 
-    // LOGIKA MULTI TAG
+    
     $raw_segments = $_POST['segment_ids'] ?? [];
     $segment_ids = [];
 
@@ -79,8 +79,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $primary_segment_id = !empty($segment_ids) ? $segment_ids[0] : null;
 
-    // 1. Handle Main Image Update
-    $image_path_db = $_POST['old_image']; // Default gambar lama
+    
+    $image_path_db = $_POST['old_image']; 
     if (isset($_FILES['image_file']) && $_FILES['image_file']['error'] == 0) {
         $target_dir = "../uploads/products/";
         $file_name = uniqid() . '-main-' . basename($_FILES["image_file"]["name"]);
@@ -88,7 +88,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $image_path_db = "uploads/products/" . $file_name;
     }
 
-    // 2. Handle Key Features Update
+    
     $features_array = [];
     if (isset($_POST['feature_title'])) {
         for ($i = 0; $i < count($_POST['feature_title']); $i++) {
@@ -102,7 +102,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     $key_features_json = json_encode($features_array);
 
-    // 3. Handle Specifications Update
+    
     $specs_array = [];
     if (isset($_POST['spec_title'])) {
         $target_icon_dir = "../uploads/icons/";
@@ -115,7 +115,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $sub = $_POST['spec_subtitle'][$i];
             $type = $_POST['spec_icon_type'][$i];
 
-            // Default ambil dari hidden old_value
+            
             $icon_value = $_POST['spec_old_value'][$i];
 
             if ($type == 'class') {
@@ -144,7 +144,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     $specifications_json = json_encode($specs_array);
 
-    // Update DB
+    
     $stmt = $koneksi->prepare(
         "UPDATE products
          SET name=?, slug=?, subtitle=?, image_url=?, description=?,
@@ -165,7 +165,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     );
 
     if ($stmt->execute()) {
-        // Reset mapping lama
+        
         $koneksi->query(
             "DELETE FROM product_segment_map WHERE product_id = " . (int) $product_id
         );
@@ -186,7 +186,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// Decode JSON untuk form
+
 $features_data = json_decode($product['key_features_json'], true) ?? [];
 $specs_data = json_decode($product['specifications_json'], true) ?? [];
 ?>
@@ -327,18 +327,18 @@ $specs_data = json_decode($product['specifications_json'], true) ?? [];
                             </div>
                             <div class="card-body" id="specs_container">
                                 <?php foreach ($specs_data as $spec):
-                                    // --- LOGIKA BARU (ANTI ERROR) ---
-                                    // 1. Cek apakah data pakai format baru (icon_type)
+                                    
+                                    
                                     if (isset($spec['icon_type'])) {
                                         $type = $spec['icon_type'];
                                         $val = $spec['icon_val'] ?? '';
                                     }
-                                    // 2. Cek apakah data pakai format manual/lama (icon_class)
+                                    
                                     elseif (isset($spec['icon_class'])) {
                                         $type = 'class';
                                         $val = $spec['icon_class'];
                                     }
-                                    // 3. Jika tidak ada keduanya, set default
+                                    
                                     else {
                                         $type = 'class';
                                         $val = '';
@@ -411,13 +411,13 @@ $specs_data = json_decode($product['specifications_json'], true) ?? [];
     </div>
 
     <script>
-        // Auto Slug
+        
         document.getElementById('name').addEventListener('input', function () {
             let slug = this.value.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
             document.getElementById('slug').value = slug;
         });
 
-        // Sama persis dengan add.php, bedanya ini hanya untuk nambah row BARU
+        
         function addFeature() {
             const div = document.createElement('div');
             div.className = 'dynamic-row';

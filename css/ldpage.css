@@ -1,10 +1,8 @@
-/* RESET BOX-SIZING */
 .desktop-8,
 .desktop-8 * {
   box-sizing: border-box;
 }
 
-/* MAIN CONTAINER */
 .desktop-8 {
   background: #ffffff;
   position: relative;
@@ -13,7 +11,6 @@
   flex-direction: column;
 }
 
-/* HEADER SECTION (sebelumnya .frame-48) */
 header.frame-48 {
   display: flex;
   flex-direction: column;
@@ -24,7 +21,6 @@ header.frame-48 {
   margin: 3.125rem auto 0;
 }
 
-/* NAVIGATION (sebelumnya .frame-34) */
 header.frame-48 > div:first-child {
   display: flex;
   flex-direction: row;
@@ -35,7 +31,6 @@ header.frame-48 > div:first-child {
   position: relative;
 }
 
-/* LOGO */
 .green-ray-logo-1 {
   flex-shrink: 0;
   width: 11.745rem;
@@ -45,7 +40,6 @@ header.frame-48 > div:first-child {
   aspect-ratio: 187.92/40;
 }
 
-/* CONTACT BUTTON (sebelumnya .frame-2) */
 .frame-2 {
   background: var(--putih, #ffffff);
   border-radius: 2.749375rem;
@@ -75,7 +69,6 @@ header.frame-48 > div:first-child {
   position: relative;
 }
 
-/* HERO CONTENT AND IMAGES (sebelumnya .frame-37) */
 section.frame-37 {
   display: flex;
   flex-direction: row;
@@ -86,7 +79,6 @@ section.frame-37 {
   position: relative;
 }
 
-/* HERO TEXT BLOCK (sebelumnya .frame-36) */
 .frame-36 {
   display: flex;
   flex-direction: column;
@@ -98,7 +90,6 @@ section.frame-37 {
   position: relative;
 }
 
-/* HEADLINE AND CTA (sebelumnya .frame-4) */
 .frame-4 {
   display: flex;
   flex-direction: column;
@@ -109,7 +100,6 @@ section.frame-37 {
   position: relative;
 }
 
-/* H1 */
 .power-your-future-brighten-your-world {
   color: #000000;
   text-align: left;
@@ -118,13 +108,12 @@ section.frame-37 {
   font-weight: 400;
   position: relative;
 }
-/* BARU: Terapkan font bold ke tag <strong> di dalam H1 */
+
 .power-your-future-brighten-your-world strong {
   font-family: "Plus Jakarta Sans", sans-serif;
   font-weight: 700;
 }
 
-/* CTA BUTTON (sebelumnya .hover) */
 .hover {
   background: #000000;
   border-radius: 0.52875rem;
@@ -162,7 +151,6 @@ section.frame-37 {
   overflow: visible;
 }
 
-/* SUBTEXT (sebelumnya .frame-5) */
 .frame-5 {
   display: flex;
   flex-direction: row;
@@ -185,12 +173,11 @@ section.frame-37 {
   flex: 1;
 }
 
-/* --- FLIP CARD STYLES --- */
 .flip-card-container {
   background-color: transparent;
   width: 100%;
-  height: 320px; /* Tinggi tetap agar kartu konsisten */
-  perspective: 1000px; /* Memberikan efek 3D */
+  height: 320px;
+  perspective: 1000px;
   cursor: pointer;
 }
 
@@ -199,11 +186,10 @@ section.frame-37 {
   width: 100%;
   height: 100%;
   text-align: center;
-  transition: transform 0.8s; /* Kecepatan putaran */
+  transition: transform 0.8s;
   transform-style: preserve-3d;
 }
 
-/* Class ini akan ditambahkan via JS saat diklik */
 .flip-card-container.flipped .flip-card-inner {
   transform: rotateY(180deg);
 }
@@ -215,7 +201,7 @@ section.frame-37 {
   height: 100%;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-  border-radius: 1rem; /* Rounded corners */
+  border-radius: 1rem;
   padding: 2rem;
   display: flex;
   flex-direction: column;
@@ -225,19 +211,16 @@ section.frame-37 {
   border: 1px solid #eee;
 }
 
-/* Tampilan Depan */
 .flip-card-front {
   background-color: #ffffff;
 }
 
-/* Tampilan Belakang */
 .flip-card-back {
-  background-color: #136000; /* Warna Hijau GreenRay */
+  background-color: #136000;
   color: white;
-  transform: rotateY(180deg); /* Memutar sisi belakang */
+  transform: rotateY(180deg);
 }
 
-/* Tombol Putar Kecil */
 .btn-flip-indicator {
   margin-top: auto;
   font-size: 0.85rem;
@@ -255,8 +238,6 @@ section.frame-37 {
   border-color: #136000;
 }
 
-/* --- CSS Navbar & Buttons --- */
-
 .navbar-brand .logo-img {
   height: 40px;
   width: auto;
@@ -265,23 +246,22 @@ section.frame-37 {
 
 .nav-link {
   font-weight: 500;
-  color: #000 !important; /* Warna hitam default */
+  color: #000 !important;
   font-size: 1.05rem;
   transition: color 0.3s ease;
 }
 
 .nav-link:hover,
 .nav-link.active {
-  color: #136000 !important; /* Hijau saat aktif/hover */
+  color: #136000 !important;
   font-weight: 700;
 }
 
-/* Tombol Login */
 .btn-custom-login {
   background-color: #136000;
   color: white;
   border-radius: 50px;
-  padding: 10px 24px; /* Padding yang pas */
+  padding: 10px 24px;
   font-weight: 600;
   border: 1px solid #136000;
   text-decoration: none;
@@ -291,10 +271,9 @@ section.frame-37 {
   background-color: #0f4d00;
   border-color: #0f4d00;
   color: white;
-  transform: translateY(-2px); /* Efek naik sedikit */
+  transform: translateY(-2px);
 }
 
-/* Tombol Contact Us */
 .btn-custom-contact {
   background-color: white;
   color: #000;
@@ -312,7 +291,6 @@ section.frame-37 {
   transform: translateY(-2px);
 }
 
-/* HERO IMAGES (sebelumnya .frame-35) */
 .frame-35 {
   display: flex;
   flex-direction: row;
@@ -356,7 +334,6 @@ section.frame-37 {
   height: 16.875rem;
 }
 
-/* PROBLEM/SOLUTION SECTION (sebelumnya .frame-14) */
 main > section.frame-14 {
   display: flex;
   flex-direction: row;
@@ -367,7 +344,6 @@ main > section.frame-14 {
   margin: 6.25rem auto 0;
 }
 
-/* HEADLINE BLOCK (sebelumnya .frame-6) */
 .sub-group {
   display: flex;
   box-sizing: border-box;
@@ -379,7 +355,6 @@ main > section.frame-14 {
   position: relative;
 }
 
-/* H2 - Heading Group */
 .heading-grup {
   color: #000000;
   text-align: left;
@@ -405,7 +380,6 @@ main > section.frame-14 {
   height: 2.75rem;
 }
 
-/* FEATURES LIST (sebelumnya .frame-13) */
 .frame-13 {
   display: flex;
   flex-direction: column;
@@ -416,7 +390,6 @@ main > section.frame-14 {
   position: relative;
 }
 
-/* FEATURE ITEM 1 (sebelumnya .frame-7) */
 .frame-13 .container {
   display: flex;
   flex-direction: row;
@@ -437,7 +410,7 @@ main > section.frame-14 {
   flex: 1;
   position: relative;
 }
-/* H3 */
+
 .frame-13 .container .container-2 h3 {
   color: #000000;
   text-align: left;
@@ -448,7 +421,6 @@ main > section.frame-14 {
   align-self: stretch;
 }
 
-/* P */
 .take-control-of-your-unpredictable-and-ever-increasing-electricity-bills-say-goodbye-to-financial-worry-with-a-fixed-energy-expense {
   color: #000000;
   text-align: left;
@@ -467,7 +439,6 @@ main > section.frame-14 {
   overflow: visible;
 }
 
-/* BENEFITS SECTION (sebelumnya .frame-19) */
 main > section.frame-19 {
   display: flex;
   flex-direction: column;
@@ -478,7 +449,6 @@ main > section.frame-19 {
   margin: 7rem auto 0;
 }
 
-/* H2 - The Benefits Are Clear */
 .the-benefits-are-clear {
   color: #000000;
   text-align: center;
@@ -493,7 +463,6 @@ main > section.frame-19 {
   font-weight: 700;
 }
 
-/* BENEFITS ROW (sebelumnya .frame-18) */
 .section-3 {
   display: flex;
   flex-direction: row;
@@ -567,7 +536,6 @@ main > section.frame-19 {
   aspect-ratio: 1;
 }
 
-/* TESTIMONIALS SECTION (sebelumnya .frame-39) */
 main > section.frame-39 {
   display: flex;
   flex-direction: column;
@@ -589,7 +557,6 @@ main > section.frame-39 {
   position: relative;
 }
 
-/* H2 - Trusted by Homeowners */
 .trusted-by-homeowners-across-indonesia {
   color: #000000;
   text-align: left;
@@ -604,7 +571,6 @@ main > section.frame-39 {
   font-weight: 700;
 }
 
-/* P */
 .don-t-just-take-our-word-for-it-see-what-our-satisfied-customers-are-saying {
   color: #000000;
   text-align: left;
@@ -633,7 +599,6 @@ main > section.frame-39 {
   object-fit: cover;
 }
 
-/* FINAL CTA SECTION (sebelumnya .frame-21) */
 main > section.frame-21 {
   display: flex;
   flex-direction: column;
@@ -653,7 +618,6 @@ main > section.frame-21 {
   position: relative;
 }
 
-/* H2 - Ready to Go Solar */
 .ready-to-go-solar {
   color: #000000;
   text-align: center;
@@ -664,7 +628,6 @@ main > section.frame-21 {
   align-self: stretch;
 }
 
-/* P */
 .it-only-takes-30-seconds-to-get-a-free-personalized-savings-estimate-start-your-journey-to-energy-independence-today {
   color: #000000;
   text-align: center;
@@ -708,7 +671,6 @@ main > section.frame-21 {
   overflow: visible;
 }
 
-/* Footer */
 .footer {
   background: #ffffff;
   border-style: solid;
@@ -831,69 +793,57 @@ main > section.frame-21 {
   font-weight: 400;
 }
 
-/* Efek Hover Angka Statistik */
 .stats-row h2 {
   background: linear-gradient(to right, #136000, #136000);
   background-clip: text;
   -webkit-background-clip: text;
   transition: color 0.3s ease, transform 0.3s ease;
-  color: #212529; /* Warna default dark */
+  color: #212529;
 }
 
 .stats-row h2:hover {
-  color: transparent; /* Trik untuk gradient text */
-  background: linear-gradient(to right, #136000, #28a745); /* Gradient hijau */
+  color: transparent;
+  background: linear-gradient(to right, #136000, #28a745);
   background-clip: text;
   -webkit-background-clip: text;
-  transform: scale(1.05); /* Sedikit membesar */
+  transform: scale(1.05);
 }
 
-/* CSS untuk Feature Cards */
-
-/* 1. Dasar Kartu */
 .feature-card {
   border-color: #f0f0f0 !important;
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
-/* 2. Efek Hover: Naik & Bayangan */
 .feature-card:hover {
   transform: translateY(-10px);
   box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.08) !important;
   border-color: transparent !important;
 }
 
-/* 3. Efek Hover: Icon Membesar */
 .feature-card:hover .icon-wrapper {
   transform: scale(1.1);
-  background-color: #136000 !important; /* Icon jadi background hijau gelap */
+  background-color: #136000 !important;
   transition: all 0.3s ease;
 }
 
-/* 4. Mengubah warna icon SVG jadi putih saat hover (Opsional, jika SVG support filter) */
 .feature-card:hover .icon-wrapper img {
-  filter: brightness(0) invert(1); /* Membuat icon jadi putih */
+  filter: brightness(0) invert(1);
   transition: filter 0.3s ease;
 }
 
-/* 5. Transisi Background Halus */
 .transition-bg {
   transition: opacity 0.3s ease;
 }
 .feature-card:hover .hover-bg-show {
-  opacity: 0.03 !important; /* Memberikan tint hijau sangat tipis di background */
+  opacity: 0.03 !important;
 }
 
-/* CSS untuk Service Cards */
-
-/* 1. Wrapper Gambar Tetap */
 .service-img-wrapper {
-  height: 240px; /* Tinggi fix agar sejajar */
+  height: 240px;
   overflow: hidden;
   position: relative;
 }
 
-/* 2. Agar gambar tidak gepeng (Zoom Effect) */
 .object-fit-cover {
   object-fit: cover;
 }
@@ -901,18 +851,17 @@ main > section.frame-21 {
   transition: transform 0.5s ease;
 }
 
-/* 3. Efek Hover pada Kartu */
 .service-card {
   position: relative;
   cursor: pointer;
   z-index: 1;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid rgba(0, 0, 0, 0.05) !important; /* Border sangat tipis */
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
 }
 
 .service-img-wrapper,
 .service-content {
-  pointer-events: none; /* Tembus klik ke link di belakangnya */
+  pointer-events: none;
 }
 
 .service-link.stretched-link::after {
@@ -921,56 +870,53 @@ main > section.frame-21 {
   width: 100%;
   height: 100%;
   content: "";
-  pointer-events: auto; /* Link aslinya tetap aktif */
+  pointer-events: auto;
   position: relative;
-  z-index: 11; /* Di atas stretched-link pseudo-element */
+  z-index: 11;
 }
 
 .hero-image-wrapper {
   width: 100%;
-  max-width: 500px; /* Batasi lebar maksimal agar tidak terlalu besar di layar lebar */
-  margin: 0 auto; /* Tengah secara horizontal */
+  max-width: 500px;
+  margin: 0 auto;
   position: relative;
 }
 
 .hero-main-img {
-  width: 100%; /* Lebar selalu mengikuti wadah */
-  height: 500px; /* TINGGI TETAP (Standar) - Sesuaikan angka ini */
-  object-fit: cover; /* KUNCI: Memotong gambar agar pas tanpa gepeng */
-  object-position: center; /* Fokus ke tengah gambar */
-  border-radius: 20px; /* Sudut membulat (sama dengan rounded-4) */
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 20px;
 }
 
 @media (max-width: 768px) {
   .hero-main-img {
-    height: 350px; /* Di HP tingginya dikurangi agar tidak makan tempat */
+    height: 350px;
   }
 
-  /* Floating badge di HP (opsional: sesuaikan posisi) */
   .hero-image-wrapper .position-absolute {
-    bottom: -20px !important; /* Geser sedikit ke bawah */
+    bottom: -20px !important;
     left: 50% !important;
-    transform: translateX(-50%); /* Tengah di HP */
+    transform: translateX(-50%);
     margin-left: 0 !important;
     width: max-content;
   }
 }
 
 .service-card:hover {
-  transform: translateY(-10px); /* Kartu naik */
+  transform: translateY(-10px);
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-  border-color: #136000 !important; /* Border jadi hijau */
+  border-color: #136000 !important;
 }
 
-/* 4. Efek Zoom Gambar saat Hover Kartu */
 .service-card:hover .transition-image {
   transform: scale(1.05);
 }
 
-/* 5. Efek Panah Bergeser */
 .transition-icon {
   transition: transform 0.3s ease;
 }
 .service-link:hover .transition-icon {
-  transform: translateX(5px); /* Panah geser kanan */
+  transform: translateX(5px);
 }

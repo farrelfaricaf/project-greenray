@@ -1,8 +1,8 @@
 <?php
 session_start();
-include '../koneksi.php'; // Menghubungkan ke database
+include '../koneksi.php'; 
 
-// Contact page settings
+
 $stmtContact = $koneksi->prepare("SELECT * FROM contact_settings WHERE id = 1");
 $stmtContact->execute();
 $contact = $stmtContact->get_result()->fetch_assoc();
@@ -21,45 +21,45 @@ if (!$contact) {
 }
 
 
-$alert_message = ""; // Untuk pesan error
-$show_modal = false;   // Untuk memicu modal sukses
+$alert_message = ""; 
+$show_modal = false;   
 
-// ==========================================================
-// LOGIKA BARU UNTUK CEK STATUS LOGIN (UNTUK HEADER)
-// ==========================================================
+
+
+
 $is_logged_in = isset($_SESSION['user_id']);
 $user_name = '';
-$profile_pic = '../img/default-profile.png'; // Path default
+$profile_pic = '../img/default-profile.png'; 
 
 if ($is_logged_in) {
   $user_name = $_SESSION['user_name'] ?? 'User';
   $profile_pic = $_SESSION['user_profile_pic'] ?? '../img/default-profile.png';
 }
-// ==========================================================
 
-// 1. Cek jika form telah di-submit (metode POST)
+
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-  // 2. Ambil data dari form (gunakan 'name' attribute dari form)
+  
   $full_name = trim($_POST['fullName']);
   $email = trim($_POST['emailAddress']);
   $subject = trim($_POST['subject']);
   $message = trim($_POST['message']);
 
-  // 3. Validasi server-side
+  
   if (empty($full_name) || empty($email) || empty($subject) || empty($message)) {
     $alert_message = '<div class="alert alert-danger" role="alert">Error: Semua field wajib diisi.</div>';
   } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     $alert_message = '<div class="alert alert-danger" role="alert">Error: Alamat email tidak valid.</div>';
   } else {
 
-    // 4. Data aman, siapkan query INSERT
+    
     $sql = "INSERT INTO contact_messages (full_name, email, subject, message) VALUES (?, ?, ?, ?)";
 
     if ($stmt = $koneksi->prepare($sql)) {
       $stmt->bind_param("ssss", $full_name, $email, $subject, $message);
 
-      // 5. Eksekusi query
+      
       if ($stmt->execute()) {
         $show_modal = true;
       } else {
@@ -69,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
       $alert_message = '<div class="alert alert-danger" role="alert">Error: Gagal menyiapkan query. ' . $koneksi->error . '</div>';
     }
-    // $koneksi->close(); // Sebaiknya ditutup di akhir skrip jika masih ada query lain
+    
   }
 }
 ?>
@@ -287,7 +287,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body text-center p-5">
-          <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="#136000"
+          <svg xmlns="https://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="#136000"
             class="mb-4">
             <path
               d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm-2 15l-4-4l1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z" />
@@ -375,7 +375,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     });
 
-    // (Script validasi Bootstrap)
+    
     (function () {
       'use strict'
       const form = document.getElementById('contactForm');

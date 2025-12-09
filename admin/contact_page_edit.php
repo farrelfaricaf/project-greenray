@@ -4,13 +4,13 @@ include 'auth_check.php';
 
 $alert_message = "";
 
-// Ambil data setting (id selalu 1)
+
 $stmt = $koneksi->prepare("SELECT * FROM contact_settings WHERE id = 1");
 $stmt->execute();
 $contact = $stmt->get_result()->fetch_assoc();
 
 if (!$contact) {
-    // Jika belum ada row, buat default
+    
     $koneksi->query("
         INSERT INTO contact_settings (id, header_title, header_subtitle, address, phone, whatsapp, email, office_hours, map_embed)
         VALUES (
@@ -30,7 +30,7 @@ if (!$contact) {
     $contact = $stmt->get_result()->fetch_assoc();
 }
 
-// PROSES UPDATE
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $header_title = $_POST['header_title'] ?? '';
     $header_subtitle = $_POST['header_subtitle'] ?? '';
@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($stmtUpd->execute()) {
         $alert_message = '<div class="alert alert-success mt-3">Contact settings updated successfully.</div>';
 
-        // refresh data setelah update
+        
         $stmt = $koneksi->prepare("SELECT * FROM contact_settings WHERE id = 1");
         $stmt->execute();
         $contact = $stmt->get_result()->fetch_assoc();

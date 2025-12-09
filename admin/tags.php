@@ -4,7 +4,7 @@ include 'auth_check.php';
 
 $alert_message = "";
 
-// baca status dari redirect (opsional)
+
 $status = $_GET['status'] ?? '';
 if ($status === 'deleted') {
     $alert_message = '<div class="alert alert-success">Tag deleted successfully.</div>';
@@ -14,7 +14,7 @@ if ($status === 'deleted') {
     $alert_message = '<div class="alert alert-danger">Failed to delete tag.</div>';
 }
 
-// ambil list tag + jumlah produk
+
 $sql = "
   SELECT
     s.id,

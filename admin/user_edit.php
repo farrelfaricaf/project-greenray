@@ -6,11 +6,11 @@ $alert_message = "";
 $user_id = null;
 $user = [];
 
-// 1. AMBIL DATA USER (GET)
+
 if (isset($_GET['id'])) {
     $user_id = $_GET['id'];
 
-    // Kita ambil data lengkap termasuk role
+    
     $stmt_select = $koneksi->prepare("SELECT id, first_name, last_name, email, role FROM users WHERE id = ?");
     $stmt_select->bind_param("i", $user_id);
     $stmt_select->execute();
@@ -26,14 +26,14 @@ if (isset($_GET['id'])) {
     $alert_message = '<div class="alert alert-danger">Error: ID User tidak valid.</div>';
 }
 
-// 2. UPDATE DATA USER (POST)
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user_id = $_POST['user_id'];
     $first_name = $_POST['first_name'];
     $last_name = $_POST['last_name'];
     $email = $_POST['email'];
 
-    // Ambil role dari form (default ke role lama jika error)
+    
     $role = isset($_POST['role']) ? $_POST['role'] : ($user['role'] ?? 'user');
 
     $stmt_update = $koneksi->prepare("UPDATE users SET first_name = ?, last_name = ?, email = ?, role = ? WHERE id = ?");
@@ -45,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                           </div>';
 
-        // Refresh data agar form terupdate
+        
         $stmt_refresh = $koneksi->prepare("SELECT id, first_name, last_name, email, role FROM users WHERE id = ?");
         $stmt_refresh->bind_param("i", $user_id);
         $stmt_refresh->execute();

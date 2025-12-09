@@ -5,29 +5,29 @@ include '../koneksi.php';
 $alert_message = "";
 $consultation_id = null;
 $consultation = [];
-$replies_history = []; // Untuk riwayat balasan
+$replies_history = [];
 
 $admin_name = $_SESSION['admin_name'] ?? 'Admin';
 
-// ======================================================
-// LOGIKA UNTUK MENGIRIM BALASAN KONSULTASI
-// ======================================================
+
+
+
 if (isset($_POST['send_reply'])) {
     $consultation_id = $_POST['consultation_id'];
     $reply_to_email = $_POST['reply_to_email'];
     $user_name = $_POST['user_name'];
     $reply_message = $_POST['reply_message'];
-    $original_subject = "Hasil Konsultasi Kalkulator GreenRay"; // Subjek default
+    $original_subject = "Hasil Konsultasi Kalkulator GreenRay";
 
     if (empty($reply_message)) {
         $alert_message = '<div class="alert alert-danger">Error: Isi balasan tidak boleh kosong.</div>';
     } else {
-        // Panggil fungsi sendEmail() dari koneksi.php
-        // Kita tidak mengutip pesan asli di sini karena emailnya sudah berisi template
+
+
         if (sendEmail($reply_to_email, $original_subject, nl2br(htmlspecialchars($reply_message)), $reply_message)) {
 
-            // SUKSES KIRIM EMAIL, SEKARANG SIMPAN KE DB
-            // Kita gunakan 'consultation' sebagai reply_type
+
+
             $stmt_save_reply = $koneksi->prepare("INSERT INTO admin_replies (reference_id, reply_type, admin_name, reply_body) VALUES (?, 'consultation', ?, ?)");
             $stmt_save_reply->bind_param("iss", $consultation_id, $admin_name, $reply_message);
             $stmt_save_reply->execute();
@@ -42,13 +42,13 @@ if (isset($_POST['send_reply'])) {
 }
 
 
-// ======================================================
-// LOGIKA UNTUK MENAMPILKAN KONSULTASI
-// ======================================================
+
+
+
 if (isset($_GET['id'])) {
     $consultation_id = $_GET['id'];
 
-    // Ambil data konsultasi
+
     $stmt = $koneksi->prepare("SELECT * FROM consultation_requests WHERE id = ?");
     $stmt->bind_param("i", $consultation_id);
     $stmt->execute();
@@ -57,7 +57,7 @@ if (isset($_GET['id'])) {
     if ($result->num_rows > 0) {
         $consultation = $result->fetch_assoc();
 
-        // Ambil riwayat balasan untuk konsultasi ini
+
         $stmt_replies = $koneksi->prepare("SELECT * FROM admin_replies WHERE reference_id = ? AND reply_type = 'consultation' ORDER BY sent_at DESC");
         $stmt_replies->bind_param("i", $consultation_id);
         $stmt_replies->execute();
@@ -72,7 +72,7 @@ if (isset($_GET['id'])) {
     }
     $stmt->close();
 } else {
-    // Jika $consultation_id tidak ada di GET, mungkin dia dari POST
+
     if ($consultation_id == null && isset($_POST['consultation_id'])) {
         $consultation_id = $_POST['consultation_id'];
     } else {
@@ -80,14 +80,14 @@ if (isset($_GET['id'])) {
     }
 }
 
-// Jika alert muncul (dari POST), kita perlu load ulang data konsultasi
+
 if (!empty($alert_message) && $consultation_id && empty($consultation)) {
     $stmt = $koneksi->prepare("SELECT * FROM consultation_requests WHERE id = ?");
     $stmt->bind_param("i", $consultation_id);
     $stmt->execute();
     $consultation = $stmt->get_result()->fetch_assoc();
 
-    // Load ulang juga riwayatnya
+
     $stmt_replies = $koneksi->prepare("SELECT * FROM admin_replies WHERE reference_id = ? AND reply_type = 'consultation' ORDER BY sent_at DESC");
     $stmt_replies->bind_param("i", $consultation_id);
     $stmt_replies->execute();
@@ -98,7 +98,7 @@ if (!empty($alert_message) && $consultation_id && empty($consultation)) {
     $stmt_replies->close();
 }
 
-// Buat template balasan
+
 $default_reply_message = "";
 if (!empty($consultation)) {
     $user_name = htmlspecialchars($consultation['full_name']);
@@ -147,7 +147,7 @@ if (!empty($consultation)) {
     <div id="layoutSidenav">
 
         <?php include 'includes/sidebar.php'; ?>
-        
+
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
@@ -301,7 +301,7 @@ if (!empty($consultation)) {
 
                 </div>
             </main>
-            
+
             <?php include 'includes/footer.php'; ?>
         </div>
     </div>

@@ -2,8 +2,8 @@
 session_start();
 include '../koneksi.php';
 
-// 1. Ambil semua segment untuk filter di atas
-// Ambil semua segment untuk filter (hanya yang dipakai produk)
+
+
 $segments = [];
 $resSeg = $koneksi->query("
     SELECT s.slug, s.name, MIN(s.id) AS id
@@ -18,10 +18,10 @@ if ($resSeg) {
     }
 }
 
-// 2. Baca filter dari URL
+
 $active_segment = $_GET['segment'] ?? 'all';
 
-// 3. Ambil produk + tag (multi-tag) dengan JOIN + GROUP_CONCAT
+
 $products = [];
 
 $sql = "
@@ -56,7 +56,7 @@ while ($row = $result->fetch_assoc()) {
     $products[] = $row;
 }
 
-// 4. Ambil konten header halaman katalog (judul, deskripsi, cover)
+
 $page_data = [];
 $res_page = $koneksi->query("SELECT * FROM page_katalog WHERE id = 1");
 if ($res_page && $res_page->num_rows > 0) {
@@ -69,13 +69,13 @@ if ($res_page && $res_page->num_rows > 0) {
     ];
 }
 
-// 5. Helper gambar
+
 function fixPath($path)
 {
     return !empty($path) ? str_replace('../', '', $path) : 'img/placeholder.png';
 }
 
-// 6. Cek status login (kalau memang dipakai di navbar)
+
 $is_logged_in = isset($_SESSION['user_id']);
 $user_name = '';
 $profile_pic = '../img/default-profile.png';
@@ -108,7 +108,7 @@ if ($is_logged_in) {
     <link rel="icon" type="image/png" href="..\img\favicon.png" sizes="180px180">
 
     <style>
-        /* CSS untuk Dropdown Profil (Diambil dari home.php) */
+       
         .profile-dropdown {
             position: relative;
             display: inline-block;
@@ -136,7 +136,7 @@ if ($is_logged_in) {
             overflow: hidden;
             font-family: 'Plus Jakarta Sans', sans-serif;
             text-align: left;
-            /* Memastikan teks rata kiri */
+           
         }
 
         .dropdown-menu-header.show {
@@ -161,7 +161,7 @@ if ($is_logged_in) {
             font-weight: 500;
         }
 
-        /* Style tambahan untuk kartu produk agar gambar rapi */
+       
         .card-img-top {
             height: 200px;
             object-fit: contain;
@@ -169,7 +169,7 @@ if ($is_logged_in) {
             background-color: #f8f9fa;
         }
 
-        /* Style list bullet points */
+       
         .custom-bullet-list {
             list-style-type: disc;
             padding-left: 1.5rem;
@@ -186,15 +186,15 @@ if ($is_logged_in) {
 
         .catalog-header-img {
             width: 100%;
-            /* Lebar menyesuaikan container */
+           
             height: auto;
-            /* Tinggi otomatis proporsional */
+           
             max-height: 350px;
-            /* BATAS MAKSIMAL TINGGI */
+           
             object-fit: cover;
-            /* Potong rapi jika rasio beda */
+           
             object-position: center;
-            /* Fokus tengah */
+           
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
@@ -202,16 +202,16 @@ if ($is_logged_in) {
         .catalog-header-wrapper {
             width: 100%;
             max-width: 1280px;
-            /* Batas lebar maksimal container gambar */
+           
             margin: 0 auto 40px auto;
-            /* Tengah horizontal & jarak bawah */
+           
             text-align: center;
-            /* Agar gambar di tengah jika lebih kecil */
+           
         }
 
-        /* ========================= */
-        /* Filter bar katalog        */
-        /* ========================= */
+       
+       
+       
 
         .catalog-filter-bar {
             display: flex;
@@ -228,7 +228,7 @@ if ($is_logged_in) {
             font-weight: 500;
         }
 
-        /* Tombol pill filter */
+       
         .filter-pill {
             display: inline-flex;
             align-items: center;
@@ -255,7 +255,7 @@ if ($is_logged_in) {
             transform: translateY(-1px);
         }
 
-        /* State aktif: selaras dengan tombol hijau card */
+       
         .filter-pill.is-active {
             background-color: var(--hijau);
             border-color: var(--hijau);
@@ -265,9 +265,9 @@ if ($is_logged_in) {
                 0rem 0.6875rem 0.4375rem rgba(0, 0, 0, 0.13);
         }
 
-        /* ========================= */
-        /* Responsif filter bar      */
-        /* ========================= */
+       
+       
+       
 
         @media (max-width: 768px) {
             .catalog-filter-bar {
@@ -294,7 +294,7 @@ if ($is_logged_in) {
 
             .filter-pill {
                 flex: 1 1 auto;
-                /* Boleh ngelebar sedikit di layar kecil */
+               
                 text-align: center;
             }
         }
@@ -368,9 +368,9 @@ if ($is_logged_in) {
                 <?php else: ?>
                     <?php foreach ($products as $product): ?>
                         <?php
-                        // Decode JSON fitur untuk ditampilkan sebagai list
+                        
                         $features = json_decode($product['key_features_json'], true);
-                        // Ambil maksimal 2 fitur agar tampilan kartu rapi
+                        
                         $display_features = array_slice($features ?? [], 0, 2);
                         ?>
                         <div class="card card-solar">

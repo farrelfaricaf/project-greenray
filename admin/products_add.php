@@ -4,7 +4,7 @@ include 'auth_check.php';
 
 $alert_message = "";
 
-// Ambil semua segment untuk dropdown
+
 $segments = [];
 $resSeg = $koneksi->query("SELECT id, name, slug FROM product_segments ORDER BY name ASC");
 if ($resSeg) {
@@ -13,17 +13,17 @@ if ($resSeg) {
     }
 }
 
-// PROSES SIMPAN PRODUK BARU
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // 1. DATA DASAR
+    
     $name = $_POST['name'] ?? '';
     $slug = $_POST['slug'] ?? '';
     $subtitle = $_POST['subtitle'] ?? '';
     $description = $_POST['description'] ?? '';
 
-    // 1a. LOGIKA MULTI TAG
-    $raw_segments = $_POST['segment_ids'] ?? [];   // name="segment_ids[]"
+    
+    $raw_segments = $_POST['segment_ids'] ?? [];   
     $segment_ids = [];
 
     if (!is_array($raw_segments)) {
@@ -36,10 +36,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             continue;
 
         if (ctype_digit($raw)) {
-            // Tag lama (ID)
+            
             $segment_ids[] = (int) $raw;
         } else {
-            // Tag baru → buat di product_segments
+            
             $segment_name = $raw;
             $segment_slug = strtolower(preg_replace('/[^a-z0-9]+/i', '-', $segment_name));
 
@@ -53,10 +53,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    // Tag utama (disimpan di kolom products.segment_id agar kompatibel dengan kode lama)
+    
     $primary_segment_id = !empty($segment_ids) ? $segment_ids[0] : null;
 
-    // 2. HANDLE MAIN IMAGE
+    
     $image_path_db = "";
     if (isset($_FILES['image_file']) && $_FILES['image_file']['error'] == 0) {
         $target_dir = "../uploads/products/";
@@ -68,7 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $image_path_db = "uploads/products/" . $file_name;
     }
 
-    // 3. PROSES KEY FEATURES
+    
     $features_array = [];
     if (isset($_POST['feature_title'])) {
         for ($i = 0; $i < count($_POST['feature_title']); $i++) {
@@ -82,7 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     $key_features_json = json_encode($features_array);
 
-    // 4. PROSES SPECIFICATIONS
+    
     $specs_array = [];
     if (isset($_POST['spec_title'])) {
         $target_icon_dir = "../uploads/icons/";
@@ -93,7 +93,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         for ($i = 0; $i < count($_POST['spec_title']); $i++) {
             $title = $_POST['spec_title'][$i];
             $sub = $_POST['spec_subtitle'][$i];
-            $type = $_POST['spec_icon_type'][$i]; // 'class' atau 'image'
+            $type = $_POST['spec_icon_type'][$i]; 
             $icon_value = "";
 
             if ($type == 'class') {
@@ -122,7 +122,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     $specifications_json = json_encode($specs_array);
 
-    // 5. INSERT KE DATABASE (produk)
+    
     if (empty($alert_message)) {
         $stmt = $koneksi->prepare(
             "INSERT INTO products (
@@ -145,7 +145,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($stmt->execute()) {
             $product_id = $stmt->insert_id;
 
-            // 6. SIMPAN MAPPING product ↔ segments
+            
             if (!empty($segment_ids)) {
                 $stmtMap = $koneksi->prepare(
                     "INSERT INTO product_segment_map (product_id, segment_id) VALUES (?, ?)"
@@ -289,7 +289,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 
     <script>
-        // Auto Slug
+        
         document.getElementById('name').addEventListener('input', function () {
             let slug = this.value.toLowerCase()
                 .replace(/[^a-z0-9-]/g, '-')
@@ -298,7 +298,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             document.getElementById('slug').value = slug;
         });
 
-        // --- KEY FEATURES LOGIC ---
+        
         function addFeature() {
             const div = document.createElement('div');
             div.className = 'dynamic-row';
@@ -319,7 +319,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         addFeature();
 
-        // --- SPECIFICATIONS LOGIC ---
+        
         function addSpec() {
             const div = document.createElement('div');
             div.className = 'dynamic-row';

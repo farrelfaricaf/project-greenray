@@ -1,26 +1,26 @@
 <?php
 session_start();
-include 'koneksi.php'; // Path koneksi di root
+include 'koneksi.php';
 
 function fixPath($path, $default = 'img/placeholder.png')
 {
-  // Hapus '../' agar path sesuai untuk root
+
   $clean = str_replace('../', '', $path ?? '');
 
-  // Jika kosong atau file tidak ada, gunakan default
+
   if (empty($clean)) {
     return $default;
   }
   return $clean;
 }
 
-// --- 2. AMBIL DATA LANDING PAGE (Tabel: landing_page) ---
+
 $lp = [];
 $res_lp = $koneksi->query("SELECT * FROM landing_page WHERE id = 1");
 if ($res_lp && $res_lp->num_rows > 0) {
   $lp = $res_lp->fetch_assoc();
 } else {
-  // Data Default (Jaga-jaga jika database kosong agar web tidak error)
+
   $lp = [
     'hero_title' => 'Solar Energy for a<br>Greener Tomorrow',
     'hero_subtitle' => 'Switch to clean energy.',
@@ -37,7 +37,7 @@ if ($res_lp && $res_lp->num_rows > 0) {
   ];
 }
 
-// 2. Cek Status Login (Untuk Header)
+
 $is_logged_in = isset($_SESSION['user_id']);
 $user_name = $_SESSION['user_name'] ?? 'User';
 $profile_pic = isset($_SESSION['user_profile_pic']) ? $_SESSION['user_profile_pic'] : 'img/default-profile.png';
@@ -71,7 +71,58 @@ if ($res_proj) {
   <link rel="icon" type="image/png" href=".\img\favicon.png" sizes="180px180" />
   <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
   <style>
-    /* Efek Hover Kartu Naik */
+    .profile-dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .profile-picture-header {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      object-fit: cover;
+      cursor: pointer;
+      border: 2px solid #136000;
+    }
+
+    .dropdown-menu-header {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 60px;
+      background-color: white;
+      min-width: 180px;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+      border-radius: 8px;
+      overflow: hidden;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      text-align: left;
+
+    }
+
+    .dropdown-menu-header.show {
+      display: block;
+    }
+
+    .dropdown-menu-header .dropdown-item,
+    .dropdown-menu-header .dropdown-item-info {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      font-size: 0.95rem;
+    }
+
+    .dropdown-menu-header .dropdown-item:hover {
+      background-color: #f1f1f1;
+    }
+
+    .dropdown-menu-header .dropdown-item-info {
+      background-color: #f9f9f9;
+      font-weight: 500;
+    }
+
     .hover-lift {
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
@@ -81,18 +132,18 @@ if ($res_proj) {
       box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.125) !important;
     }
 
-    /* Efek Zoom Gambar saat Hover */
+
     .service-card:hover .transition-transform {
       transform: scale(1.05);
       transition: transform 0.5s ease;
     }
 
-    /* Panah Geser saat Hover */
+
     .service-card:hover .group-hover-arrow svg {
       transform: translateX(5px);
     }
 
-    /* Helper object-fit */
+
     .object-fit-cover {
       object-fit: cover;
     }
@@ -101,9 +152,9 @@ if ($res_proj) {
       background-color: transparent;
       width: 100%;
       height: 350px;
-      /* Tinggi tetap agar konsisten */
+
       perspective: 1000px;
-      /* Efek 3D */
+
     }
 
     .flip-card-inner {
@@ -115,7 +166,7 @@ if ($res_proj) {
       transform-style: preserve-3d;
     }
 
-    /* Class ini yang akan ditambahkan oleh JS */
+
     .flip-card-wrapper.flipped .flip-card-inner {
       transform: rotateY(180deg);
     }
@@ -131,7 +182,7 @@ if ($res_proj) {
       left: 0;
     }
 
-    /* Sisi Belakang harus diputar dulu 180 derajat */
+
     .flip-card-back {
       transform: rotateY(180deg);
     }
@@ -157,19 +208,19 @@ if ($res_proj) {
               </div>
               <h1 class="hero-title display-4 fw-bold text-dark mb-3">
                 <?php
-                // TRIK: Pecah teks berdasarkan tombol Enter (Baris baru)
-                // Mendukung berbagai jenis enter (\r\n, \r, atau \n)
+
+
                 $lines = preg_split('/\r\n|\r|\n/', $lp['hero_title']);
 
-                // Tampilkan Baris 1 (Warna Hitam / Default)
+
                 echo htmlspecialchars($lines[0] ?? '');
 
-                // Tampilkan Baris 2 (Warna Hijau), Jika ada
+
                 if (isset($lines[1]) && !empty($lines[1])) {
                   echo '<br><span class="text-success">' . htmlspecialchars($lines[1]) . '</span>';
                 }
 
-                // (Opsional) Jika ada Baris 3 dst, tampilkan biasa
+
                 for ($i = 2; $i < count($lines); $i++) {
                   if (!empty($lines[$i])) {
                     echo '<br>' . htmlspecialchars($lines[$i]);
@@ -244,7 +295,7 @@ if ($res_proj) {
                   High Electricity Bills?
                   <svg class="position-absolute start-0 bottom-0 w-100" height="10"
                     style="transform: translateY(5px); opacity: 0.3;" viewBox="0 0 200 9" fill="none"
-                    xmlns="http://www.w3.org/2000/svg">
+                    xmlns="https://www.w3.org/2000/svg">
                     <path d="M2.00025 6.99997C30.5082 2.08486 97.1038 -2.3321 197.996 3.33329" stroke="#DC3545"
                       stroke-width="3" stroke-linecap="round" />
                   </svg>
@@ -380,16 +431,16 @@ if ($res_proj) {
             <?php if (!empty($projects)): ?>
               <?php foreach ($projects as $proj): ?>
                 <?php
-                // 1. Bersihkan path gambar (hapus ../ karena kita di root)
+
                 $img_path = str_replace('../', '', $proj['hero_image_url']);
 
-                // 2. Tentukan Warna Badge Kategori secara otomatis
+
                 $cat = htmlspecialchars($proj['category']);
-                $badge_class = 'bg-success text-success'; // Default Hijau (Residential)
+                $badge_class = 'bg-success text-success';
                 if (stripos($cat, 'Commercial') !== false)
-                  $badge_class = 'bg-primary text-primary'; // Biru
+                  $badge_class = 'bg-primary text-primary';
                 if (stripos($cat, 'Industrial') !== false)
-                  $badge_class = 'bg-warning text-warning'; // Kuning
+                  $badge_class = 'bg-warning text-warning';
                 ?>
 
                 <div class="col-md-4">
@@ -421,7 +472,7 @@ if ($res_proj) {
                       <a href="html/project_detail.php?slug=<?php echo $proj['slug']; ?>"
                         class="stretched-link text-decoration-none fw-bold text-success d-flex align-items-center">
                         View Details
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        <svg xmlns="https://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                           class="ms-2">
                           <path d="M5 12h14" />
@@ -590,7 +641,7 @@ if ($res_proj) {
       <section class="cta-section px-5 py-5">
         <div class="container">
           <div class="cta-box text-center text-white rounded-5 p-5" style="
-                background-image: url('img/image 10.png');
+                background-image: url('<?php echo fixPath($lp['cta_image']); ?>');
                 background-size: cover;
                 background-position: center;
                 position: relative;
@@ -629,17 +680,17 @@ if ($res_proj) {
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      // Pilih semua tombol pemicu
+
       const buttons = document.querySelectorAll('.btn-trigger-flip');
 
       buttons.forEach(btn => {
         btn.addEventListener('click', function (e) {
-          e.preventDefault(); // Mencegah reload jika ada href
+          e.preventDefault();
 
-          // Cari elemen pembungkus kartu terdekat
+
           const cardWrapper = this.closest('.flip-card-wrapper');
 
-          // Toggle class 'flipped'
+
           if (cardWrapper) {
             cardWrapper.classList.toggle('flipped');
           }

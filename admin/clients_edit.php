@@ -1,5 +1,5 @@
 <?php
-// 1. Hubungkan ke database
+
 include '../koneksi.php';
 include 'auth_check.php';
 
@@ -7,11 +7,11 @@ $alert_message = "";
 $client_id = null;
 $client = [];
 
-// 2. Ambil ID Klien dari URL (GET Request)
+
 if (isset($_GET['id'])) {
     $client_id = $_GET['id'];
 
-    // 3. Ambil data lama dari database
+    
     $stmt_select = $koneksi->prepare("SELECT * FROM clients WHERE id = ?");
     $stmt_select->bind_param("i", $client_id);
     $stmt_select->execute();
@@ -27,14 +27,14 @@ if (isset($_GET['id'])) {
     $alert_message = '<div class="alert alert-danger">Error: ID Klien tidak valid.</div>';
 }
 
-// 4. Logika untuk memproses form saat disubmit (POST Request)
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // Ambil path gambar lama dari hidden input
+    
     $current_logo_path = $_POST['current_logo_path'];
-    $logo_path_db = $current_logo_path; // Default-nya adalah gambar lama
+    $logo_path_db = $current_logo_path; 
 
-    // --- AWAL LOGIKA UPLOAD FILE BARU (JIKA ADA) ---
+    
     if (isset($_FILES['logo_file']) && $_FILES['logo_file']['error'] == 0 && $_FILES['logo_file']['size'] > 0) {
 
         $target_dir = "../uploads/clients/";
@@ -45,10 +45,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $check = getimagesize($_FILES["logo_file"]["tmp_name"]);
         if ($check !== false) {
             if (move_uploaded_file($_FILES["logo_file"]["tmp_name"], $target_file)) {
-                // Jika berhasil, set path BARU untuk database
+                
                 $logo_path_db = "uploads/clients/" . $file_name;
 
-                // Hapus file gambar LAMA dari server
+                
                 if (!empty($current_logo_path) && file_exists("../" . $current_logo_path)) {
                     unlink("../" . $current_logo_path);
                 }
@@ -59,27 +59,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $alert_message = '<div class="alert alert-danger">Error: File baru bukan gambar.</div>';
         }
     }
-    // --- AKHIR LOGIKA UPLOAD FILE ---
+    
 
-    // Ambil data form lainnya
+    
     $client_id = $_POST['client_id'];
     $name = $_POST['name'];
 
-    // Hanya jalankan query UPDATE jika alert masih kosong
+    
     if (empty($alert_message)) {
 
-        // 5. Buat query UPDATE
+        
         $stmt_update = $koneksi->prepare("UPDATE clients SET name = ?, logo_url = ? WHERE id = ?");
         $stmt_update->bind_param("ssi", $name, $logo_path_db, $client_id);
 
-        // 6. Eksekusi query
+        
         if ($stmt_update->execute()) {
             $alert_message = '<div class="alert alert-success alert-dismissible fade show" role="alert">
                                 <strong>Sukses!</strong> Klien berhasil diperbarui.
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                               </div>';
 
-            // Ambil lagi data terbaru untuk ditampilkan di form
+            
             $stmt_select = $koneksi->prepare("SELECT * FROM clients WHERE id = ?");
             $stmt_select->bind_param("i", $client_id);
             $stmt_select->execute();
@@ -96,7 +96,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// Jika data $client kosong (karena error atau ID tidak ada), isi dengan string kosong
+
 if (empty($client)) {
     $client = array_fill_keys(['name', 'logo_url'], '');
 }

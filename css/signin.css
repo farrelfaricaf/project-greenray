@@ -1,13 +1,12 @@
-/* FONT */
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   overflow: hidden;
   height: 100vh;
-  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-family: "Plus Jakarta Sans", sans-serif !important;
 }
 
-/* Container utama 2 kolom */
 .signup-container {
   display: flex;
   width: 100%;
@@ -16,7 +15,6 @@ html, body {
   align-items: center;
 }
 
-/* KIRI: Form area */
 .left-panel {
   flex: 1;
   padding: 60px 80px;
@@ -44,13 +42,12 @@ html, body {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  /* Sesuaikan lebar form agar lebih rapih */
-  width: 100%; 
-  max-width: 400px; /* Batasi lebar form di tengah */
+
+  width: 100%;
+  max-width: 400px;
   margin: 0 auto;
 }
 
-/* FORM INPUT */
 .form-group {
   display: flex;
   flex-direction: column;
@@ -62,48 +59,40 @@ label {
   margin-bottom: 6px;
 }
 
-/* ========================================= */
-/* PENTING: Penyesuaian Style Input Bootstrap */
-/* ========================================= */
-
-/* Gunakan class Bootstrap .form-control */
 .form-control {
   padding: 12px 14px;
   border: none;
-  border-bottom: 2px solid #ccc; /* Border bawah kustom */
+  border-bottom: 2px solid #ccc;
   border-radius: 6px;
   outline: none;
   transition: border-color 0.3s ease;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  /* Hapus background dan box-shadow default Bootstrap */
+  font-family: "Plus Jakarta Sans", sans-serif;
+
   background-image: none !important;
   box-shadow: none !important;
 }
 
 .form-control:focus {
-  border-bottom: 2px solid #146b00; /* Border hijau saat fokus */
+  border-bottom: 2px solid #146b00;
 }
 
-/* Styling saat VALID (garis hijau) */
-/* Hilangkan ikon validasi default Bootstrap */
-.form-control.is-valid, .form-control:valid {
-    border-color: #146b00 !important;
-    padding-right: 14px !important; /* Jaga padding agar tidak ada ikon */
-    background-image: none !important;
+.form-control.is-valid,
+.form-control:valid {
+  border-color: #146b00 !important;
+  padding-right: 14px !important;
+  background-image: none !important;
 }
 
-/* Styling saat TIDAK VALID (garis merah) */
-/* Hilangkan ikon validasi default Bootstrap */
-.form-control.is-invalid, .form-control:invalid {
-    border-color: #dc3545 !important; /* Warna merah */
-    padding-right: 14px !important; /* Jaga padding agar tidak ada ikon */
-    background-image: none !important;
+.form-control.is-invalid,
+.form-control:invalid {
+  border-color: #dc3545 !important;
+  padding-right: 14px !important;
+  background-image: none !important;
 }
 
-/* Pastikan feedback message terlihat */
 .invalid-feedback {
-    font-size: 12px;
-    margin-top: 5px;
+  font-size: 12px;
+  margin-top: 5px;
 }
 
 small {
@@ -112,8 +101,6 @@ small {
   margin-top: 5px;
 }
 
-/* TOMBOL SIGN IN */
-/* Sesuaikan selektor agar tombol juga memiliki lebar penuh di Bootstrap 5 */
 .btn-success {
   background-color: #146b00;
   color: white;
@@ -124,15 +111,14 @@ small {
   font-weight: 600;
   cursor: pointer;
   transition: background 0.3s ease;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  width: 100%; /* Agar tombol full width */
+  font-family: "Plus Jakarta Sans", sans-serif;
+  width: 100%;
 }
 
 .btn-success:hover {
   background-color: #0e5000;
 }
 
-/* TEKS LOGIN */
 .login-text {
   text-align: center;
   font-size: 12px;
@@ -149,7 +135,6 @@ small {
   text-decoration: underline;
 }
 
-/* KANAN: Gradasi panel */
 .right-panel {
   flex: 1;
   height: 85%;
@@ -177,13 +162,11 @@ small {
   margin: 0;
 }
 
-/* MODAL TEXT */
 .modal-content {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
 }
 
-/* Pastikan tombol di modal juga sesuai */
 .modal-body .btn-success {
-    width: auto !important;
-    padding: 10px 20px;
+  width: auto !important;
+  padding: 10px 20px;
 }

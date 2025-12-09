@@ -2,7 +2,7 @@
 session_start();
 include '../koneksi.php';
 
-// 1. Cek status login untuk header
+
 $is_logged_in = isset($_SESSION['user_id']);
 $user_name = '';
 $profile_pic = '../img/default-profile.png';
@@ -12,14 +12,14 @@ if ($is_logged_in) {
     $profile_pic = $_SESSION['user_profile_pic'] ?? '../img/default-profile.png';
 }
 
-// 2. Ambil slug dari URL
+
 if (!isset($_GET['slug'])) {
     die("Error: Proyek tidak ditemukan. (Slug tidak ada)");
 }
 
 $slug = $_GET['slug'];
 
-// 3. Ambil data proyek dari database
+
 $stmt = $koneksi->prepare("SELECT * FROM projects WHERE slug = ? LIMIT 1");
 $stmt->bind_param("s", $slug);
 $stmt->execute();
@@ -30,9 +30,9 @@ if ($result->num_rows === 0) {
 }
 
 $project = $result->fetch_assoc();
-$project_id = $project['id']; // Ambil ID untuk query galeri
+$project_id = $project['id'];
 
-// 4. Ambil gambar galeri (jika ada)
+
 $gallery_images = [];
 $stmt_gallery = $koneksi->prepare("SELECT * FROM project_gallery_images WHERE project_id = ?");
 $stmt_gallery->bind_param("i", $project_id);
@@ -42,9 +42,9 @@ while ($row = $result_gallery->fetch_assoc()) {
     $gallery_images[] = $row;
 }
 
-// 5. Decode JSON untuk Technical Specs
+
 $tech_specs = json_decode($project['tech_specs_json'], true);
-// Pastikan $tech_specs adalah array, walau JSON-nya error/kosong
+
 if (!is_array($tech_specs)) {
     $tech_specs = [];
 }
@@ -123,45 +123,9 @@ if (!is_array($tech_specs)) {
 <body>
     <div class="portfolio-detail-wrapper">
 
-        <div class="hero">
-            <img class="green-ray-logo-1" src="..\img\GreenRay_Logo 1-1.png" />
-            <div class="header-menu">
-                <div class="non-active"><a href="home.php">Home</a></div>
-                <div class="active-head"><a href="portofolio.php">Portfolio</a></div>
-                <div class="non-active"><a href="calc.php">Calculator</a></div>
-                <div class="non-active"><a href="katalog.html">Catalog</a></div>
-            </div>
+        <?php include 'includes/header.php'; ?>
 
-            <div class="header-actions">
-                <?php if ($is_logged_in): ?>
-                    <div class="profile-dropdown">
-                        <a href="#" class="profile-toggle" id="profileToggle">
-                            <img src="../<?php echo htmlspecialchars($profile_pic); ?>" alt="Profil"
-                                class="profile-picture-header">
-                        </a>
-                        <div class="dropdown-menu-header" id="profileDropdownMenu">
-                            <div class="dropdown-item-info">
-                                Halo, <strong><?php echo htmlspecialchars($user_name); ?></strong>!
-                            </div>
-                            <a class="dropdown-item" href="profile.php">Profil Saya</a>
-                            <a class="dropdown-item" href="contact-us.php">Bantuan / Kontak</a>
-                            <a class="dropdown-item" href="logout.php">Logout</a>
-                        </div>
-                    </div>
-                <?php else: ?>
-                    <a class="login-btn" href="signin.php">
-                        <div class="login-text">Login</div>
-                        <span class="akar-icons--door"></span>
-                    </a>
-                    <a class="contact-us-btn" href="contact-us.php">
-                        <div class="contact-us-text">Contact Us</div>
-                        <span class="mynaui--arrow-right"></span>
-                    </a>
-                <?php endif; ?>
-            </div>
-        </div>
-
-        <a href="portofolio.php" class="back-button">
+        <a href="portofolio.php" class="back-button mt-5">
             <span class="formkit--arrowleft"></span>
             <div class="contact-us2">Back to Projects</div>
         </a>
@@ -177,7 +141,7 @@ if (!is_array($tech_specs)) {
                     <span
                         class="badge bg-light text-dark rounded-pill px-3 py-2"><?php echo htmlspecialchars($project['category']); ?></span>
                     <div class="d-flex align-items-center gap-1 text-muted small">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                        <svg xmlns="https://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
                             class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
                             <path
                                 d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
@@ -327,13 +291,13 @@ if (!is_array($tech_specs)) {
         </div>
 
     </div>
-    
+
     <?php include 'includes/footer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // (Logika Profile Dropdown)
+
             const profileToggle = document.getElementById('profileToggle');
             const profileDropdownMenu = document.getElementById('profileDropdownMenu');
             if (profileToggle) {
